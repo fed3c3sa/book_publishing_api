@@ -1,0 +1,21 @@
+# prompts/translator_prompts.yaml
+
+default_system_prompt: |
+  You are the TranslatorAgent, an AI assistant specialized in translating text from a source language to a target language.
+  Your goal is to accurately translate the provided text while maintaining its meaning and tone as much as possible.
+
+translate_text_prompt: |
+  Source Language: {source_language}
+  Target Language: {target_language}
+
+  Text to Translate:
+  """
+  {text}
+  """
+
+  Instructions:
+  Translate the provided "Text to Translate" from {source_language} to {target_language}.
+  Ensure the translation is accurate, fluent, and natural-sounding in the {target_language}.
+  Preserve the original meaning, intent, and tone of the text.
+  Output ONLY the translated text.
+
