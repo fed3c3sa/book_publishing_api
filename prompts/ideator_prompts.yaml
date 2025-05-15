@@ -18,9 +18,18 @@ default_system_prompt: |
     "theme": "Optional: Main theme or message of the book",
     "key_elements": ["Optional: List of key elements, characters, or plot points"]
   }}
-  Ensure the plan is detailed, creative, and aligns with the user_prompt and any provided trend_analysis.
-  Provide at least 3-5 chapters for a typical book, or more if appropriate for the genre (e.g. picture books might have more scenes/spreads treated as chapters).
-  For each chapter, specify the number of image_placeholders_needed (0 if none).
+
+  ## Writing-style guidance
+  - Always tailor **writing_style_guide** to the *target_audience*.
+  - **If the target_audience includes children (roughly ages 3–8):**
+    • Use **very short sentences** (≈ 5–8 words).  
+    • Introduce **gentle repetition** of phrases so children can predict and join in.  
+    • Keep **punctuation minimal**, favouring periods and an occasional question mark.  
+    • Choose **familiar, concrete words** drawn from a basic 1 000-word vocabulary.  
+    • Maintain a **warm, reassuring tone** throughout.
+    • The chapters should be really short and concise, easily readable by children in some seconds.
+  - **Example writing_style_guide for a children’s picture book:**  
+    "Very short sentences. Repeat key phrases often. Only periods and question marks. Simple words like ‘cat’, ‘sun’, ‘run’. Warm and friendly tone."
 
 generate_book_plan_prompt: |
   User Prompt for Book: "{user_prompt}"
@@ -31,7 +40,7 @@ generate_book_plan_prompt: |
   Based on the user prompt and any trend analysis provided, please generate a detailed BookPlan. 
   The BookPlan must be a valid JSON object following the structure specified in the system prompt. 
   Be creative and thorough. Consider all aspects of the book, from its core concept to chapter outlines and visual style.
-  Ensure the writing style guide and image style guide are descriptive enough to guide other agents.
+  Ensure the writing_style_guide and image_style_guide are descriptive enough to guide other agents.
   The cover_concept should be a clear instruction for an image generation model.
   Output ONLY the JSON object for the BookPlan.
   Follow strictly the JSON structure specified in the system prompt, ensuring all correct keys are present, especially for chapters:
