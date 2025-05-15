@@ -1,9 +1,9 @@
 # agents/base_agent.py
-from smolagents import CodeAgent, InferenceClientModel
+from smolagents import ToolCallingAgent, InferenceClientModel
 from typing import List, Dict, Any, Optional
 import yaml
 
-class BaseBookAgent(CodeAgent):
+class BaseBookAgent(ToolCallingAgent):
     """
     Base class for all agents in the book writing project.
     It extends smolagents.CodeAgent to provide common functionalities

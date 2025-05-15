@@ -1,0 +1,31 @@
+{
+    // Put this file in .vscode/launch.json
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Debug ▶ Streamlit app",
+        "type": "python",
+        "request": "launch",
+  
+        // Tell VS Code to run the `streamlit` CLI as a module
+        "module": "streamlit",
+  
+        // Arguments you would normally pass on the command line
+        "args": [
+          "run",
+          "${workspaceFolder}/streamlit_app.py",
+          // optional: customise the port
+          "--server.port", "8501",
+          // optional: headless on/off
+          "--server.headless", "true"
+        ],
+  
+        // Use the integrated terminal so you can see Streamlit output
+        "console": "integratedTerminal",
+  
+        // Step into Streamlit and other site-packages when debugging
+        "justMyCode": false
+      }
+    ]
+  }
+  

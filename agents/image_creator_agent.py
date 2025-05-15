@@ -40,7 +40,7 @@ class ImageCreatorAgent(BaseBookAgent):
         # Initialize OpenAI client
         # Make sure to set OPENAI_API_KEY environment variable
         self.openai_client = OpenAI(
-            api_key="openai-api-key"
+            api_key=os.getenv("OPENAI_API_KEY")
         )
         
         # Configuration for DALL-E

@@ -4,7 +4,7 @@ import os
 import shutil
 from datetime import datetime
 import uuid
-
+import dotenv
 # Assuming smolagents and necessary models are installed and configured
 # For actual LLM interaction, you would need an API key for OpenAI or a running Ollama instance.
 # from smolagents.models.ollama import OllamaChatModel
@@ -27,27 +27,8 @@ from data_models.generated_image import GeneratedImage
 
 # Placeholder for a generic model client if specific ones aren't set up
 # This would need to be replaced with a concrete implementation like OpenAIServerModel or OllamaChatModel
-class OpenAIServerModel(InferenceClientModel):
-    def __init__(self, model_name="placeholder_model", **kwargs):
-        super().__init__(model_name=model_name, **kwargs)
-        self.model_name = model_name # Ensure model_name is set as an instance attribute
-        print(f"Initialized OpenAIServerModel: {model_name}")
 
-    def complete(self, prompt: str, **kwargs) -> str:
-        print(f"OpenAIServerModel received prompt (first 100 chars): {prompt[:100]}...")
-        # Simulate a generic response structure if needed by agents
-        if "JSON object" in prompt or "JSON report" in prompt:
-            return "{\"simulated_response\": \"This is a placeholder JSON response from the LLM.\"}"
-        return f"This is a placeholder LLM response to: {prompt[:50]}..."
-
-    async def acomplete(self, prompt: str, **kwargs) -> str:
-        # Placeholder for async completion if needed by smolagents base classes
-        print(f"OpenAIServerModel (async) received prompt (first 100 chars): {prompt[:100]}...")
-        if "JSON object" in prompt or "JSON report" in prompt:
-            return "{\"simulated_response\": \"This is an async placeholder JSON response from the LLM.\"}"
-        return f"This is an async placeholder LLM response to: {prompt[:50]}..."
-
-
+dotenv.load_dotenv("secrets.env")
 def load_config(config_path="config.yaml") -> dict:
     """Loads the main configuration file."""
     try:
@@ -73,19 +54,18 @@ def main_workflow(config: dict, user_book_idea: str):
 
     # --- Initialize LLM Model (Placeholder) ---
     # Replace with actual model initialization, e.g.:
-    # llm_model = OpenAIServerModel(api_key=config["openai_api_key"], model_name="gpt-3.5-turbo")
-    # llm_model = OllamaChatModel(model_name="llama2")
-    openai_api_key = "openai-api-key"
+    # llm_model = OpenAIServerModel(api_key=config["openai_api_key"], model="gpt-3.5-turbo")
+    # llm_model = OllamaChatModel(model="llama2")
+    api_key=os.getenv("OPENAI_API_KEY")
     try:
         llm_model = OpenAIServerModel(
-        api_key=openai_api_key,
-        model_name=config.get("openai_llm_model", "gpt-4o") # Usa gpt-4o o un altro modello desiderato
+        api_key=api_key,
+        model_id=config.get("openai_llm_model", "gpt-4o") # Usa gpt-4o o un altro modello desiderato
         )
-        print(f"Using LLM Model: {llm_model.model_name}")
+        print(f"Using LLM Model: {llm_model.model_id}")
     except Exception as e:
         print(f"Errore durante l'inizializzazione di OpenAIServerModel: {e}")
         return None, f"Errore inizializzazione LLM: {e}"
-        print(f"Using LLM Model: {llm_model.model_name}")
 
     # --- Initialize Tools (Conceptual for now, agents might use them internally) ---
     # web_search_tool = WebSearchTool() # If using smolagents built-in

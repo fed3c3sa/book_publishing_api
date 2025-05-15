@@ -55,13 +55,28 @@ class StoryWriterAgent(BaseBookAgent):
                 style_example=style_example if style_example else "N/A"
             )
             
-            print(f"StoryWriterAgent: (Placeholder) LLM would generate text for 	'{chapter_outline.title}'	. Simulating text generation.")
-            # chapter_text_raw = self.execute(formatted_prompt)
-            # Placeholder response for now
-            chapter_text_raw = f"This is the rich and engaging content for chapter 	'{chapter_outline.title}'	. It elaborates on {chapter_outline.summary}. "
-            for img_idx in range(chapter_outline.image_placeholders_needed):
-                chapter_text_raw += f" [IMAGE: A descriptive scene for image {img_idx+1} in {chapter_outline.title}]"
-            chapter_text_raw += " The chapter concludes with an exciting cliffhanger."
+            try:
+                # Execute the LLM with the formatted prompt
+                chapter_text_raw = self.run(formatted_prompt)
+                print(f"StoryWriterAgent: Successfully generated content for '{chapter_outline.title}'")
+                
+            except Exception as e:
+                print(f"StoryWriterAgent: Error generating content for '{chapter_outline.title}': {e}")
+                print(f"StoryWriterAgent: Using fallback content for chapter '{chapter_outline.title}'")
+                
+                # Fallback content generation if LLM fails
+                chapter_text_raw = f"This is the rich and engaging content for chapter '{chapter_outline.title}'. It elaborates on {chapter_outline.summary}. "
+                
+                # Add image placeholders to the fallback content
+                for img_idx in range(chapter_outline.image_placeholders_needed):
+                    if img_idx == 0:
+                        chapter_text_raw += f" [IMAGE: {chapter_outline.title} - opening scene illustration]"
+                    elif img_idx == chapter_outline.image_placeholders_needed - 1:
+                        chapter_text_raw += f" [IMAGE: {chapter_outline.title} - concluding scene illustration]"
+                    else:
+                        chapter_text_raw += f" [IMAGE: {chapter_outline.title} - mid-chapter action scene {img_idx}]"
+                
+                chapter_text_raw += " The chapter concludes with an exciting transition to the next part of the story."
 
             current_chapter_placeholders = []
             # Use regex to find placeholders like [IMAGE: description]
@@ -75,6 +90,11 @@ class StoryWriterAgent(BaseBookAgent):
                 temp_chapter_text = temp_chapter_text.replace(f"[IMAGE: {desc}]", f"[IMAGE: {placeholder_id}]", 1)
             chapter_text_markdown = temp_chapter_text
 
+            # Validate that we have the expected number of image placeholders
+            if len(current_chapter_placeholders) != chapter_outline.image_placeholders_needed:
+                print(f"StoryWriterAgent: Warning - Expected {chapter_outline.image_placeholders_needed} image placeholders "
+                      f"but found {len(current_chapter_placeholders)} in chapter '{chapter_outline.title}'")
+
             chapters_content.append(ChapterContent(
                 title=chapter_outline.title,
                 text_markdown=chapter_text_markdown,
@@ -87,6 +107,6 @@ class StoryWriterAgent(BaseBookAgent):
             chapters_content=chapters_content,
             cover_image_prompt=book_plan.cover_concept # Get cover prompt from book plan
         )
-        print(f"StoryWriterAgent: Generated story content - {len(story_content.chapters_content)} chapters.")
+        print(f"StoryWriterAgent: Generated story content - {len(story_content.chapters_content)} chapters, "
+              f"{len(all_image_placeholders)} total image placeholders.")
         return story_content
-

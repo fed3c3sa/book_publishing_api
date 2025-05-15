@@ -49,51 +49,63 @@ class IdeatorAgent(BaseBookAgent):
             trend_analysis=trend_info_str
         )
         
-        print(f"IdeatorAgent: Generating book plan based on prompt: 	'{user_prompt[:100]}...	'")
-        # llm_response_str = self.execute(formatted_prompt)
+        print(f"IdeatorAgent: Generating book plan based on prompt: '{user_prompt[:100]}...'")
+        
+        try:
+            # Execute the LLM with the formatted prompt
+            llm_response_dict = self.run(task=formatted_prompt)
+            print(f"IdeatorAgent: Received LLM response, attempting to parse as JSON...")
+            
+            # Try to parse the LLM response as JSON
+            plan_dict = json.loads(llm_response_dict)
+            print(f"IdeatorAgent: Successfully parsed LLM response as JSON")
+            
+        except json.JSONDecodeError as e:
+            print(f"IdeatorAgent: Error parsing LLM response as JSON: {e}. Using fallback plan.")
+            # Fallback plan in case of JSON parsing error
+            plan_dict = {
+                "title": "The Magical Forest Adventure",
+                "genre": "Children's Fantasy",
+                "target_audience": "Ages 6-10",
+                "writing_style_guide": "Simple, engaging language with vivid descriptions. Positive and encouraging tone.",
+                "image_style_guide": "Colorful, whimsical illustrations. Friendly characters. Bright and inviting scenes.",
+                "cover_concept": "A group of diverse children and friendly animals at the entrance of a vibrant, sunlit magical forest.",
+                "chapters": [
+                    {"title": "The Mysterious Map", "summary": "Children find a mysterious map in their grandmother's attic.", "image_placeholders_needed": 2},
+                    {"title": "Journey into the Whispering Woods", "summary": "They follow the map into a local woods that transforms into a magical forest.", "image_placeholders_needed": 3},
+                    {"title": "Meeting the Forest Guardians", "summary": "The children meet talking animals who are guardians of the forest.", "image_placeholders_needed": 2}
+                ],
+                "theme": "Friendship and adventure",
+                "key_elements": ["Magical transformation", "Animal friends", "Discovery and wonder"]
+            }
+        except Exception as e:
+            print(f"IdeatorAgent: Unexpected error during LLM execution: {e}. Using fallback plan.")
+            # More comprehensive fallback for any other execution errors
+            plan_dict = {
+                "title": "The Little Dragon Who Couldn't Breathe Fire",
+                "genre": "Children's Picture Book",
+                "target_audience": "Ages 3-6",
+                "writing_style_guide": "Simple, repetitive, and rhythmic language. Focus on themes of friendship, perseverance, and self-acceptance. Short sentences, easy vocabulary. Encouraging and warm tone.",
+                "image_style_guide": "Soft, watercolor-style illustrations. Cute and expressive characters. Pastel color palette. Full-page spreads with minimal text overlay where appropriate.",
+                "cover_concept": "A small, sad-looking green dragon trying to puff out a tiny wisp of smoke, with friendly animal friends looking on encouragingly. Sunny meadow background.",
+                "chapters": [
+                    {"title": "Sparky's Big Problem", "summary": "Introduce Sparky, a little dragon who can't breathe fire like his friends. He feels sad and left out.", "image_placeholders_needed": 1},
+                    {"title": "Trying Everything", "summary": "Sparky tries different funny ways to make fire (eating spicy peppers, jumping up and down) but nothing works.", "image_placeholders_needed": 2},
+                    {"title": "A Kind Friend", "summary": "Sparky meets a wise old owl who tells him everyone has unique talents.", "image_placeholders_needed": 1},
+                    {"title": "Discovering a New Talent", "summary": "Sparky discovers he can blow beautiful, sparkling bubbles instead of fire, which delight his friends.", "image_placeholders_needed": 2},
+                    {"title": "The Bubble Festival", "summary": "Sparky becomes the star of the annual forest festival with his amazing bubble show, learning to embrace his uniqueness.", "image_placeholders_needed": 1}
+                ],
+                "theme": "Self-acceptance and celebrating differences",
+                "key_elements": ["Cute dragon character", "Supportive friends", "Problem-solving", "Happy resolution"]
+            }
 
-        # Placeholder implementation - replace with actual LLM interaction and robust parsing
-        print(f"IdeatorAgent: (Placeholder) LLM would generate a book plan here. Simulating plan generation.")
-        # try:
-        #     plan_dict = json.loads(llm_response_str)
-        # except json.JSONDecodeError as e:
-        #     print(f"IdeatorAgent: Error parsing LLM response as JSON: {e}. Using fallback plan.")
-        #     # Fallback or error handling
-        #     plan_dict = {
-        #         "title": "The Magical Forest Adventure",
-        #         "genre": "Children's Fantasy",
-        #         "target_audience": "Ages 6-10",
-        #         "writing_style_guide": "Simple, engaging language with vivid descriptions. Positive and encouraging tone.",
-        #         "image_style_guide": "Colorful, whimsical illustrations. Friendly characters. Bright and inviting scenes.",
-        #         "cover_concept": "A group of diverse children and friendly animals at the entrance of a vibrant, sunlit magical forest.",
-        #         "chapters": [
-        #             {"title": "The Mysterious Map", "summary": "Children find a mysterious map in their grandmother's attic.", "image_placeholders_needed": 2},
-        #             {"title": "Journey into the Whispering Woods", "summary": "They follow the map into a local woods that transforms into a magical forest.", "image_placeholders_needed": 3},
-        #             {"title": "Meeting the Forest Guardians", "summary": "The children meet talking animals who are guardians of the forest.", "image_placeholders_needed": 2}
-        #         ]
-        #     }
-
-        # More detailed placeholder for now
-        plan_dict = {
-            "title": "The Little Dragon Who Couldn't Breathe Fire",
-            "genre": "Children's Picture Book",
-            "target_audience": "Ages 3-6",
-            "writing_style_guide": "Simple, repetitive, and rhythmic language. Focus on themes of friendship, perseverance, and self-acceptance. Short sentences, easy vocabulary. Encouraging and warm tone.",
-            "image_style_guide": "Soft, watercolor-style illustrations. Cute and expressive characters. Pastel color palette. Full-page spreads with minimal text overlay where appropriate.",
-            "cover_concept": "A small, sad-looking green dragon trying to puff out a tiny wisp of smoke, with friendly animal friends looking on encouragingly. Sunny meadow background.",
-            "chapters": [ # For a picture book, chapters might be scenes or page spreads
-                {"title": "Sparky's Big Problem", "summary": "Introduce Sparky, a little dragon who can't breathe fire like his friends. He feels sad and left out.", "image_placeholders_needed": 1},
-                {"title": "Trying Everything", "summary": "Sparky tries different funny ways to make fire (eating spicy peppers, jumping up and down) but nothing works.", "image_placeholders_needed": 2},
-                {"title": "A Kind Friend", "summary": "Sparky meets a wise old owl who tells him everyone has unique talents.", "image_placeholders_needed": 1},
-                {"title": "Discovering a New Talent", "summary": "Sparky discovers he can blow beautiful, sparkling bubbles instead of fire, which delight his friends.", "image_placeholders_needed": 2},
-                {"title": "The Bubble Festival", "summary": "Sparky becomes the star of the annual forest festival with his amazing bubble show, learning to embrace his uniqueness.", "image_placeholders_needed": 1}
-            ],
-            "theme": "Self-acceptance and celebrating differences",
-            "key_elements": ["Cute dragon character", "Supportive friends", "Problem-solving", "Happy resolution"]
-        }
+        # Generate unique project ID
         project_id = f"book_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:6]}"
+        
+        # Create BookPlan object from the parsed (or fallback) dictionary
         book_plan = BookPlan(
-            project_id=project_id,          title=plan_dict.get("title", "Untitled Book"),
+            project_id=project_id,
+            title=plan_dict.get("title", "Untitled Book"),
             genre=plan_dict.get("genre", "Unknown Genre"),
             target_audience=plan_dict.get("target_audience", "General Audience"),
             writing_style_guide=plan_dict.get("writing_style_guide", "Standard writing style."),
@@ -103,6 +115,6 @@ class IdeatorAgent(BaseBookAgent):
             theme=plan_dict.get("theme"),
             key_elements=plan_dict.get("key_elements", [])
         )
-        print(f"IdeatorAgent: Generated book plan for 	'{book_plan.title}	' with Project ID: {book_plan.project_id}")
+        
+        print(f"IdeatorAgent: Generated book plan for '{book_plan.title}' with Project ID: {book_plan.project_id}")
         return book_plan
-
