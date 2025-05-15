@@ -1,0 +1,40 @@
+# Configuration for Book Writing Agent Project
+
+# Language Model Configuration (Example using a local Ollama setup or a generic API endpoint)
+# This would be specific to the LLM provider you choose.
+llm_config:
+  model_name: "llama3" # Or any other model compatible with your smolagents setup
+  # For local Ollama (ensure Ollama is running and the model is pulled):
+  # base_url: "http://localhost:11434/v1" # Standard OpenAI-compatible API endpoint for Ollama
+  # api_key: "ollama" # Often not strictly required for local Ollama but good practice
+  # For a generic OpenAI-compatible API:
+  base_url: "http://localhost:1234/v1" # Placeholder, replace with your actual API base URL
+  api_key: "not-needed" # Placeholder, replace with your actual API key if required
+  # Other parameters like temperature, max_tokens can be added here if needed by InferenceClientModel
+
+# PDF Generation Configuration (for ImpaginatorAgent)
+pdf_settings:
+  margin_cm: 2.0
+  font_name: "Helvetica" # Standard ReportLab font
+  font_size_title: 24
+  font_size_h1: 18
+  font_size_h2: 14
+  font_size_normal: 12
+  cover_image_width_inch: 5
+  cover_image_height_inch: 7
+  body_image_width_inch: 4.5
+
+# Output Directory Configuration
+output_base_dir: "/home/federico/Desktop/personal/book_publishing_api/outputs"
+
+# Agent-specific configurations (if any)
+# Example: API keys for external services used by tools
+trend_finder_api_key: "YOUR_SEARCH_API_KEY_IF_NEEDED" # Placeholder
+translation_api_key: "YOUR_TRANSLATION_API_KEY_IF_NEEDED" # Placeholder
+image_generation_api_key: "YOUR_IMAGE_API_KEY_IF_NEEDED" # Placeholder
+
+# Feature flags for optional agents/functionality
+enable_trend_finder: true
+enable_style_imitator: true
+enable_translator: false # Example: Translator is off by default
+
