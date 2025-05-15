@@ -22,7 +22,7 @@ class StoryWriterAgent(BaseBookAgent):
         super().__init__(
             model=model, # Pass the model instance directly
             tools=agent_tools,
-            system_prompt_path="/home/ubuntu/book_writing_agent/prompts/story_writer_prompts.yaml",
+            system_prompt_path="/home/federico/Desktop/personal/book_publishing_api/prompts/story_writer_prompts.yaml",
             **kwargs
         )
 

@@ -20,7 +20,7 @@ class TranslatorAgent(BaseBookAgent):
         super().__init__(
             model=model, # Pass the model instance directly
             tools=agent_tools,
-            system_prompt_path="/home/ubuntu/book_writing_agent/prompts/translator_prompts.yaml",
+            system_prompt_path="/home/federico/Desktop/personal/book_publishing_api/prompts/translator_prompts.yaml",
             **kwargs
         )
 

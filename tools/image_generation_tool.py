@@ -52,7 +52,7 @@ if __name__ == "__main__":
     # Example Usage (for testing the tool directly)
     sample_prompt = "A friendly dragon reading a book in a cozy cave, illuminated by glowing crystals."
     sample_style = "Warm, whimsical, detailed illustration, storybook style."
-    sample_output_dir = "/home/ubuntu/book_writing_agent/outputs/tool_test/images"
+    sample_output_dir = "/home/federico/Desktop/personal/book_publishing_api/outputs/tool_test/images"
     sample_filename_base = "dragon_reading_test"
 
     # Ensure the base output directory for the test exists

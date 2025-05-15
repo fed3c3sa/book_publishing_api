@@ -8,8 +8,9 @@ import uuid
 # Assuming smolagents and necessary models are installed and configured
 # For actual LLM interaction, you would need an API key for OpenAI or a running Ollama instance.
 # from smolagents.models.ollama import OllamaChatModel
-# from smolagents.models.openai import OpenAIChatModel
+# from smolagents.models.openai import OpenAIServerModel
 from smolagents import InferenceClientModel # Generic model placeholder
+from smolagents import OpenAIServerModel
 
 from agents import (
     IdeatorAgent,
@@ -25,15 +26,15 @@ from data_models.story_content import StoryContent
 from data_models.generated_image import GeneratedImage
 
 # Placeholder for a generic model client if specific ones aren't set up
-# This would need to be replaced with a concrete implementation like OpenAIChatModel or OllamaChatModel
-class PlaceholderModel(InferenceClientModel):
+# This would need to be replaced with a concrete implementation like OpenAIServerModel or OllamaChatModel
+class OpenAIServerModel(InferenceClientModel):
     def __init__(self, model_name="placeholder_model", **kwargs):
         super().__init__(model_name=model_name, **kwargs)
         self.model_name = model_name # Ensure model_name is set as an instance attribute
-        print(f"Initialized PlaceholderModel: {model_name}")
+        print(f"Initialized OpenAIServerModel: {model_name}")
 
     def complete(self, prompt: str, **kwargs) -> str:
-        print(f"PlaceholderModel received prompt (first 100 chars): {prompt[:100]}...")
+        print(f"OpenAIServerModel received prompt (first 100 chars): {prompt[:100]}...")
         # Simulate a generic response structure if needed by agents
         if "JSON object" in prompt or "JSON report" in prompt:
             return "{\"simulated_response\": \"This is a placeholder JSON response from the LLM.\"}"
@@ -41,7 +42,7 @@ class PlaceholderModel(InferenceClientModel):
 
     async def acomplete(self, prompt: str, **kwargs) -> str:
         # Placeholder for async completion if needed by smolagents base classes
-        print(f"PlaceholderModel (async) received prompt (first 100 chars): {prompt[:100]}...")
+        print(f"OpenAIServerModel (async) received prompt (first 100 chars): {prompt[:100]}...")
         if "JSON object" in prompt or "JSON report" in prompt:
             return "{\"simulated_response\": \"This is an async placeholder JSON response from the LLM.\"}"
         return f"This is an async placeholder LLM response to: {prompt[:50]}..."
@@ -63,7 +64,7 @@ def load_config(config_path="config.yaml") -> dict:
 
 def main_workflow(config: dict, user_book_idea: str):
     """Orchestrates the main book creation workflow."""
-    project_base_output_dir = config.get("output_directory", "/home/ubuntu/book_writing_agent/outputs")
+    project_base_output_dir = config.get("output_directory", "/home/federico/Desktop/personal/book_publishing_api/outputs")
     # Create a unique project ID for this run
     project_id = f"book_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:6]}"
     current_project_output_dir = os.path.join(project_base_output_dir, project_id)
@@ -72,10 +73,19 @@ def main_workflow(config: dict, user_book_idea: str):
 
     # --- Initialize LLM Model (Placeholder) ---
     # Replace with actual model initialization, e.g.:
-    # llm_model = OpenAIChatModel(api_key=config["openai_api_key"], model_name="gpt-3.5-turbo")
+    # llm_model = OpenAIServerModel(api_key=config["openai_api_key"], model_name="gpt-3.5-turbo")
     # llm_model = OllamaChatModel(model_name="llama2")
-    llm_model = PlaceholderModel(model_name=config.get("llm_model_name", "placeholder/generic-llm"))
-    print(f"Using LLM Model: {llm_model.model_name}")
+    openai_api_key = "openai-api-key"
+    try:
+        llm_model = OpenAIServerModel(
+        api_key=openai_api_key,
+        model_name=config.get("openai_llm_model", "gpt-4o") # Usa gpt-4o o un altro modello desiderato
+        )
+        print(f"Using LLM Model: {llm_model.model_name}")
+    except Exception as e:
+        print(f"Errore durante l'inizializzazione di OpenAIServerModel: {e}")
+        return None, f"Errore inizializzazione LLM: {e}"
+        print(f"Using LLM Model: {llm_model.model_name}")
 
     # --- Initialize Tools (Conceptual for now, agents might use them internally) ---
     # web_search_tool = WebSearchTool() # If using smolagents built-in
@@ -199,7 +209,7 @@ if __name__ == "__main__":
     initial_user_idea = cfg.get("default_user_book_idea", "A children's book about a curious squirrel who explores a magical garden.")
     
     # Clean up previous outputs if they exist to avoid clutter during testing
-    # output_dir_to_clean = cfg.get("output_directory", "/home/ubuntu/book_writing_agent/outputs")
+    # output_dir_to_clean = cfg.get("output_directory", "/home/federico/Desktop/personal/book_publishing_api/outputs")
     # if os.path.exists(output_dir_to_clean):
     #     print(f"Cleaning up previous output directory: {output_dir_to_clean}")
     #     # Be careful with shutil.rmtree!

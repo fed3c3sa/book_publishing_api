@@ -83,11 +83,11 @@ if __name__ == "__main__":
         {"title": "Chapter 1: The Beginning", "text_markdown": "This is the first paragraph.\n\nThis is the second paragraph with more text."},
         {"title": "Chapter 2: The Middle", "text_markdown": "Content for the second chapter.\n\nIt was very exciting."}
     ]
-    if not os.path.exists("/home/ubuntu/book_writing_agent/outputs/tool_test"):
-        os.makedirs("/home/ubuntu/book_writing_agent/outputs/tool_test")
+    if not os.path.exists("/home/federico/Desktop/personal/book_publishing_api/outputs/tool_test"):
+        os.makedirs("/home/federico/Desktop/personal/book_publishing_api/outputs/tool_test")
 
     result = generate_pdf_from_structured_content(
-        output_pdf_path="/home/ubuntu/book_writing_agent/outputs/tool_test/sample_tool_book.pdf",
+        output_pdf_path="/home/federico/Desktop/personal/book_publishing_api/outputs/tool_test/sample_tool_book.pdf",
         title="My Sample Book via Tool",
         chapters_data=sample_chapters,
         pdf_config=sample_pdf_config

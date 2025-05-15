@@ -12,7 +12,7 @@ if PROJECT_ROOT not in sys.path:
 
 # Attempt to import the main workflow function
 try:
-    from book_writing_agent.main import main_workflow, load_config
+    from main import main_workflow, load_config
 except ImportError as e:
     st.error(f"Errore nell\"importare i moduli del progetto: {e}. Assicurati che la struttura del progetto sia corretta e che streamlit_app.py sia nella directory principale del progetto book_writing_agent.")
     st.stop()
@@ -22,7 +22,7 @@ def run_book_generation(app_config):
     
     # Prepare a dynamic configuration for the workflow based on UI inputs
     # We load the base config and then override/add based on UI
-    base_config = load_config(os.path.join(PROJECT_ROOT, "book_writing_agent", "config.yaml"))
+    base_config = load_config(os.path.join(PROJECT_ROOT,"book_publishing_api", "config.yaml"))
 
     # Update base_config with UI inputs
     # Note: The main_workflow might need adjustments to accept these overrides directly

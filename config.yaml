@@ -25,7 +25,7 @@ pdf_settings:
   body_image_width_inch: 4.5
 
 # Output Directory Configuration
-output_base_dir: "/home/ubuntu/book_writing_agent/outputs"
+output_base_dir: "/home/federico/Desktop/personal/book_publishing_api/outputs"
 
 # Agent-specific configurations (if any)
 # Example: API keys for external services used by tools
