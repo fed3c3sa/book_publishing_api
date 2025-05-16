@@ -7,7 +7,7 @@ from data_models.story_content import StoryContent, ChapterContent, ImagePlaceho
 import re # For parsing image placeholders
 
 class StoryWriterAgent(BaseBookAgent):
-    """Agent responsible for writing the story content based on the book plan."""
+    """Agent responsible for writing the complete story content based on the book plan."""
 
     def __init__(self, model: InferenceClientModel, tools: List[callable] = None, **kwargs):
         """
@@ -28,7 +28,7 @@ class StoryWriterAgent(BaseBookAgent):
 
     def write_story(self, book_plan: BookPlan, style_example: Optional[str] = None) -> StoryContent:
         """
-        Writes the full story based on the provided book plan.
+        Writes the complete story based on the provided book plan.
 
         Args:
             book_plan (BookPlan): The detailed plan for the book.
@@ -37,107 +37,123 @@ class StoryWriterAgent(BaseBookAgent):
         Returns:
             StoryContent: The generated story content with image placeholders.
         """
+        print(f"StoryWriterAgent: Writing complete book '{book_plan.title}'")
+        
+        prompt_template = self.load_prompt_template("write_complete_book_prompt")
+        
+        # Prepare chapter outlines as text
+        chapter_outlines_text = ""
+        total_images = 0
+        for i, chapter in enumerate(book_plan.chapters, 1):
+            chapter_outlines_text += f"Chapter {i}: {chapter.title}\n"
+            chapter_outlines_text += f"Summary: {chapter.summary}\n"
+            chapter_outlines_text += f"Images needed: {chapter.image_placeholders_needed}\n\n"
+            total_images += chapter.image_placeholders_needed
+        
+        formatted_prompt = prompt_template.format(
+            book_plan_title=book_plan.title,
+            book_plan_genre=book_plan.genre,
+            book_plan_target_audience=book_plan.target_audience,
+            book_plan_writing_style=book_plan.writing_style_guide,
+            book_plan_theme=book_plan.theme or "N/A",
+            book_plan_key_elements=", ".join(book_plan.key_elements) if book_plan.key_elements else "N/A",
+            chapter_outlines=chapter_outlines_text,
+            image_style_guide=book_plan.image_style_guide,
+            style_example=style_example if style_example else "N/A",
+            total_images=total_images
+        )
+        
+        complete_book_text = ""
+        try:
+            # Execute the LLM with the formatted prompt to write the entire book
+            complete_book_text = self.run(formatted_prompt)
+            print(f"StoryWriterAgent: Successfully generated complete book content")
+            
+        except Exception as e:
+            print(f"StoryWriterAgent: Error generating complete book content: {e}")
+            print(f"StoryWriterAgent: Using fallback content")
+            
+            # Create fallback content for the entire book
+            complete_book_text = f"# {book_plan.title}\n\n"
+            for i, chapter in enumerate(book_plan.chapters, 1):
+                complete_book_text += f"## Chapter {i}: {chapter.title}\n\n"
+                complete_book_text += f"This is the engaging content for chapter '{chapter.title}'. "
+                complete_book_text += f"It tells the story of {chapter.summary}. "
+                
+                # Add image placeholders
+                for img_idx in range(chapter.image_placeholders_needed):
+                    if img_idx == 0:
+                        complete_book_text += f"[IMAGE: Opening scene for {chapter.title}] "
+                    else:
+                        complete_book_text += f"[IMAGE: {chapter.title} - scene {img_idx + 1}] "
+                
+                complete_book_text += "The chapter continues with exciting developments and transitions smoothly to the next part of the story.\n\n"
+
+        # Parse the complete book text into chapters
         chapters_content_list: List[ChapterContent] = []
         all_image_placeholders: List[ImagePlaceholder] = []
         
-        # Store previously written chapter texts (markdown) for context
-        written_chapter_texts_markdown: List[str] = [] 
-
-        for i, chapter_outline in enumerate(book_plan.chapters):
-            current_chapter_number = i + 1
-            print(f"StoryWriterAgent: Writing chapter {current_chapter_number}: {chapter_outline.title}")
+        # Split the book text into chapters using markdown headers
+        chapter_pattern = r'##?\s*Chapter\s*\d+:?\s*([^\n]+)'
+        chapter_matches = list(re.finditer(chapter_pattern, complete_book_text, re.IGNORECASE))
+        
+        for i, match in enumerate(chapter_matches):
+            # Extract chapter title from the match
+            chapter_title = match.group(1).strip()
             
-            prompt_template = self.load_prompt_template("write_chapter_prompt")
+            # Find the start and end of the chapter content
+            chapter_start = match.end()
+            if i + 1 < len(chapter_matches):
+                chapter_end = chapter_matches[i + 1].start()
+            else:
+                chapter_end = len(complete_book_text)
             
-            # --- Prepare context from previous chapters ---
-            previous_chapter_summaries_str = "N/A"
-            if i > 0:
-                summaries = []
-                # Iterate through the outlines of previously planned chapters
-                for j in range(i): 
-                    prev_chap_outline = book_plan.chapters[j]
-                    summaries.append(f"Chapter {j+1} - {prev_chap_outline.title}: {prev_chap_outline.summary}")
-                previous_chapter_summaries_str = "\n".join(summaries)
-
-            previous_chapter_full_text = "N/A"
-            if i > 0 and written_chapter_texts_markdown:
-                # Get the text of the immediately preceding chapter
-                previous_chapter_full_text = written_chapter_texts_markdown[i-1]
-            # --- End of context preparation ---
-
-            formatted_prompt = prompt_template.format(
-                book_plan_title=book_plan.title,
-                book_plan_genre=book_plan.genre,
-                book_plan_target_audience=book_plan.target_audience,
-                book_plan_writing_style=book_plan.writing_style_guide,
-                
-                # New context variables
-                previous_chapter_summaries=previous_chapter_summaries_str,
-                previous_chapter_text=previous_chapter_full_text,
-                chapter_number=current_chapter_number,
-                
-                chapter_title=chapter_outline.title,
-                chapter_summary=chapter_outline.summary,
-                num_images=chapter_outline.image_placeholders_needed,
-                style_example=style_example if style_example else "N/A"
-            )
+            chapter_text = complete_book_text[chapter_start:chapter_end].strip()
             
-            chapter_text_raw = "" # Initialize to ensure it's defined
-            try:
-                # Execute the LLM with the formatted prompt
-                chapter_text_raw = self.run(formatted_prompt)
-                print(f"StoryWriterAgent: Successfully generated content for '{chapter_outline.title}'")
-                
-            except Exception as e:
-                print(f"StoryWriterAgent: Error generating content for '{chapter_outline.title}': {e}")
-                print(f"StoryWriterAgent: Using fallback content for chapter '{chapter_outline.title}'")
-                
-                # Fallback content generation if LLM fails
-                chapter_text_raw = f"This is the rich and engaging content for chapter '{chapter_outline.title}'. It elaborates on {chapter_outline.summary}. "
-                
-                # Add image placeholders to the fallback content
-                for img_idx in range(chapter_outline.image_placeholders_needed):
-                    if img_idx == 0:
-                        chapter_text_raw += f" [IMAGE: {chapter_outline.title} - opening scene illustration for Chapter {current_chapter_number}]"
-                    elif img_idx == chapter_outline.image_placeholders_needed - 1:
-                        chapter_text_raw += f" [IMAGE: {chapter_outline.title} - concluding scene illustration for Chapter {current_chapter_number}]"
-                    else:
-                        chapter_text_raw += f" [IMAGE: {chapter_outline.title} - mid-chapter action scene {img_idx} for Chapter {current_chapter_number}]"
-                
-                chapter_text_raw += " The chapter concludes with an exciting transition to the next part of the story."
-
+            # Find image placeholders in this chapter
             current_chapter_placeholders = []
-            # Use regex to find placeholders like [IMAGE: description]
-            placeholder_matches = re.findall(r"\[IMAGE: (.*?)\]", chapter_text_raw)
+            placeholder_matches = re.findall(r"\[IMAGE: (.*?)\]", chapter_text)
             
-            temp_chapter_text = chapter_text_raw
+            temp_chapter_text = chapter_text
             for idx, desc in enumerate(placeholder_matches):
-                placeholder_id = f"chapter{current_chapter_number}_image{idx+1}" # Create a unique ID for the placeholder
+                placeholder_id = f"chapter{i+1}_image{idx+1}"
                 current_chapter_placeholders.append(ImagePlaceholder(id=placeholder_id, description=desc))
-                # Replace the found placeholder with one that includes the ID for later mapping
+                # Replace the found placeholder with one that includes the ID
                 temp_chapter_text = temp_chapter_text.replace(f"[IMAGE: {desc}]", f"[IMAGE: {placeholder_id}]", 1)
-            chapter_text_markdown = temp_chapter_text
-
-            # Store the generated markdown text for the next iteration's context
-            written_chapter_texts_markdown.append(chapter_text_markdown)
-
-            # Validate that we have the expected number of image placeholders
-            if len(current_chapter_placeholders) != chapter_outline.image_placeholders_needed:
-                print(f"StoryWriterAgent: Warning - Expected {chapter_outline.image_placeholders_needed} image placeholders "
-                      f"but found {len(current_chapter_placeholders)} in chapter '{chapter_outline.title}'")
-
+            
             chapters_content_list.append(ChapterContent(
-                title=chapter_outline.title,
-                text_markdown=chapter_text_markdown,
+                title=chapter_title,
+                text_markdown=temp_chapter_text,
                 image_placeholders=current_chapter_placeholders
             ))
             all_image_placeholders.extend(current_chapter_placeholders)
 
+        # If no chapters were found in the text, treat the entire text as one book
+        if not chapters_content_list:
+            print("StoryWriterAgent: No chapter markers found, treating as single chapter")
+            # Find all image placeholders in the complete text
+            all_placeholders = []
+            placeholder_matches = re.findall(r"\[IMAGE: (.*?)\]", complete_book_text)
+            
+            temp_text = complete_book_text
+            for idx, desc in enumerate(placeholder_matches):
+                placeholder_id = f"chapter1_image{idx+1}"
+                all_placeholders.append(ImagePlaceholder(id=placeholder_id, description=desc))
+                temp_text = temp_text.replace(f"[IMAGE: {desc}]", f"[IMAGE: {placeholder_id}]", 1)
+            
+            chapters_content_list.append(ChapterContent(
+                title=book_plan.title,
+                text_markdown=temp_text,
+                image_placeholders=all_placeholders
+            ))
+            all_image_placeholders.extend(all_placeholders)
+
         story_content = StoryContent(
             book_plan=book_plan,
-            chapters_content=chapters_content_list, # Use the correctly typed list
-            cover_image_prompt=book_plan.cover_concept # Get cover prompt from book plan
+            chapters_content=chapters_content_list,
+            cover_image_prompt=book_plan.cover_concept
         )
-        print(f"StoryWriterAgent: Generated story content - {len(story_content.chapters_content)} chapters, "
+        
+        print(f"StoryWriterAgent: Generated complete story content - {len(story_content.chapters_content)} chapters, "
               f"{len(all_image_placeholders)} total image placeholders.")
         return story_content
