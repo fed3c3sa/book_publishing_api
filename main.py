@@ -5,6 +5,7 @@ import shutil
 from datetime import datetime
 import uuid
 import dotenv
+from typing import List
 # Assuming smolagents and necessary models are installed and configured
 # For actual LLM interaction, you would need an API key for OpenAI or a running Ollama instance.
 # from smolagents.models.ollama import OllamaChatModel
@@ -114,11 +115,21 @@ def main_workflow(config: dict, user_book_idea: str):
 
     # 2. Idea Generation
     print("\nStep 2: Generating Book Plan...")
-    book_plan: BookPlan = ideator.generate_initial_idea(user_prompt=user_book_idea, trend_analysis=trend_analysis_results)
+    # Get provisional title from config if available
+    title = config.get("title", None)
+    if title:
+        print(f"Using provisional title from config: {title}")
+    
+    # Pass provisional title to the ideator agent
+    book_plan: BookPlan = ideator.generate_initial_idea(
+        user_prompt=user_book_idea, 
+        trend_analysis=trend_analysis_results,
+        title=title
+    )
     if not book_plan or not book_plan.chapters:
         print("Error: Failed to generate a valid book plan. Exiting.")
         return
-    print(f"Book Plan Generated: 	{book_plan.title}	 with {len(book_plan.chapters)} chapters.")
+    print(f"Book Plan Generated: {book_plan.title} with {len(book_plan.chapters)} chapters.")
     # Save book plan
     with open(os.path.join(current_project_output_dir, "book_plan.yaml"), "w") as f:
         yaml.dump(book_plan.__dict__, f, indent=2, default_flow_style=False, allow_unicode=True)
@@ -138,7 +149,7 @@ def main_workflow(config: dict, user_book_idea: str):
     if not story_content or not story_content.chapters_content:
         print("Error: Failed to generate story content. Exiting.")
         return
-    print(f"Story Content Generated for 	{story_content.book_plan.title}	.")
+    print(f"Story Content Generated for {story_content.book_plan.title}.")
     # Save story content (e.g., as JSON or individual chapter files)
     # For simplicity, let's just log it for now or save a summary
     with open(os.path.join(current_project_output_dir, "story_summary.txt"), "w") as f:
@@ -200,4 +211,3 @@ if __name__ == "__main__":
     #     # print("Cleanup complete.")
 
     main_workflow(config=cfg, user_book_idea=initial_user_idea)
-
