@@ -27,13 +27,14 @@ class IdeatorAgent(BaseBookAgent):
             **kwargs
         )
 
-    def generate_initial_idea(self, user_prompt: str, trend_analysis: Optional[Dict[str, Any]] = None) -> BookPlan:
+    def generate_initial_idea(self, user_prompt: str, trend_analysis: Optional[Dict[str, Any]] = None, title: Optional[str] = None) -> BookPlan:
         """
         Generates a detailed book plan based on a user prompt and optional trend analysis.
 
         Args:
             user_prompt (str): The user's initial idea or requirements for the book.
             trend_analysis (Optional[Dict[str, Any]]): Optional trend data to inform the idea.
+            title (Optional[str]): Optional provisional title for the book.
 
         Returns:
             BookPlan: A detailed plan for the book.
@@ -44,9 +45,16 @@ class IdeatorAgent(BaseBookAgent):
         if trend_analysis:
             trend_info_str = json.dumps(trend_analysis, indent=2)
 
+        # Handle provisional title
+        title_str = "No provisional title provided."
+        if title:
+            title_str = f"Use this provisional title: '{title}'"
+            print(f"IdeatorAgent: Using provisional title: {title}")
+
         formatted_prompt = prompt_template.format(
             user_prompt=user_prompt,
-            trend_analysis=trend_info_str
+            trend_analysis=trend_info_str,
+            title=title_str
         )
         
         print(f"IdeatorAgent: Generating book plan based on prompt: '{user_prompt[:100]}...'")
@@ -63,8 +71,10 @@ class IdeatorAgent(BaseBookAgent):
         except json.JSONDecodeError as e:
             print(f"IdeatorAgent: Error parsing LLM response as JSON: {e}. Using fallback plan.")
             # Fallback plan in case of JSON parsing error
+            # Use provisional title if provided, otherwise use fallback title
+            fallback_title = title if title else "The Magical Forest Adventure"
             plan_dict = {
-                "title": "The Magical Forest Adventure",
+                "title": fallback_title,
                 "genre": "Children's Fantasy",
                 "target_audience": "Ages 6-10",
                 "writing_style_guide": "Simple, engaging language with vivid descriptions. Positive and encouraging tone.",
@@ -81,8 +91,10 @@ class IdeatorAgent(BaseBookAgent):
         except Exception as e:
             print(f"IdeatorAgent: Unexpected error during LLM execution: {e}. Using fallback plan.")
             # More comprehensive fallback for any other execution errors
+            # Use provisional title if provided, otherwise use fallback title
+            fallback_title = title if title else "The Little Dragon Who Couldn't Breathe Fire"
             plan_dict = {
-                "title": "The Little Dragon Who Couldn't Breathe Fire",
+                "title": fallback_title,
                 "genre": "Children's Picture Book",
                 "target_audience": "Ages 3-6",
                 "writing_style_guide": "Simple, repetitive, and rhythmic language. Focus on themes of friendship, perseverance, and self-acceptance. Short sentences, easy vocabulary. Encouraging and warm tone.",
@@ -103,9 +115,15 @@ class IdeatorAgent(BaseBookAgent):
         project_id = f"book_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:6]}"
         
         # Create BookPlan object from the parsed (or fallback) dictionary
+        # If provisional title was provided and LLM didn't use it, override the title
+        final_title = plan_dict.get("title", "Untitled Book")
+        if title and final_title != title:
+            print(f"IdeatorAgent: Overriding LLM title '{final_title}' with provisional title '{title}'")
+            final_title = title
+        
         book_plan = BookPlan(
             project_id=project_id,
-            title=plan_dict.get("title", "Untitled Book"),
+            title=final_title,
             genre=plan_dict.get("genre", "Unknown Genre"),
             target_audience=plan_dict.get("target_audience", "General Audience"),
             writing_style_guide=plan_dict.get("writing_style_guide", "Standard writing style."),
