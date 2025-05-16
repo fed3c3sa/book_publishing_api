@@ -111,7 +111,7 @@ class ImageCreatorAgent(BaseBookAgent):
             is_cover (bool): True if this is the cover image.
 
         Returns:
-            Optional[GeneratedImage]: GeneratedImage object or None if failed.
+            Optional[GeneratedImage]: GeneratedImage object or None if generation failed.
         """
         filename_base = placeholder_id.replace(" ", "_").lower()
         unique_suffix = uuid.uuid4().hex[:6]
@@ -165,67 +165,7 @@ class ImageCreatorAgent(BaseBookAgent):
             
         except Exception as e:
             print(f"ImageCreatorAgent: Error generating image for '{placeholder_id}': {e}")
-            
-            # Create a fallback placeholder image if DALL-E fails
-            print(f"ImageCreatorAgent: Creating fallback placeholder image for '{placeholder_id}'")
-            return self._create_fallback_image(placeholder_id, prompt, style_guide, output_path, is_cover)
-
-    def _create_fallback_image(self, placeholder_id: str, prompt: str, style_guide: str, output_path: str, is_cover: bool = False) -> Optional[GeneratedImage]:
-        """
-        Creates a fallback placeholder image when DALL-E generation fails.
-        
-        Args:
-            placeholder_id (str): The ID for this image.
-            prompt (str): The original prompt.
-            style_guide (str): The style guide.
-            output_path (str): Where to save the image.
-            is_cover (bool): True if this is a cover image.
-            
-        Returns:
-            Optional[GeneratedImage]: GeneratedImage object or None if failed.
-        """
-        try:
-            # Use appropriate dimensions for PDF
-            if is_cover:
-                img_width = 800
-                img_height = 1000
-            else:
-                img_width = 600
-                img_height = 400
-                
-            img = PilImage.new("RGB", (img_width, img_height), color="lightgrey")
-            draw = ImageDraw.Draw(img)
-            
-            # Try to load a font, use default if not found
-            try:
-                font = ImageFont.truetype("arial.ttf", 24)
-                small_font = ImageFont.truetype("arial.ttf", 16)
-            except IOError:
-                font = ImageFont.load_default()
-                small_font = font
-            
-            # Draw text
-            title = f"Fallback Image"
-            subtitle = f"ID: {placeholder_id}"
-            prompt_text = f"Prompt: {prompt[:100]}..."
-            style_text = f"Style: {style_guide[:100]}..."
-            
-            # Calculate positions
-            title_bbox = draw.textbbox((0, 0), title, font=font)
-            title_width = title_bbox[2] - title_bbox[0]
-            title_x = (img_width - title_width) / 2
-            
-            draw.text((title_x, 100), title, fill="red", font=font)
-            draw.text((50, 200), subtitle, fill="black", font=small_font)
-            draw.text((50, 250), prompt_text, fill="black", font=small_font)
-            draw.text((50, 300), style_text, fill="black", font=small_font)
-            
-            img.save(output_path, "PNG")
-            print(f"ImageCreatorAgent: Created fallback image for '{placeholder_id}'")
-            return GeneratedImage(placeholder_id=placeholder_id, prompt_used=prompt, image_path=output_path)
-            
-        except Exception as e:
-            print(f"ImageCreatorAgent: Error creating fallback image for '{placeholder_id}': {e}")
+            print(f"ImageCreatorAgent: Skipping image generation for '{placeholder_id}' - placeholder will be removed from text")
             return None
 
     def create_images(self, story_content: StoryContent, book_plan: BookPlan) -> List[GeneratedImage]:
@@ -237,7 +177,7 @@ class ImageCreatorAgent(BaseBookAgent):
             book_plan (BookPlan): The book plan containing style guides and cover concept.
 
         Returns:
-            List[GeneratedImage]: A list of GeneratedImage objects for all created images.
+            List[GeneratedImage]: A list of GeneratedImage objects for all successfully created images.
         """
         generated_images = []
         image_style = book_plan.image_style_guide
@@ -253,6 +193,8 @@ class ImageCreatorAgent(BaseBookAgent):
             img = self._generate_single_image(placeholder.id, placeholder.description, image_style)
             if img:
                 generated_images.append(img)
+            else:
+                print(f"ImageCreatorAgent: Skipping failed image generation for placeholder '{placeholder.id}'")
         
         # Generate cover image
         print(f"ImageCreatorAgent: Processing cover image with concept: '{book_plan.cover_concept}'")
@@ -274,8 +216,10 @@ class ImageCreatorAgent(BaseBookAgent):
         
         if cover_img:
             generated_images.append(cover_img)
+        else:
+            print(f"ImageCreatorAgent: Warning: Cover image generation failed")
             
-        print(f"ImageCreatorAgent: Finished image generation. Total images: {len(generated_images)}")
+        print(f"ImageCreatorAgent: Finished image generation. Total images successfully created: {len(generated_images)}")
         return generated_images
 
     def set_dalle_configuration(self, model: str = None, size: str = None, quality: str = None, style: str = None):
