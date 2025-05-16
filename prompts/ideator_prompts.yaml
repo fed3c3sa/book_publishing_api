@@ -46,13 +46,13 @@ default_system_prompt: |
   
   The "writing_style_guide" field is THE MOST CRITICAL part of your BookPlan. It must be tailored EXACTLY to the target audience.
   
-  **For kids/children - ULTRA SIMPLE REQUIRED:**
-  - Sentences must be 3-6 words MAXIMUM
-  - Use ONLY periods. NO commas, semicolons, or complex punctuation
-  - Use only the most basic vocabulary (cat, dog, run, jump, happy, sad)
+  **For kids/children - SIMPLE REQUIRED:**
+  - Sentences must be short
+  - Use mostly periods. NO semicolons, or complex punctuation
+  - Use only basic vocabulary, easy to understand by a kid.
   - Repeat key phrases multiple times for learning
-  - Each chapter should be very short (50-100 words maximum)
-  - Example style: "The cat is big. The cat is happy. The cat runs fast."
+  - Each chapter should be short.
+  - Example style: "The cat is big. The cat is happy and runs quick around the house. The cat jumps on the bed and plays with the dog. The cat is a good friend of the dog."
   
   **For teenagers - ACCESSIBLE:**
   - Clear, direct sentences
@@ -77,25 +77,39 @@ generate_book_plan_prompt: |
   Provisional Title (if provided):
   {title}
   
-  Based on the user prompt and any trend analysis provided, generate a detailed BookPlan focusing on SIMPLE, CLEAR writing.
+  Additional Constraints (if provided):
+  {additional_constraints}
+  
+  Based on the user prompt, any trend analysis provided, and any additional constraints, generate a detailed BookPlan focusing on SIMPLE, CLEAR writing.
   
   ## CRITICAL INSTRUCTIONS:
   1. **OUTPUT ONLY VALID JSON** - No explanations, no markdown code blocks, no additional text
   2. **FOLLOW THE EXACT STRUCTURE** shown in the system prompt
-  3. **VALIDATE YOUR JSON** - Ensure it's properly formatted with correct syntax
-  4. **USE PROPER DATA TYPES**:
+  3. **RESPECT ANY PROVIDED CONSTRAINTS** - If specific genre, target audience, writing style, image style, cover concept, theme, or key elements are provided in the additional constraints, incorporate them into your plan
+  4. **VALIDATE YOUR JSON** - Ensure it's properly formatted with correct syntax
+  5. **USE PROPER DATA TYPES**:
      - Strings in double quotes
      - Numbers without quotes for "image_placeholders_needed" 
      - Arrays with square brackets for "chapters" and "key_elements"
   
   ## Key requirements for the book plan:
-  - **PRIORITY #1**: Base your writing_style_guide ENTIRELY on the target audience
+  - **PRIORITY #1**: Base your writing_style_guide ENTIRELY on the target audience (whether provided or inferred)
   - **PRIORITY #2**: If target audience is kids/children, make writing EXTREMELY simple
+  - **PRIORITY #3**: If specific constraints are provided (genre, style guides, etc.), honor them in your output
   - Create a book that matches the reading level of the target audience
   - Keep the story structure straightforward and age-appropriate
   - Ensure each chapter has a clear purpose and flows naturally
   - Include 3-6 chapters typically
   - Each chapter should need 1-3 images maximum
+  
+  ## HANDLING PROVIDED CONSTRAINTS:
+  - If a specific **genre** is provided, use it exactly as specified
+  - If a specific **target audience** is provided, tailor everything to that audience
+  - If a specific **writing style guide** is provided, use it as the foundation but ensure it's audience-appropriate
+  - If a specific **image style guide** is provided, incorporate it into your plan
+  - If a specific **cover concept** is provided, use it as inspiration or directly if suitable
+  - If a specific **theme** is provided, make it central to your story
+  - If specific **key elements** are provided, incorporate them into your chapters and story
   
   ## EXAMPLES OF WRITING_STYLE_GUIDE BY AUDIENCE:
   - **Kids/Children**: "Use short sentences only. Few punctuation. Basic words like: cat, dog, go, stop, happy, sad. Repeat key phrases."
@@ -114,5 +128,6 @@ generate_book_plan_prompt: |
   ❌ **Using wrong chapter keys** like "images_needed" instead of "image_placeholders_needed"
   ❌ **Using wrong chapter keys** like "outline" instead of "summary"
   ❌ **Changing key names** - ALWAYS use: "title", "summary", "image_placeholders_needed"
+  ❌ **Ignoring provided constraints** - Always incorporate specific requirements when given
   
-  **REMEMBER: Output ONLY the JSON object. Simple doesn't mean boring - create an engaging story with clear, accessible language!**
+  **REMEMBER: Output ONLY the JSON object. Simple doesn't mean boring - create an engaging story with clear, accessible language that honors any provided constraints!**

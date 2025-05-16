@@ -43,8 +43,16 @@ def run_book_generation(app_config):
     current_run_config["user_book_idea"] = user_idea # Pass the main idea
     current_run_config["title"] = app_config.get("title")
     current_run_config["main_genre"] = app_config.get("main_genre")
-    current_run_config["writing_style_guide"] = app_config.get("writing_style") # Assumes BookPlan can take this
-    current_run_config["image_style_guide"] = app_config.get("image_style") # Assumes BookPlan can take this
+    
+    # Map streamlit parameter names to what the ideator expects
+    # Streamlit collects 'writing_style', but ideator expects 'writing_style_guide'
+    # Streamlit collects 'image_style', but ideator expects 'image_style_guide'
+    current_run_config["writing_style_guide"] = app_config.get("writing_style")
+    current_run_config["image_style_guide"] = app_config.get("image_style")
+    
+    # Copy these for backward compatibility (in case anything else uses the old names)
+    current_run_config["writing_style"] = app_config.get("writing_style")
+    current_run_config["image_style"] = app_config.get("image_style")
     
     current_run_config["enable_trend_finder"] = app_config.get("enable_trend_finder", False)
     current_run_config["enable_style_imitator"] = app_config.get("enable_style_imitator", False)

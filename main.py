@@ -115,16 +115,38 @@ def main_workflow(config: dict, user_book_idea: str):
 
     # 2. Idea Generation
     print("\nStep 2: Generating Book Plan...")
-    # Get provisional title from config if available
+    # Extract additional parameters from config for ideator
     title = config.get("title", None)
-    if title:
-        print(f"Using provisional title from config: {title}")
+    genre = config.get("main_genre", None)  # Streamlit uses 'main_genre'
+    target_audience = config.get("target_audience", None)
+    writing_style_guide = config.get("writing_style_guide", None)  # Streamlit uses 'writing_style'
+    image_style_guide = config.get("image_style_guide", None)  # Streamlit uses 'image_style'
+    cover_concept = config.get("cover_concept", None)
+    theme = config.get("theme", None)
+    key_elements = config.get("key_elements", None)
     
-    # Pass provisional title to the ideator agent
+    # Log what parameters are being used
+    if title:
+        print(f"Using provisional title: {title}")
+    if genre:
+        print(f"Using specified genre: {genre}")
+    if writing_style_guide:
+        print(f"Using specified writing style guide")
+    if image_style_guide:
+        print(f"Using specified image style guide")
+    
+    # Pass all available parameters to the ideator agent
     book_plan: BookPlan = ideator.generate_initial_idea(
         user_prompt=user_book_idea, 
         trend_analysis=trend_analysis_results,
-        title=title
+        title=title,
+        genre=genre,
+        target_audience=target_audience,
+        writing_style_guide=writing_style_guide,
+        image_style_guide=image_style_guide,
+        cover_concept=cover_concept,
+        theme=theme,
+        key_elements=key_elements
     )
     if not book_plan or not book_plan.chapters:
         print("Error: Failed to generate a valid book plan. Exiting.")

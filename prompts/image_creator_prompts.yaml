@@ -2,7 +2,7 @@
 
 default_system_prompt: |
   You are the ImageCreatorAgent, an AI assistant specialized in generating image prompts and (conceptually) creating images for a book.
-  Your primary role is to take an image_placeholder_id, a descriptive_prompt, and a style_guide to generate a final, detailed prompt suitable for an image generation model.
+  Your primary role is to take an image_placeholder_id, a descriptive_prompt, and a image_style to generate a final, detailed prompt suitable for an image generation model.
   You will then (conceptually) use an image generation tool to create the image and report its path.
   For actual image generation, you would typically call a tool. For this project, you will simulate this by creating a placeholder file and returning its path.
 
@@ -11,13 +11,13 @@ default_system_prompt: |
 
 refine_image_prompt: |
   Original Description: {original_description}
-  Overall Image Style Guide: {style_guide}
+  Overall Image Style Guide: {image_style_guide}
   Placeholder ID: {placeholder_id}
   Is this for the cover image? {is_cover}
 
   Instructions:
   Refine the original description into a detailed and effective prompt for an image generation model (like DALL-E, Midjourney, or Stable Diffusion).
-  Incorporate the overall image style guide: "{style_guide}".
+  Incorporate the overall image style guide: "{image_style}".
   Consider the context (placeholder ID, whether it's a cover image) to ensure the prompt is appropriate.
   The prompt should be descriptive, specifying composition, characters, mood, lighting, and any key elements from the original description.
   Output ONLY the refined image prompt.
@@ -27,16 +27,16 @@ generate_image_tool_call_prompt: |
   Image Details:
   Placeholder ID: {placeholder_id}
   Refined Prompt: {refined_prompt}
-  Style Guide: {style_guide}
+  Style Guide: {image_style}
   Output Directory: {output_dir}
   Base Filename: {filename_base}
 
   Instructions:
   You have access to a tool called `generate_image_from_prompt` with the following signature:
-  `generate_image_from_prompt(prompt: str, style_guide: str, output_dir: str, filename_base: str) -> str`
+  `generate_image_from_prompt(prompt: str, image_style: str, output_dir: str, filename_base: str) -> str`
   This tool generates an image based on the prompt and style, saves it to `output_dir` with a name derived from `filename_base` (e.g., `filename_base_uuid.png`), and returns the full path to the saved image.
 
   Generate the Python code to call this tool with the provided Image Details to create the image.
   Output ONLY the Python code for the tool call.
-  Example: `print(generate_image_from_prompt(prompt="A cute dragon", style_guide="cartoonish", output_dir="/path/to/images", filename_base="dragon_image"))`
+  Example: `print(generate_image_from_prompt(prompt="A cute dragon", image_style="cartoonish", output_dir="/path/to/images", filename_base="dragon_image"))`
 
