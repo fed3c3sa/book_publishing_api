@@ -41,7 +41,7 @@ def run_book_generation(app_config):
     # adapted or a new entry point created that takes these flags.
     current_run_config = base_config.copy() # Start with base config
     current_run_config["user_book_idea"] = user_idea # Pass the main idea
-    current_run_config["provisional_title"] = app_config.get("provisional_title")
+    current_run_config["title"] = app_config.get("title")
     current_run_config["main_genre"] = app_config.get("main_genre")
     current_run_config["writing_style_guide"] = app_config.get("writing_style") # Assumes BookPlan can take this
     current_run_config["image_style_guide"] = app_config.get("image_style") # Assumes BookPlan can take this
@@ -129,9 +129,9 @@ def main_ui():
         key="book_idea",
         value="Un drago verde che non sa sputare fuoco ma scopre di avere un talento per far crescere fiori magici."
     )
-    provisional_title = st.sidebar.text_input(
+    title = st.sidebar.text_input(
         "Titolo provvisorio del libro (opzionale)",
-        key="provisional_title",
+        key="title",
         value="Sparky, il Drago dei Fiori"
     )
     
@@ -218,7 +218,7 @@ def main_ui():
         # Collect inputs into a dictionary to pass to the generation function
         app_config_data = {
             "book_idea": book_idea,
-            "provisional_title": provisional_title,
+            "title": title,
             "main_genre": main_genre if main_genre != "Altro" else other_genre,
             "writing_style": writing_style,
             "image_style": image_style,
