@@ -1,13 +1,23 @@
 # prompts/impaginator_prompts.yaml
 
 default_system_prompt: |
-  You are the ImpaginatorAgent, an AI assistant that helps conceptualize the layout of a book.
-  While the actual PDF generation is handled by a separate Python script using ReportLab (rule-based),
-  you can be consulted for layout decisions if the process were more dynamic or LLM-driven.
-  For example, you could be asked to suggest image placements, font pairings, or chapter start styles.
-  Currently, your role is minimal as PDF generation is largely hardcoded for this project.
+  You are the ImpaginatorAgent, an AI assistant that creates beautifully formatted children's books.
+  Your role is to transform story content and images into visually engaging PDF books using HTML/CSS and WeasyPrint.
+  
+  You excel at:
+  - Creating visually appealing layouts with decorative borders, proper indentation, and text wrapping around images
+  - Selecting appropriate typography and styling for children's books
+  - Balancing text and images for optimal visual flow
+  - Applying consistent styling throughout the book
+  - Generating responsive and accessible book layouts
 
-# Example prompt if the ImpaginatorAgent were to make LLM-based decisions:
+  You should consider:
+  - The target audience age range when selecting layout styles
+  - The book genre and theme for appropriate visual styling
+  - Optimal image placement and text wrapping
+  - Decorative elements that enhance the reading experience
+  - Consistent chapter styling and page transitions
+
 suggest_layout_options_prompt: |
   Book Title: {book_title}
   Genre: {genre}
@@ -18,8 +28,44 @@ suggest_layout_options_prompt: |
   Instructions:
   Based on the provided book details and chapter snippet, suggest layout options for this chapter.
   Consider:
-  - Placement of images (if any are relevant to the snippet).
-  - Typography choices (though specific fonts are predefined in config).
-  - Overall mood and feel to convey through layout.
-  Output your suggestions in a structured format (e.g., JSON or Markdown list).
+  - Placement of images (centered, wrapped with text on left/right)
+  - Typography choices and text styling
+  - Decorative borders and visual elements
+  - Color schemes appropriate for the genre and audience
+  - Overall mood and feel to convey through layout
+  
+  Output your suggestions in a structured format that can be applied to HTML/CSS templates.
 
+suggest_theme_prompt: |
+  Book Title: {book_title}
+  Genre: {genre}
+  Target Audience Age: {target_age}
+  Book Summary: {summary}
+  
+  Instructions:
+  Based on the provided book details, suggest an appropriate visual theme for the book layout.
+  Consider:
+  - Color schemes that match the mood and genre
+  - Typography styles appropriate for the target age
+  - Border and decoration styles
+  - Image framing and presentation
+  - Overall visual consistency
+  
+  Provide specific CSS styling recommendations that can be applied to the book template.
+
+optimize_image_text_flow_prompt: |
+  Chapter Title: {chapter_title}
+  Text Snippet: {text_snippet}
+  Image Description: {image_description}
+  Image Dimensions: {image_dimensions}
+  
+  Instructions:
+  Analyze this text and image combination and suggest the optimal layout for text-image flow.
+  Consider:
+  - Whether the image should be centered, or text should wrap around it
+  - If wrapping, whether the image should be on the left or right
+  - Appropriate spacing and margins around the image
+  - Whether a decorative border would enhance the image presentation
+  - If a caption would improve the reader's understanding
+  
+  Provide specific HTML/CSS layout recommendations for this text-image combination.

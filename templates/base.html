@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        @page {
+            size: {{ page_size }};
+            margin: {{ margin }}cm;
+            @top-center {
+                content: {% if show_page_numbers %}counter(page){% else %}''{% endif %};
+                font-family: {{ font_family }};
+                font-size: 10pt;
+            }
+        }
+        body {
+            font-family: {{ font_family }};
+            font-size: {{ font_size }}pt;
+            line-height: 1.5;
+            color: {{ text_color }};
+            background-color: {{ background_color }};
+        }
+        .book-title {
+            font-size: {{ title_font_size }}pt;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 30%;
+            color: {{ title_color }};
+        }
+        .cover-image {
+            display: block;
+            margin: 2cm auto;
+            max-width: 80%;
+            max-height: 50%;
+        }
+        .chapter {
+            page-break-before: always;
+        }
+        .chapter-title {
+            font-size: {{ chapter_title_font_size }}pt;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 2cm;
+            margin-bottom: 1.5cm;
+            color: {{ chapter_title_color }};
+            border-bottom: 2px solid {{ chapter_title_color }};
+            padding-bottom: 0.5cm;
+        }
+        .paragraph {
+            text-indent: 1.5em;
+            margin-bottom: 1em;
+            text-align: justify;
+        }
+        .image-container {
+            margin: 1.5cm auto;
+            text-align: center;
+        }
+        .image-container.float-right {
+            float: right;
+            margin: 0 0 1em 1em;
+            max-width: 40%;
+        }
+        .image-container.float-left {
+            float: left;
+            margin: 0 1em 1em 0;
+            max-width: 40%;
+        }
+        .image {
+            max-width: 100%;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .image-caption {
+            font-style: italic;
+            font-size: 0.9em;
+            margin-top: 0.5em;
+            text-align: center;
+        }
+        .page-break {
+            page-break-after: always;
+        }
+        .decorative-border {
+            border: {{ border_width }}px {{ border_style }} {{ border_color }};
+            padding: 1cm;
+            margin: 0.5cm 0;
+            border-radius: {{ border_radius }}px;
+        }
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+        {% block additional_styles %}{% endblock %}
+    </style>
+</head>
+<body>
+    {% block content %}{% endblock %}
+</body>
+</html>

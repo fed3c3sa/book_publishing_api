@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block additional_styles %}
+    {% if theme == "children" %}
+    /* Children's book theme */
+    body {
+        background-color: #fffaf0;
+    }
+    .chapter-title {
+        font-family: 'Comic Sans MS', cursive, sans-serif;
+        color: #ff6b6b;
+    }
+    .decorative-border {
+        border: 3px dashed #ffc107;
+        background-color: #fff8e1;
+    }
+    {% elif theme == "fantasy" %}
+    /* Fantasy book theme */
+    body {
+        background-color: #f5f5f5;
+    }
+    .chapter-title {
+        font-family: 'Palatino Linotype', serif;
+        color: #4b0082;
+    }
+    .decorative-border {
+        border: 2px double #8a2be2;
+        background-color: #f8f4ff;
+    }
+    {% elif theme == "adventure" %}
+    /* Adventure book theme */
+    body {
+        background-color: #f9f5eb;
+    }
+    .chapter-title {
+        font-family: 'Georgia', serif;
+        color: #3a5a40;
+    }
+    .decorative-border {
+        border: 3px solid #588157;
+        background-color: #f9f5eb;
+    }
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <!-- Title Page -->
+    <div class="book-title">{{ title }}</div>
+    
+    {% if cover_image_path %}
+    <img src="{{ cover_image_path }}" alt="Cover Image" class="cover-image">
+    {% endif %}
+    
+    <div class="page-break"></div>
+    
+    <!-- Chapters -->
+    {% for chapter in chapters %}
+    <div class="chapter">
+        <div class="chapter-title">{{ chapter.title }}</div>
+        
+        {% for content_block in chapter.content_blocks %}
+            {% if content_block.type == 'text' %}
+                <div class="paragraph{% if content_block.decorative_border %} decorative-border{% endif %}">
+                    {{ content_block.content }}
+                </div>
+            {% elif content_block.type == 'image' %}
+                <div class="image-container{% if content_block.float %} float-{{ content_block.float }}{% endif %}">
+                    <img src="{{ content_block.path }}" alt="{{ content_block.alt_text }}" class="image">
+                    {% if content_block.caption %}
+                    <div class="image-caption">{{ content_block.caption }}</div>
+                    {% endif %}
+                </div>
+                {% if content_block.float %}
+                <div class="clearfix"></div>
+                {% endif %}
+            {% elif content_block.type == 'text_with_image' %}
+                <div class="clearfix">
+                    <div class="image-container float-{{ content_block.image_position|default('right') }}">
+                        <img src="{{ content_block.image_path }}" alt="{{ content_block.image_alt_text }}" class="image">
+                        {% if content_block.image_caption %}
+                        <div class="image-caption">{{ content_block.image_caption }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="paragraph">
+                        {{ content_block.text_content }}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endfor %}
+{% endblock %}
