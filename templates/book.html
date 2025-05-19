@@ -1,111 +1,120 @@
 {% extends "base.html" %}
 
 {% block additional_styles %}
+    body {
+        /* {{ background_color }} is set in base.html and should be controlled by your variable */
+    }
+
     {% if theme == "children" %}
     /* Children's book theme - Playful and Bright */
-    body {
-        background-color: #fffcf0; /* Softer than floralwhite */
-        /* Consider a very subtle background pattern if the renderer supports it:
-           background-image: url('path/to/light_pattern.png');
-        */
-    }
     .book-title {
-        font-family: 'Comic Sans MS', 'Chalkboard SE', 'Kristen ITC', cursive, sans-serif; /* Playful fonts */
-        color: {{ title_color|default('#e74c3c') }}; /* Cheerful red */
+        font-family: 'Comic Sans MS', 'Chalkboard SE', 'Kristen ITC', cursive, sans-serif;
+        color: {{ title_color|default('#e74c3c') }};
     }
     .chapter-title {
-        font-family: 'Comic Sans MS', 'Chalkboard SE', 'Kristen ITC', cursive, sans-serif; /* Consistent playful font */
-        color: {{ chapter_title_color|default('#ff6b6b') }}; /* Bright pink/coral */
-        border-bottom: none; /* Remove default border */
-        padding-bottom: 0.5cm;
-        position: relative; /* For pseudo-elements */
+        font-family: 'Comic Sans MS', 'Chalkboard SE', 'Kristen ITC', cursive, sans-serif;
+        color: {{ chapter_title_color|default('#ff6b6b') }};
+        border-bottom: 3px dotted {{ chapter_title_color|default('#ff6b6b') }};
+        padding-bottom: 0.4cm;
+        margin-bottom: 1.2cm;
     }
-    .chapter-title::after { /* Fun underline effect */
-        content: '';
-        display: block;
-        width: 100px; /* Adjust width as needed */
-        height: 4px;
-        background-color: {{ chapter_title_color|default('#ff6b6b') }};
-        border-radius: 2px;
-        margin: 0.2cm auto 0 auto; /* Center the underline */
+    .chapter-title::before, .chapter-title::after { /* Sparkles */
+        content: '✧';
+        font-size: 0.8em;
+        color: {{ chapter_title_color|default('#ff9a00') }};
+        padding: 0 5px;
     }
     .decorative-border {
-        border: {{ border_width|default(3) }}px dashed {{ border_color|default('#f7b731') }}; /* Playful orange dash */
-        background-color: #fff9e6; /* Very light yellow */
-        border-radius: {{ border_radius|default(15) }}px; /* More rounded */
-        padding: 0.6cm;
+        border: {{ border_width|default(3) }}px dashed {{ border_color|default('#f7b731') }};
+        background-color: transparent;
+        border-radius: {{ border_radius|default(15) }}px;
+        padding: 0.5cm;
     }
-    .image {
-        border: 3px solid #fdebd0; /* Light, playful border around images */
+    .image, .cover-image { /* Cool border for children's theme images */
+        border: 5px solid {{ border_color|default('#ffdd77') }}; /* Cheerful yellow border */
+        padding: 4px; /* Padding creates an inner "matting" effect */
+        background-color: {{ background_color|default('#FFFFFF') }}; /* Image sits on page background, padding shows border color */
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     }
 
     {% elif theme == "fantasy" %}
     /* Fantasy book theme - Magical and Whimsical */
-    body {
-        background-color: #f4f0f8; /* Light lavender tint */
-    }
     .book-title {
-        font-family: 'Luminari', 'Papyrus', 'Georgia Pro', serif; /* Whimsical/Fantasy fonts */
-        color: {{ title_color|default('#5e3370') }}; /* Deep purple */
+        font-family: 'Luminari', 'Papyrus', 'Times New Roman', serif;
+        color: {{ title_color|default('#5D3A9B') }};
     }
     .chapter-title {
-        font-family: 'Luminari', 'Papyrus', 'Georgia Pro', serif;
-        color: {{ chapter_title_color|default('#4b0082') }}; /* Indigo */
-        border-bottom: 2px dotted {{ chapter_title_color|default('#8a2be2') }}; /* Ornate dotted border */
-        padding-bottom: 0.4cm;
-        background: linear-gradient(to bottom, transparent 0%, #f8f4ff 100%); /* Subtle gradient background */
+        font-family: 'Luminari', 'Papyrus', 'Times New Roman', serif;
+        color: {{ chapter_title_color|default('#4b0082') }};
+        border-top: 1px solid {{ chapter_title_color|default('#8a2be2') }};
+        border-bottom: 1px solid {{ chapter_title_color|default('#8a2be2') }};
+        padding-top: 0.3cm;
+        padding-bottom: 0.3cm;
+        letter-spacing: 0.5px;
+    }
+    .chapter-title::before { /* Scroll Icon */
+        content: "📜 ";
+        font-size: 0.7em;
+        opacity: 0.7;
+        padding-right: 5px;
     }
     .decorative-border {
-        border: {{ border_width|default(2) }}px double {{ border_color|default('#7d5bbe') }}; /* Elegant purple double border */
-        background-color: #fdfaff; /* Very light purple */
+        border: {{ border_width|default(2) }}px double {{ border_color|default('#7d5bbe') }};
+        background-color: transparent;
         border-radius: {{ border_radius|default(8) }}px;
-        box-shadow: 0 0 10px rgba(125, 91, 190, 0.1);
+        box-shadow: 0 0 8px rgba(125, 91, 190, 0.2);
     }
-    .image {
-        box-shadow: 0 5px 10px rgba(75, 0, 130, 0.2); /* Purple-ish shadow */
+    .image, .cover-image { /* Cool border for fantasy theme images */
+        border: 3px groove {{ border_color|default('#ab87ff') }}; /* Grooved border for a subtle 3D effect */
+        padding: 5px;
+        background-color: {{ background_color|default('#FFFFFF') }};
+        border-radius: 10px;
+        box-shadow: 0 0 10px 2px {{ chapter_title_color|default('rgba(138, 43, 226, 0.4)') }}; /* Magical glow */
     }
 
     {% elif theme == "adventure" %}
     /* Adventure book theme - Bold and Exciting */
-    body {
-        background-color: #fdfaf6; /* Off-white, slightly warm */
-    }
     .book-title {
-        font-family: 'Copperplate', 'Impact', 'Franklin Gothic Medium', sans-serif; /* Bold, adventurous fonts */
-        color: {{ title_color|default('#c0392b') }}; /* Strong red */
+        font-family: 'Copperplate', 'Impact', 'Arial Black', sans-serif;
+        color: {{ title_color|default('#b33939') }};
     }
     .chapter-title {
-        font-family: 'Copperplate', 'Impact', 'Franklin Gothic Medium', sans-serif;
-        color: {{ chapter_title_color|default('#3a5a40') }}; /* Dark green */
-        border-bottom: none;
-        border-top: 3px solid {{ chapter_title_color|default('#588157') }};
-        border-bottom: 3px solid {{ chapter_title_color|default('#588157') }};
-        padding-top: 0.4cm;
-        padding-bottom: 0.4cm;
-        letter-spacing: 1px; /* Add some spacing for a bolder look */
+        font-family: 'Copperplate', 'Impact', 'Arial Black', sans-serif;
+        color: {{ chapter_title_color|default('#2c3e50') }};
+        border-bottom: 4px solid {{ chapter_title_color|default('#784F32') }}; /* Darker Brown */
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+    }
+    .chapter-title::after { /* Compass Icon */
+        content: " 🧭";
+        font-size: 0.7em;
+        opacity: 0.8;
+        padding-left: 5px;
     }
     .decorative-border {
-        border: {{ border_width|default(4) }}px solid {{ border_color|default('#8c5e3c') }}; /* Earthy brown, thicker border */
-        background-color: #f9f5eb; /* Light beige */
-        border-radius: {{ border_radius|default(5) }}px; /* Less rounded, more rugged */
+        border: {{ border_width|default(4) }}px solid {{ border_color|default('#8c5e3c') }};
+        background-color: transparent;
+        border-radius: {{ border_radius|default(4) }}px;
     }
-    .image {
-        border: 4px solid #d4a373; /* Earthy border for images */
+    .image, .cover-image { /* Cool border for adventure theme images */
+        border: 6px ridge {{ border_color|default('#8B4513') }}; /* SaddleBrown - like a heavier wooden frame */
+        padding: 3px;
+        background-color: {{ background_color|default('#FFFFFF') }};
+        border-radius: 5px;
+        box-shadow: 2px 2px 7px rgba(0,0,0,0.25);
     }
+
     {% endif %}
-
-    /* Ensure specific font families are available or use web safe fonts */
-    /* Example: @import url('https://fonts.googleapis.com/css2?family=YourKidFont&display=swap'); */
-    /* body { font-family: 'YourKidFont', {{ font_family }}; } */
-
 {% endblock %}
 
 {% block content %}
-    <div class="book-title">{{ title }}</div>
-
-    {% if cover_image_path %}
-    <img src="{{ cover_image_path }}" alt="Cover Image" class="cover-image">
-    {% endif %}
+    <div class="title-page-container">
+        <div class="book-title">{{ title }}</div>
+        {% if cover_image_path %}
+        <img src="{{ cover_image_path }}" alt="Cover Image" class="cover-image">
+        {% endif %}
+    </div>
 
     <div class="page-break"></div>
 
@@ -129,7 +138,8 @@
                 <div class="clearfix"></div>
                 {% endif %}
             {% elif content_block.type == 'text_with_image' %}
-                <div class="text-with-image-block clearfix"> <div class="image-container float-{{ content_block.image_position|default('right') }}">
+                <div class="text-with-image-block clearfix">
+                    <div class="image-container float-{{ content_block.image_position|default('right') }}">
                         <img src="{{ content_block.image_path }}" alt="{{ content_block.image_alt_text }}" class="image">
                         {% if content_block.image_caption %}
                         <div class="image-caption">{{ content_block.image_caption }}</div>

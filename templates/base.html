@@ -7,109 +7,129 @@
     <style>
         @page {
             size: {{ page_size }};
-            margin: {{ margin }}cm; /* Consider reducing {{ margin }} value if it's too large, e.g., 1.5cm or 2cm */
-            @top-center {
+            margin: {{ margin }}cm;
+            @bottom-center {
                 content: {% if show_page_numbers %}"Page " counter(page){% else %}''{% endif %};
-                font-family: {{ font_family }}, Arial, sans-serif; /* Added fallback fonts */
-                font-size: 9pt; /* Slightly smaller for a cleaner footer/header */
-                color: #666; /* Softer color for page numbers */
+                font-family: {{ font_family }}, Arial, sans-serif;
+                font-size: 9pt;
+                color: #555;
+                vertical-align: top;
             }
         }
         body {
-            font-family: {{ font_family }}, Verdana, Geneva, sans-serif; /* Added fallback fonts */
+            font-family: {{ font_family }}, "Helvetica Neue", Helvetica, Arial, sans-serif;
             font-size: {{ font_size }}pt;
-            line-height: 1.55; /* Slightly adjusted for readability and space */
+            line-height: 1.5;
             color: {{ text_color }};
-            background-color: {{ background_color }};
-            /* text-align: left; /* Consider for younger kids as justify can create large gaps. Or keep justify if preferred. */
+            background-color: {{ background_color }}; /* Ensure this is set to #FFFFFF or your desired page color */
+            -webkit-hyphens: auto;
+            -moz-hyphens: auto;
+            -ms-hyphens: auto;
+            hyphens: auto;
+        }
+        .title-page-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+            text-align: center;
         }
         .book-title {
-            font-size: {{ title_font_size }}pt; /* Ensure this is large enough, e.g., 36pt or more */
+            font-size: {{ title_font_size }}pt;
             font-weight: bold;
-            text-align: center;
-            margin-top: 20%; /* Reduced from 30% to lessen blank space */
-            margin-bottom: 1cm; /* Added bottom margin for spacing before cover image */
             color: {{ title_color }};
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            margin-top: 0;
+            margin-bottom: 0.5cm;
         }
-        .cover-image {
-            display: block;
-            margin: 1cm auto 2cm auto; /* Reduced top margin */
-            max-width: 75%; /* Slightly reduced if you want more text space around, or keep at 80% */
-            max-height: 55%; /* Adjusted slightly */
-            height: auto; /* Ensures aspect ratio is maintained */
-            object-fit: contain; /* Ensures entire image is visible within bounds */
-            border-radius: 10px; /* Softer, more modern rounded corners */
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15); /* Enhanced shadow */
+        .cover-image { /* For centering the main cover image */
+            display: block; /* Essential for margin: auto to work for centering */
+            margin: 0.5cm auto 1cm auto; /* Top, Right/Left (auto for center), Bottom */
+            max-width: 60%;
+            max-height: 45vh;
+            height: auto;
+            object-fit: contain;
+            border-radius: 10px;
+            /* Specific border styling will be in themes for this class too if needed, or a general .image style can apply */
         }
         .chapter {
             page-break-before: always;
-            padding-top: 0.5cm; /* Add a little space at the top of the chapter page, if not covered by header margin */
+            padding-top: 0.2cm;
         }
         .chapter-title {
-            font-size: {{ chapter_title_font_size }}pt; /* Ensure this is impactful, e.g., 24pt or more */
+            font-size: {{ chapter_title_font_size }}pt;
             font-weight: bold;
             text-align: center;
-            margin-top: 1cm; /* Reduced from 2cm */
-            margin-bottom: 1cm; /* Reduced from 1.5cm */
+            margin-top: 0.5cm;
+            margin-bottom: 1cm;
             color: {{ chapter_title_color }};
-            padding-bottom: 0.3cm; /* Reduced from 0.5cm */
-            border-bottom: 3px solid {{ chapter_title_color }}; /* Made border slightly thicker */
-            /* Consider more creative borders in theme-specific styles */
+            padding-bottom: 0.3cm;
         }
         .paragraph {
             text-indent: 1.5em;
-            margin-bottom: 0.8em; /* Reduced from 1em to tighten paragraphs */
-            text-align: justify; /* Keep if desired, but be mindful of gaps for young readers */
-            line-height: 1.6; /* Ensure good readability within paragraphs */
+            margin-bottom: 0.7em;
+            text-align: justify !important;
+            text-align-last: left;
+            line-height: 1.6;
         }
-        .image-container {
-            margin: 1cm auto; /* Reduced from 1.5cm */
-            text-align: center;
+        .image-container { /* For images within chapters that are NOT floated */
+            text-align: center; /* This centers inline-block or inline images */
+            margin: 0.8cm auto;
+        }
+        .image-container .image { /* If the image itself is display:block, it needs margin:auto */
+             margin-left: auto;
+             margin-right: auto;
         }
         .image-container.float-right {
             float: right;
-            margin: 0.2cm 0 0.5cm 0.8cm; /* Adjusted margins for tighter wrap */
-            max-width: 45%; /* Slightly increased for impact, adjust as needed */
+            margin: 0.1cm 0 0.4cm 0.7cm;
+            max-width: 48%;
+            text-align: left; /* Reset text-align for floated containers */
+        }
+        .image-container.float-right .image {
+            margin-left: 0; /* Override auto margins for floated images */
+            margin-right: 0;
         }
         .image-container.float-left {
             float: left;
-            margin: 0.2cm 0.8cm 0.5cm 0; /* Adjusted margins for tighter wrap */
-            max-width: 45%; /* Slightly increased for impact, adjust as needed */
+            margin: 0.1cm 0.7cm 0.4cm 0;
+            max-width: 48%;
+            text-align: left; /* Reset text-align for floated containers */
         }
-        .image {
+         .image-container.float-left .image {
+            margin-left: 0; /* Override auto margins for floated images */
+            margin-right: 0;
+        }
+        .image { /* General image styling */
             max-width: 100%;
-            height: auto; /* Crucial for responsive images */
-            border-radius: 8px; /* Consistent rounded corners */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Softer, more modern shadow */
-            display: block; /* Prevents extra space below image if it's inline */
+            height: auto;
+            display: block; /* Make images block elements by default */
+            border-radius: 6px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+            /* Basic border, themes will enhance this */
+            border: 1px solid #ccc; /* A very basic default border, themes should override */
         }
         .image-caption {
             font-style: italic;
-            font-size: 0.85em; /* Slightly smaller for distinction */
-            margin-top: 0.4em; /* Reduced margin */
+            font-size: 0.8em;
+            margin-top: 0.3em;
             text-align: center;
-            color: #555; /* Softer color for captions */
+            color: #444;
         }
         .page-break {
             page-break-after: always;
         }
         .decorative-border {
             border: {{ border_width }}px {{ border_style }} {{ border_color }};
-            padding: 0.8cm; /* Reduced from 1cm */
-            margin: 0.8cm 0; /* Adjusted margin */
-            border-radius: {{ border_radius }}px; /* e.g. 10px or 15px for a softer look */
-            /* Background color for decorative border will be handled in themes */
+            padding: 0.7cm;
+            margin: 0.7cm auto;
+            border-radius: {{ border_radius }}px;
         }
         .clearfix::after {
             content: "";
             clear: both;
             display: table;
-        }
-
-        /* Styles for text_with_image block */
-        .text-with-image-block .paragraph {
-             /* Allow text to flow naturally around the floated image container */
         }
 
         {% block additional_styles %}{% endblock %}
