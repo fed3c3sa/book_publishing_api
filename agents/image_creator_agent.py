@@ -1,15 +1,11 @@
 # agents/image_creator_agent.py
 from .base_agent import BaseBookAgent
-from smolagents import InferenceClientModel # Ensure InferenceClientModel is imported for type hinting
+from smolagents import InferenceClientModel
 from typing import List, Dict, Any, Optional
 from data_models.book_plan import BookPlan
-from data_models.story_content import StoryContent, ImagePlaceholder
+from data_models.story_content import StoryContent
 from data_models.generated_image import GeneratedImage
 import os
-import uuid
-import requests
-from PIL import Image as PilImage, ImageDraw, ImageFont
-from openai import OpenAI
 import time
 
 class ImageCreatorAgent(BaseBookAgent):
@@ -24,11 +20,13 @@ class ImageCreatorAgent(BaseBookAgent):
             project_id (str): The unique identifier for the current book project.
             output_dir (str): The base directory where images for this project will be saved.
             tools (List[Any], optional): List of tools for the agent. Defaults to an empty list.
-            **kwargs: Additional arguments for CodeAgent.
+            **kwargs: Additional arguments for BaseBookAgent.
         """
+        # Ensure tools is a list, even if None is passed
         agent_tools = tools if tools is not None else []
+        
         super().__init__(
-            model=model, # Pass the model instance directly
+            model=model,
             tools=agent_tools,
             system_prompt_path="/home/federico/Desktop/personal/book_publishing_api/prompts/image_creator_prompts.yaml",
             **kwargs
@@ -36,137 +34,6 @@ class ImageCreatorAgent(BaseBookAgent):
         self.project_id = project_id
         self.project_output_dir = os.path.join(output_dir, project_id, "images")
         os.makedirs(self.project_output_dir, exist_ok=True)
-        
-        # Initialize OpenAI client
-        # Make sure to set OPENAI_API_KEY environment variable
-        self.openai_client = OpenAI(
-            api_key=os.getenv("OPENAI_API_KEY")
-        )
-        
-        # Configuration for DALL-E
-        self.dalle_model = "dall-e-3"  # Options: "dall-e-2" or "dall-e-3"
-        self.dalle_size = "1024x1024"  # Options: "256x256", "512x512", "1024x1024" for DALL-E 2
-                                       # or "1024x1024", "1024x1792", "1792x1024" for DALL-E 3
-        self.dalle_quality = "standard"  # Options: "standard" or "hd" (DALL-E 3 only)
-        self.dalle_style = "natural"     # Options: "natural" or "vivid" (DALL-E 3 only)
-
-    def _resize_image_for_pdf(self, image_path: str, is_cover: bool = False):
-        """
-        Resize image to appropriate dimensions for PDF layout.
-        
-        Args:
-            image_path (str): Path to the image file
-            is_cover (bool): True if this is a cover image
-        """
-        try:
-            with PilImage.open(image_path) as img:
-                # Define maximum dimensions based on PDF layout
-                # These values are in pixels and should fit well in typical PDF layouts
-                if is_cover:
-                    # Cover images can be larger
-                    max_width = 800
-                    max_height = 1000
-                else:
-                    # Chapter images should be smaller to fit in the text flow
-                    max_width = 600
-                    max_height = 400
-                
-                # Calculate aspect ratio
-                aspect_ratio = img.width / img.height
-                
-                # Determine new dimensions while maintaining aspect ratio
-                if aspect_ratio > 1:  # Landscape
-                    new_width = min(max_width, img.width)
-                    new_height = int(new_width / aspect_ratio)
-                    if new_height > max_height:
-                        new_height = max_height
-                        new_width = int(new_height * aspect_ratio)
-                else:  # Portrait or square
-                    new_height = min(max_height, img.height)
-                    new_width = int(new_height * aspect_ratio)
-                    if new_width > max_width:
-                        new_width = max_width
-                        new_height = int(new_width / aspect_ratio)
-                
-                # Only resize if the image is larger than the target dimensions
-                if img.width > new_width or img.height > new_height:
-                    # Use high-quality resampling
-                    resized_img = img.resize((new_width, new_height), PilImage.Resampling.LANCZOS)
-                    resized_img.save(image_path, "PNG", quality=95, optimize=True)
-                    print(f"ImageCreatorAgent: Resized image from {img.width}x{img.height} to {new_width}x{new_height}")
-                else:
-                    print(f"ImageCreatorAgent: Image size {img.width}x{img.height} is already appropriate, no resizing needed")
-                    
-        except Exception as e:
-            print(f"ImageCreatorAgent: Error resizing image {image_path}: {e}")
-
-    def _generate_single_image(self, placeholder_id: str, prompt: str, style_guide: str, is_cover: bool = False) -> Optional[GeneratedImage]:
-        """
-        Generates a single image using OpenAI DALL-E.
-
-        Args:
-            placeholder_id (str): The ID for this image (e.g., "chapter1_image1", "cover").
-            prompt (str): The prompt for image generation.
-            style_guide (str): The style guide for the image.
-            is_cover (bool): True if this is the cover image.
-
-        Returns:
-            Optional[GeneratedImage]: GeneratedImage object or None if generation failed.
-        """
-        filename_base = placeholder_id.replace(" ", "_").lower()
-        unique_suffix = uuid.uuid4().hex[:6]
-        image_filename = f"{filename_base}_{unique_suffix}.png"
-        output_path = os.path.join(self.project_output_dir, image_filename)
-
-        # Combine prompt with style guide for better results
-        enhanced_prompt = f"{prompt}. Style: {style_guide}"
-        
-        # Limit prompt length (DALL-E has a 4000 character limit)
-        if len(enhanced_prompt) > 4000:
-            enhanced_prompt = enhanced_prompt[:3997] + "..."
-        
-        print(f"ImageCreatorAgent: Generating image for ID '{placeholder_id}' with DALL-E")
-        print(f"Enhanced prompt: {enhanced_prompt}")
-
-        try:
-            # Generate image with DALL-E
-            response = self.openai_client.images.generate(
-                model=self.dalle_model,
-                prompt=enhanced_prompt,
-                size=self.dalle_size,
-                quality=self.dalle_quality if self.dalle_model == "dall-e-3" else None,
-                style=self.dalle_style if self.dalle_model == "dall-e-3" else None,
-                n=1,  # Number of images to generate
-            )
-            
-            # Get the image URL from the response
-            image_url = response.data[0].url
-            
-            # Download the image
-            image_response = requests.get(image_url, timeout=30)
-            image_response.raise_for_status()
-            
-            # Save the image
-            with open(output_path, 'wb') as f:
-                f.write(image_response.content)
-            
-            # Resize image for PDF compatibility
-            self._resize_image_for_pdf(output_path, is_cover)
-            
-            # Verify the image was saved correctly
-            try:
-                with PilImage.open(output_path) as img:
-                    img.verify()
-            except Exception as e:
-                print(f"ImageCreatorAgent: Warning - Image verification failed for '{placeholder_id}': {e}")
-            
-            print(f"ImageCreatorAgent: Successfully generated image for '{placeholder_id}' at {output_path}")
-            return GeneratedImage(placeholder_id=placeholder_id, prompt_used=enhanced_prompt, image_path=output_path)
-            
-        except Exception as e:
-            print(f"ImageCreatorAgent: Error generating image for '{placeholder_id}': {e}")
-            print(f"ImageCreatorAgent: Skipping image generation for '{placeholder_id}' - placeholder will be removed from text")
-            return None
 
     def create_images(self, story_content: StoryContent, book_plan: BookPlan) -> List[GeneratedImage]:
         """
@@ -181,6 +48,17 @@ class ImageCreatorAgent(BaseBookAgent):
         """
         generated_images = []
         image_style = book_plan.image_style_guide
+        
+        # Find the image generation tool from the tools list
+        image_generator = None
+        for tool in self.tools:
+            if tool == "image_generator":
+                image_generator = tool
+                break
+        
+        if not image_generator:
+            print("ImageCreatorAgent: Error - Image generation tool not found in tools list")
+            return []
 
         # Generate chapter images
         for i, placeholder in enumerate(story_content.all_image_placeholders):
@@ -190,9 +68,22 @@ class ImageCreatorAgent(BaseBookAgent):
             if i > 0:
                 time.sleep(1)
             
-            img = self._generate_single_image(placeholder.id, placeholder.description, image_style)
-            if img:
-                generated_images.append(img)
+            # Use the agent to generate the image
+            result = self.run(
+                f"Generate an image for this description: {placeholder.description}. Style: {image_style}",
+                additional_args={
+                    'image_id': placeholder.id,
+                    'is_cover': False
+                }
+            )
+            
+            # Check if image generation was successful
+            if isinstance(result, str) and os.path.exists(result):
+                generated_images.append(GeneratedImage(
+                    placeholder_id=placeholder.id, 
+                    prompt_used=f"{placeholder.description}. Style: {image_style}", 
+                    image_path=result
+                ))
             else:
                 print(f"ImageCreatorAgent: Skipping failed image generation for placeholder '{placeholder.id}'")
         
@@ -203,42 +94,24 @@ class ImageCreatorAgent(BaseBookAgent):
         if story_content.all_image_placeholders:
             time.sleep(1)
         
-        # Use a larger size for cover if using DALL-E 3
-        original_size = self.dalle_size
-        is_cover = True  # This is the cover image generation
-        if is_cover and self.dalle_model == "dall-e-3":
-            self.dalle_size = "1024x1792"  # Portrait orientation for book cover
+        # Generate cover image
+        cover_result = self.run(
+            f"Generate a book cover image for this concept: {book_plan.cover_concept}. Style: {image_style}",
+            additional_args={
+                'image_id': 'cover',
+                'is_cover': True
+            }
+        )
         
-        cover_img = self._generate_single_image("cover", book_plan.cover_concept, image_style, is_cover=True)
-        
-        # Restore original size setting
-        self.dalle_size = original_size
-        
-        if cover_img:
-            generated_images.append(cover_img)
+        # Check if cover image generation was successful
+        if isinstance(cover_result, str) and os.path.exists(cover_result):
+            generated_images.append(GeneratedImage(
+                placeholder_id="cover", 
+                prompt_used=f"{book_plan.cover_concept}. Style: {image_style}", 
+                image_path=cover_result
+            ))
         else:
             print(f"ImageCreatorAgent: Warning: Cover image generation failed")
             
         print(f"ImageCreatorAgent: Finished image generation. Total images successfully created: {len(generated_images)}")
         return generated_images
-
-    def set_dalle_configuration(self, model: str = None, size: str = None, quality: str = None, style: str = None):
-        """
-        Update DALL-E configuration settings.
-        
-        Args:
-            model (str): DALL-E model to use ("dall-e-2" or "dall-e-3")
-            size (str): Image size
-            quality (str): Image quality ("standard" or "hd", DALL-E 3 only)
-            style (str): Image style ("natural" or "vivid", DALL-E 3 only)
-        """
-        if model:
-            self.dalle_model = model
-        if size:
-            self.dalle_size = size
-        if quality:
-            self.dalle_quality = quality
-        if style:
-            self.dalle_style = style
-        
-        print(f"DALL-E configuration updated: model={self.dalle_model}, size={self.dalle_size}, quality={self.dalle_quality}, style={self.dalle_style}")
