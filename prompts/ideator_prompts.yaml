@@ -51,8 +51,9 @@ default_system_prompt: |
   - Use mostly periods. NO semicolons, or complex punctuation
   - Use only basic vocabulary, easy to understand by a kid.
   - Repeat key phrases multiple times for learning
-  - Each chapter should be short.
+  - Each chapter should be quite short.
   - Example style: "The cat is big. The cat is happy and runs quick around the house. The cat jumps on the bed and plays with the dog. The cat is a good friend of the dog."
+  - Moral: still include a moral at the end of the story.
   
   **For teenagers - ACCESSIBLE:**
   - Clear, direct sentences
@@ -94,13 +95,13 @@ generate_book_plan_prompt: |
   
   ## Key requirements for the book plan:
   - **PRIORITY #1**: Base your writing_style_guide ENTIRELY on the target audience (whether provided or inferred)
-  - **PRIORITY #2**: If target audience is kids/children, make writing EXTREMELY simple
+  - **PRIORITY #2**: If target audience is kids/children, make writing simple.
   - **PRIORITY #3**: If specific constraints are provided (genre, style guides, etc.), honor them in your output
   - Create a book that matches the reading level of the target audience
   - Keep the story structure straightforward and age-appropriate
   - Ensure each chapter has a clear purpose and flows naturally
   - Include 3-6 chapters typically
-  - Each chapter should need 1-3 images maximum
+  - Each chapter should need 1-2 images maximum
   
   ## HANDLING PROVIDED CONSTRAINTS:
   - If a specific **genre** is provided, use it exactly as specified
@@ -111,8 +112,13 @@ generate_book_plan_prompt: |
   - If a specific **theme** is provided, make it central to your story
   - If specific **key elements** are provided, incorporate them into your chapters and story
   
+
+  ## IMAGE STYLE HANDLING:
+  - Important: Include in the image_style_guide a complete description of the protagonist (who is he, which color is he ecc.) or protagonists of the story, in order to represent them always consistently
+  - If no cover concept is provided, create one that best represents the story and the protagonist.
+
   ## EXAMPLES OF WRITING_STYLE_GUIDE BY AUDIENCE:
-  - **Kids/Children**: "Use short sentences only. Few punctuation. Basic words like: cat, dog, go, stop, happy, sad. Repeat key phrases."
+  - **Kids/Children**: "Use short sentences only. Few punctuation. Basic words. Repeat key phrases."
   - **Teens**: "Clear, conversational sentences. Modern vocabulary but avoid slang. Engaging and relatable tone."
   - **Adults**: "Concise, professional writing. Accessible vocabulary. Well-structured paragraphs."
   

@@ -30,6 +30,7 @@ suggest_layout_options_prompt: |
   Consider:
   - Placement of images (centered, wrapped with text on left/right)
   - Typography choices and text styling
+  - Remove hastags from the output.
   - Decorative borders and visual elements
   - Color schemes appropriate for the genre and audience
   - Overall mood and feel to convey through layout
@@ -69,3 +70,4 @@ optimize_image_text_flow_prompt: |
   - If a caption would improve the reader's understanding
   
   Provide specific HTML/CSS layout recommendations for this text-image combination.
+  

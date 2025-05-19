@@ -5,6 +5,29 @@
         /* {{ background_color }} is set in base.html and should be controlled by your variable */
     }
 
+    /* General style to make the cover image square and larger */
+    .cover-image {
+        display: block; /* Ensures the image is a block element, allowing for auto margins */
+        width: 450px;   /* Increased width for a larger cover image. Adjust as needed. */
+        height: 450px;  /* Increased height to match width for a square. */
+                        /* Alternatively, if using width and aspect-ratio:
+                           width: 450px;
+                           aspect-ratio: 1 / 1; */
+        object-fit: cover;   /* Ensures the image covers the area, cropping if necessary */
+        margin-left: auto;   /* Centers the image horizontally */
+        margin-right: auto;  /* Centers the image horizontally */
+        margin-top: 0.5cm;   /* Adds some space above the image */
+        margin-bottom: 1.5cm;  /* Increased bottom margin for better spacing */
+    }
+
+    /* General style for paragraphs to ensure text is justified */
+    .paragraph {
+        text-align: justify;
+        margin-bottom: 0.5cm; /* Default bottom margin for paragraphs, adjust as needed */
+        /* Add other general paragraph styling here if needed */
+    }
+
+
     {% if theme == "children" %}
     /* Children's book theme - Playful and Bright */
     .book-title {
@@ -29,6 +52,7 @@
         background-color: transparent;
         border-radius: {{ border_radius|default(15) }}px;
         padding: 0.5cm;
+        margin-bottom: 0.5cm; /* Ensure decorative borders also have consistent spacing */
     }
     .image, .cover-image { /* Cool border for children's theme images */
         border: 5px solid {{ border_color|default('#ffdd77') }}; /* Cheerful yellow border */
@@ -52,6 +76,7 @@
         padding-top: 0.3cm;
         padding-bottom: 0.3cm;
         letter-spacing: 0.5px;
+        margin-bottom: 1.2cm;
     }
     .chapter-title::before { /* Scroll Icon */
         content: "📜 ";
@@ -64,6 +89,8 @@
         background-color: transparent;
         border-radius: {{ border_radius|default(8) }}px;
         box-shadow: 0 0 8px rgba(125, 91, 190, 0.2);
+        padding: 0.5cm;
+        margin-bottom: 0.5cm;
     }
     .image, .cover-image { /* Cool border for fantasy theme images */
         border: 3px groove {{ border_color|default('#ab87ff') }}; /* Grooved border for a subtle 3D effect */
@@ -85,6 +112,7 @@
         border-bottom: 4px solid {{ chapter_title_color|default('#784F32') }}; /* Darker Brown */
         text-transform: uppercase;
         letter-spacing: 1.5px;
+        margin-bottom: 1.2cm;
     }
     .chapter-title::after { /* Compass Icon */
         content: " 🧭";
@@ -96,6 +124,8 @@
         border: {{ border_width|default(4) }}px solid {{ border_color|default('#8c5e3c') }};
         background-color: transparent;
         border-radius: {{ border_radius|default(4) }}px;
+        padding: 0.5cm;
+        margin-bottom: 0.5cm;
     }
     .image, .cover-image { /* Cool border for adventure theme images */
         border: 6px ridge {{ border_color|default('#8B4513') }}; /* SaddleBrown - like a heavier wooden frame */
