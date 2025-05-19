@@ -190,7 +190,7 @@ class IdeatorAgent(BaseBookAgent):
         final_genre = genre if genre else plan_dict.get("genre", "Unknown Genre")
         final_target_audience = target_audience if target_audience else plan_dict.get("target_audience", "General Audience")
         final_writing_style = writing_style_guide if writing_style_guide else plan_dict.get("writing_style_guide", "Standard writing style.")
-        final_image_style = image_style_guide if image_style_guide else plan_dict.get("image_style_guide", "Standard image style.")
+        final_image_style = str(plan_dict.get("image_style_guide")) if plan_dict.get("image_style_guide") else image_style_guide if image_style_guide else "Standard image style."
         final_cover_concept = cover_concept if cover_concept else plan_dict.get("cover_concept", "A generic book cover.")
         final_theme = theme if theme else plan_dict.get("theme")
         final_key_elements = key_elements if key_elements else plan_dict.get("key_elements", [])
