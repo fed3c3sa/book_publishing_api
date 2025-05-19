@@ -3,28 +3,32 @@
 {% block additional_styles %}
     body {
         /* {{ background_color }} is set in base.html and should be controlled by your variable */
+        /* For CSS hyphenation to work correctly, ensure your HTML has the correct lang attribute.
+           For Italian, you would typically have <html lang="it"> or <body lang="it"> in your base.html. */
     }
 
     /* General style to make the cover image square and larger */
     .cover-image {
-        display: block; /* Ensures the image is a block element, allowing for auto margins */
-        width: 450px;   /* Increased width for a larger cover image. Adjust as needed. */
-        height: 450px;  /* Increased height to match width for a square. */
-                        /* Alternatively, if using width and aspect-ratio:
-                           width: 450px;
-                           aspect-ratio: 1 / 1; */
-        object-fit: cover;   /* Ensures the image covers the area, cropping if necessary */
-        margin-left: auto;   /* Centers the image horizontally */
-        margin-right: auto;  /* Centers the image horizontally */
-        margin-top: 0.5cm;   /* Adds some space above the image */
-        margin-bottom: 1.5cm;  /* Increased bottom margin for better spacing */
+        display: block;
+        width: 450px;
+        height: 450px;
+        object-fit: cover;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 0.5cm;
+        margin-bottom: 1cm;   /* Reduced from 1.5cm */
     }
 
-    /* General style for paragraphs to ensure text is justified */
+    /* General style for paragraphs to ensure text is justified and reduce spacing issues */
     .paragraph {
         text-align: justify;
-        margin-bottom: 0.5cm; /* Default bottom margin for paragraphs, adjust as needed */
-        /* Add other general paragraph styling here if needed */
+        margin-bottom: 0.4cm; /* Reduced from 0.5cm, adjust as needed */
+        -webkit-hyphens: auto; /* Safari, Chrome */
+        -moz-hyphens: auto;    /* Firefox */
+        -ms-hyphens: auto;     /* IE, Edge */
+        hyphens: auto;         /* Standard */
+        /* Line height can also affect perceived spacing, adjust if necessary:
+           line-height: 1.6; (example) */
     }
 
 
@@ -38,8 +42,8 @@
         font-family: 'Comic Sans MS', 'Chalkboard SE', 'Kristen ITC', cursive, sans-serif;
         color: {{ chapter_title_color|default('#ff6b6b') }};
         border-bottom: 3px dotted {{ chapter_title_color|default('#ff6b6b') }};
-        padding-bottom: 0.4cm;
-        margin-bottom: 1.2cm;
+        padding-bottom: 0.3cm; /* Reduced from 0.4cm */
+        margin-bottom: 1cm;    /* Reduced from 1.2cm */
     }
     .chapter-title::before, .chapter-title::after { /* Sparkles */
         content: '✧';
@@ -51,13 +55,13 @@
         border: {{ border_width|default(3) }}px dashed {{ border_color|default('#f7b731') }};
         background-color: transparent;
         border-radius: {{ border_radius|default(15) }}px;
-        padding: 0.5cm;
-        margin-bottom: 0.5cm; /* Ensure decorative borders also have consistent spacing */
+        padding: 0.4cm;        /* Reduced from 0.5cm */
+        margin-bottom: 0.4cm; /* Reduced from 0.5cm */
     }
     .image, .cover-image { /* Cool border for children's theme images */
-        border: 5px solid {{ border_color|default('#ffdd77') }}; /* Cheerful yellow border */
-        padding: 4px; /* Padding creates an inner "matting" effect */
-        background-color: {{ background_color|default('#FFFFFF') }}; /* Image sits on page background, padding shows border color */
+        border: 5px solid {{ border_color|default('#ffdd77') }};
+        padding: 4px;
+        background-color: {{ background_color|default('#FFFFFF') }};
         border-radius: 12px;
         box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     }
@@ -73,10 +77,10 @@
         color: {{ chapter_title_color|default('#4b0082') }};
         border-top: 1px solid {{ chapter_title_color|default('#8a2be2') }};
         border-bottom: 1px solid {{ chapter_title_color|default('#8a2be2') }};
-        padding-top: 0.3cm;
-        padding-bottom: 0.3cm;
+        padding-top: 0.2cm;    /* Reduced from 0.3cm */
+        padding-bottom: 0.2cm; /* Reduced from 0.3cm */
         letter-spacing: 0.5px;
-        margin-bottom: 1.2cm;
+        margin-bottom: 1cm;    /* Reduced from 1.2cm */
     }
     .chapter-title::before { /* Scroll Icon */
         content: "📜 ";
@@ -89,15 +93,15 @@
         background-color: transparent;
         border-radius: {{ border_radius|default(8) }}px;
         box-shadow: 0 0 8px rgba(125, 91, 190, 0.2);
-        padding: 0.5cm;
-        margin-bottom: 0.5cm;
+        padding: 0.4cm;        /* Reduced from 0.5cm */
+        margin-bottom: 0.4cm; /* Reduced from 0.5cm */
     }
     .image, .cover-image { /* Cool border for fantasy theme images */
-        border: 3px groove {{ border_color|default('#ab87ff') }}; /* Grooved border for a subtle 3D effect */
+        border: 3px groove {{ border_color|default('#ab87ff') }};
         padding: 5px;
         background-color: {{ background_color|default('#FFFFFF') }};
         border-radius: 10px;
-        box-shadow: 0 0 10px 2px {{ chapter_title_color|default('rgba(138, 43, 226, 0.4)') }}; /* Magical glow */
+        box-shadow: 0 0 10px 2px {{ chapter_title_color|default('rgba(138, 43, 226, 0.4)') }};
     }
 
     {% elif theme == "adventure" %}
@@ -109,10 +113,10 @@
     .chapter-title {
         font-family: 'Copperplate', 'Impact', 'Arial Black', sans-serif;
         color: {{ chapter_title_color|default('#2c3e50') }};
-        border-bottom: 4px solid {{ chapter_title_color|default('#784F32') }}; /* Darker Brown */
+        border-bottom: 4px solid {{ chapter_title_color|default('#784F32') }};
         text-transform: uppercase;
         letter-spacing: 1.5px;
-        margin-bottom: 1.2cm;
+        margin-bottom: 1cm;    /* Reduced from 1.2cm */
     }
     .chapter-title::after { /* Compass Icon */
         content: " 🧭";
@@ -124,11 +128,11 @@
         border: {{ border_width|default(4) }}px solid {{ border_color|default('#8c5e3c') }};
         background-color: transparent;
         border-radius: {{ border_radius|default(4) }}px;
-        padding: 0.5cm;
-        margin-bottom: 0.5cm;
+        padding: 0.4cm;        /* Reduced from 0.5cm */
+        margin-bottom: 0.4cm; /* Reduced from 0.5cm */
     }
     .image, .cover-image { /* Cool border for adventure theme images */
-        border: 6px ridge {{ border_color|default('#8B4513') }}; /* SaddleBrown - like a heavier wooden frame */
+        border: 6px ridge {{ border_color|default('#8B4513') }};
         padding: 3px;
         background-color: {{ background_color|default('#FFFFFF') }};
         border-radius: 5px;
