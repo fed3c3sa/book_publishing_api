@@ -143,7 +143,7 @@ def main_ui():
         value="Sparky, il Drago dei Fiori"
     )
     
-    genres = ["Racconto per bambini", "Fantasy", "Fantascienza", "Romanzo Rosa", "Thriller", "Saggio", "Altro"]
+    genres = ["Racconto per bambini", "Racconto per adolescenti", "Fantasy", "Fantascienza", "Romanzo Rosa", "Thriller", "Saggio", "Altro"]
     main_genre = st.sidebar.selectbox(
         "Genere principale", 
         genres,

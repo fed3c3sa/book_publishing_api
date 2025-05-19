@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Creator - Generate Your Custom Book</title>
+    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="stylesheet" href="static/css/book-preview.css">
+    <!-- Turn.js library for page flipping -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
+</head>
+<body>
+    <!-- Particles Background -->
+    <div class="particles-container"></div>
+
+    <div class="container">
+        <header>
+            <h1 class="title">Magical Book Creator</h1>
+            <p class="subtitle">Transform your ideas into beautifully illustrated books with just a few clicks. Our AI-powered system creates custom stories with stunning visuals tailored to your preferences.</p>
+        </header>
+
+        <!-- Input Form -->
+        <form id="book-form" class="form-container">
+            <div class="form-group">
+                <label for="book-idea">Your Book Idea</label>
+                <textarea id="book-idea" name="book-idea" placeholder="Describe your book idea or concept..." required>Un drago verde che non sa sputare fuoco ma scopre di avere un talento per far crescere fiori magici.</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="title">Book Title (Optional)</label>
+                <input type="text" id="title" name="title" placeholder="Suggested title for your book" value="Sparky, il Drago dei Fiori">
+            </div>
+            
+            <div class="form-group">
+                <label for="genre">Genre</label>
+                <select id="genre" name="genre" required>
+                    <option value="">Select a genre</option>
+                    <option value="Racconto per bambini" selected>Children's Book</option>
+                    <option value="Racconto per adolescenti">Young Adult</option>
+                    <option value="Fantasy">Fantasy</option>
+                    <option value="Fantascienza">Science Fiction</option>
+                    <option value="Romanzo Rosa">Romance</option>
+                    <option value="Thriller">Thriller</option>
+                    <option value="Saggio">Essay</option>
+                    <option value="Altro">Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="writing-style">Writing Style</label>
+                <textarea id="writing-style" name="writing-style" placeholder="Describe your preferred writing style (e.g., humorous, formal, poetic)...">Semplice, adatto ai bambini, con dialoghi divertenti e un messaggio positivo sull'unicità.</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="image-style">Image Style</label>
+                <textarea id="image-style" name="image-style" placeholder="Describe your preferred image style (e.g., watercolor, cartoon, realistic)...">Illustrazioni colorate e vivaci, stile cartone animato amichevole, con personaggi espressivi.</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Optional Features</label>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="trend-finder" name="trend-finder">
+                    <label for="trend-finder">Enable Trend Finder</label>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="style-imitator" name="style-imitator">
+                    <label for="style-imitator">Enable Style Imitator</label>
+                </div>
+                
+                <div class="form-group style-imitator-text" style="display: none;">
+                    <label for="style-imitator-text">Style Imitator Example Text</label>
+                    <textarea id="style-imitator-text" name="style-imitator-text" placeholder="Paste text to imitate style..."></textarea>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="translator" name="translator">
+                    <label for="translator">Enable Translator</label>
+                </div>
+                
+                <div class="form-group translator-options" style="display: none;">
+                    <label for="target-language">Target Language</label>
+                    <select id="target-language" name="target-language">
+                        <option value="Inglese">English</option>
+                        <option value="Spagnolo">Spanish</option>
+                        <option value="Francese">French</option>
+                        <option value="Tedesco">German</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="btn-container">
+                <button type="submit" class="btn">Create My Book</button>
+            </div>
+        </form>
+
+        <!-- Progress Section -->
+        <div class="progress-container">
+            <h2>Creating Your Book</h2>
+            <div class="progress-animation">
+                <div class="loading-animation">
+                    <div class="circle"></div>
+                    <div class="circle"></div>
+                </div>
+            </div>
+            <div class="progress-percentage">0%</div>
+            <div class="progress-status">Initializing...</div>
+            <div class="progress-bar-container">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/js/api.js"></script>
+    <script src="static/js/book-preview.js"></script>
+    <script src="static/js/main.js"></script>
+    
+    <script>
+        // Toggle optional features
+        document.getElementById('style-imitator').addEventListener('change', function() {
+            const textArea = document.querySelector('.style-imitator-text');
+            textArea.style.display = this.checked ? 'block' : 'none';
+        });
+        
+        document.getElementById('translator').addEventListener('change', function() {
+            const options = document.querySelector('.translator-options');
+            options.style.display = this.checked ? 'block' : 'none';
+        });
+    </script>
+</body>
+</html>

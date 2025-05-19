@@ -1,0 +1,277 @@
+/* Additional styles for enhanced book preview */
+
+/* Book container and pages */
+.book {
+  background-color: transparent;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+}
+
+.book.turning {
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+}
+
+.book-page {
+  background-color: white;
+  color: #333;
+  overflow: hidden;
+  position: relative;
+}
+
+.cover-page {
+  background: linear-gradient(135deg, #0288D1, #29B6F6);
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.inside-cover {
+  background-color: #f5f5f5;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.back-cover {
+  background: linear-gradient(135deg, #29B6F6, #0288D1);
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Cover content */
+.cover-content {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.full-cover-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.book-title {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.inside-title {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #6A1B9A;
+}
+
+.inside-subtitle {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.back-cover-text {
+  font-size: 1.2rem;
+  padding: 2rem;
+}
+
+/* Page content */
+.page-content {
+  padding: 2rem;
+  height: 100%;
+  position: relative;
+}
+
+.book-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-top: 1rem;
+}
+
+.page-number {
+  position: absolute;
+  bottom: 1rem;
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.page-number.left {
+  left: 2rem;
+}
+
+.page-number.right {
+  right: 2rem;
+}
+
+/* Decorative elements */
+.cover-decoration {
+  width: 80%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.5);
+  margin: 2rem auto;
+  position: relative;
+}
+
+.cover-decoration::before,
+.cover-decoration::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: white;
+  top: -3.5px;
+}
+
+.cover-decoration::before {
+  left: 0;
+}
+
+.cover-decoration::after {
+  right: 0;
+}
+
+.inside-decoration {
+  width: 60%;
+  height: 2px;
+  background: rgba(106, 27, 154, 0.3);
+  margin: 2rem auto;
+  position: relative;
+}
+
+.page-decoration {
+  width: 40%;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.1);
+  margin: 2rem 0;
+}
+
+.back-cover-decoration {
+  width: 60%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.5);
+  margin: 2rem auto;
+}
+
+/* Page corner effect */
+.page-corner {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.03) 50%);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.page-corner.hover {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.1) 50%);
+}
+
+/* Page indicator */
+.page-indicator {
+  margin: 0 1rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* Success message */
+.success-message {
+  background-color: var(--success);
+  color: white;
+  padding: 1rem;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  animation: slideDown 0.5s ease-out;
+}
+
+.success-message.fade-out {
+  animation: fadeOut 0.5s ease-out forwards;
+}
+
+.success-icon {
+  font-size: 1.5rem;
+  margin-right: 1rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Purchase button animation */
+.purchase-btn.purchase-animation {
+  animation: purchasePulse 1s ease;
+}
+
+/* Animations */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes purchasePulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(156, 39, 176, 0.7);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .book-title {
+    font-size: 1.8rem;
+  }
+  
+  .page-content {
+    padding: 1.5rem;
+  }
+  
+  .page-corner {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .page-corner.hover {
+    width: 50px;
+    height: 50px;
+  }
+}

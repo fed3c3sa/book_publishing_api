@@ -118,3 +118,64 @@ I contributi sono benvenuti! Si prega di aprire una issue o una pull request per
 
 Questo progetto è rilasciato sotto la Licenza MIT (o altra licenza da definire).
 
+
+
+Step 4: Generating Images...
+ImageCreatorAgent: Processing placeholder 1/8: chapter1_image1
+ImageCreatorAgent: Generating image for ID 'chapter1_image1' with DALL-E
+Enhanced prompt: Sparky, a small dragon with bright colors, sitting happily among flowers in a garden.. Style: Standard image style.
+ImageCreatorAgent: Resized image from 1024x1024 to 400x400
+ImageCreatorAgent: Successfully generated image for 'chapter1_image1' at /home/federico/Desktop/personal/book_publishing_api/outputs/book_20250516_121540_005d11/images/chapter1_image1_1ec9b0.png
+ImageCreatorAgent: Processing placeholder 2/8: chapter1_image2
+ImageCreatorAgent: Generating image for ID 'chapter1_image2' with DALL-E
+Enhanced prompt: Pippo, a tiny mouse, peeking out from behind a large, colorful flower as he meets Sparky.. Style: Standard image style.
+ImageCreatorAgent: Resized image from 1024x1024 to 400x400
+ImageCreatorAgent: Successfully generated image for 'chapter1_image2' at /home/federico/Desktop/personal/book_publishing_api/outputs/book_20250516_121540_005d11/images/chapter1_image2_d06848.png
+ImageCreatorAgent: Processing placeholder 3/8: chapter2_image1
+ImageCreatorAgent: Generating image for ID 'chapter2_image1' with DALL-E
+Enhanced prompt: Sparky and Pippo running through a vibrant garden, flowers swaying as they play.. Style: Standard image style.
+ImageCreatorAgent: Resized image from 1024x1024 to 400x400
+ImageCreatorAgent: Successfully generated image for 'chapter2_image1' at /home/federico/Desktop/personal/book_publishing_api/outputs/book_20250516_121540_005d11/images/chapter2_image1_93bcc4.png
+ImageCreatorAgent: Processing placeholder 4/8: chapter2_image2
+ImageCreatorAgent: Generating image for ID 'chapter2_image2' with DALL-E
+Enhanced prompt: Sparky and Pippo discovering a small pond in the garden and splashing water playfully.. Style: Standard image style.
+ImageCreatorAgent: Resized image from 1024x1024 to 400x400
+ImageCreatorAgent: Successfully generated image for 'chapter2_image2' at /home/federico/Desktop/personal/book_publishing_api/outputs/book_20250516_121540_005d11/images/chapter2_image2_eb21bf.png
+ImageCreatorAgent: Processing placeholder 5/8: chapter3_image1
+ImageCreatorAgent: Generating image for ID 'chapter3_image1' with DALL-E
+Enhanced prompt: A mysterious wizard with a long hat handing colorful candy to Sparky and Pippo in the garden.. Style: Standard image style.
+ImageCreatorAgent: Resized image from 1024x1024 to 400x400
+ImageCreatorAgent: Successfully generated image for 'chapter3_image1' at /home/federico/Desktop/personal/book_publishing_api/outputs/book_20250516_121540_005d11/images/chapter3_image1_4a94c5.png
+ImageCreatorAgent: Processing placeholder 6/8: chapter4_image1
+ImageCreatorAgent: Generating image for ID 'chapter4_image1' with DALL-E
+Enhanced prompt: Sparky and Pippo looking at the empty candy wrappers with sad expressions, realizing their mistake.. Style: Standard image style.
+ImageCreatorAgent: Resized image from 1024x1024 to 400x400
+ImageCreatorAgent: Successfully generated image for 'chapter4_image1' at /home/federico/Desktop/personal/book_publishing_api/outputs/book_20250516_121540_005d11/images/chapter4_image1_49100a.png
+ImageCreatorAgent: Processing placeholder 7/8: chapter4_image2
+ImageCreatorAgent: Generating image for ID 'chapter4_image2' with DALL-E
+Enhanced prompt: Sparky and Pippo shaking hands and smiling, promising to avoid the candy from the wizard.. Style: Standard image style.
+ImageCreatorAgent: Resized image from 1024x1024 to 400x400
+ImageCreatorAgent: Successfully generated image for 'chapter4_image2' at /home/federico/Desktop/personal/book_publishing_api/outputs/book_20250516_121540_005d11/images/chapter4_image2_52cc70.png
+ImageCreatorAgent: Processing placeholder 8/8: chapter5_image1
+ImageCreatorAgent: Generating image for ID 'chapter5_image1' with DALL-E
+Enhanced prompt: Sparky and Pippo playing among the flowers and enjoying the sunshine, looking carefree and joyful.. Style: Standard image style.
+ImageCreatorAgent: Resized image from 1024x1024 to 400x400
+ImageCreatorAgent: Successfully generated image for 'chapter5_image1' at /home/federico/Desktop/personal/book_publishing_api/outputs/book_20250516_121540_005d11/images/chapter5_image1_16357a.png
+ImageCreatorAgent: Processing cover image with concept: 'A generic book cover.'
+ImageCreatorAgent: Generating image for ID 'cover' with DALL-E
+Enhanced prompt: A generic book cover.. Style: Standard image style.
+ImageCreatorAgent: Resized image from 1024x1792 to 571x1000
+ImageCreatorAgent: Successfully generated image for 'cover' at /home/federico/Desktop/personal/book_publishing_api/outputs/book_20250516_121540_005d11/images/cover_f9f4b7.png
+ImageCreatorAgent: Finished image generation. Total images: 9
+Primary gen_id: None
+Cover gen_id: None
+Consistency strategy used: primary
+Image Generation Complete. 9 images processed.
+
+Step 5: Creating Book PDF...
+ImpaginatorAgent: Successfully generated PDF: /home/federico/Desktop/personal/book_publishing_api/outputs/book_20250516_121540_005d11/sparky,_il_drago_dei_fiori_book.pdf
+PDF Creation Result: /home/federico/Desktop/personal/book_publishing_api/outputs/book_20250516_121540_005d11/sparky,_il_drago_dei_fiori_book.pdf
+
+--- Book Creation Workflow Completed ---
+All outputs saved in project directory: /home/federico/Desktop/personal/book_publishing_api/outputs/book_20250516_121540_005d11
+Final PDF (if successful): /home/federico/Desktop/personal/book_publishing_api/outputs/book_20250516_121540_005d11/sparky,_il_drago_dei_fiori_book.pdf
