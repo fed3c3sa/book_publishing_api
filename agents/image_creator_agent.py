@@ -52,7 +52,7 @@ class ImageCreatorAgent(BaseBookAgent):
         # Find the image generation tool from the tools list
         image_generator = None
         for tool in self.tools:
-            if tool == "image_generator":
+            if "image_generator" in tool:
                 image_generator = tool
                 break
         

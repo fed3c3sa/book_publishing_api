@@ -7,6 +7,7 @@ import uuid
 import dotenv
 from typing import List
 from tools.image_generation_tool import image_generation_tool
+from tools.ideogram_image_generation_tool import ideogram_image_generation_tool 
 # Assuming smolagents and necessary models are installed and configured
 # For actual LLM interaction, you would need an API key for OpenAI or a running Ollama instance.
 # from smolagents.models.ollama import OllamaChatModel
@@ -80,7 +81,7 @@ def main_workflow(config: dict, user_book_idea: str):
     print("\n--- Initializing Agents ---")
     ideator = IdeatorAgent(model=llm_model)
     story_writer = StoryWriterAgent(model=llm_model)
-    image_creator = ImageCreatorAgent(model=llm_model, project_id=project_id, output_dir=project_base_output_dir, tools=[image_generation_tool])
+    image_creator = ImageCreatorAgent(model=llm_model, project_id=project_id, output_dir=project_base_output_dir, tools=[ideogram_image_generation_tool])
     impaginator = ImpaginatorAgent(model=llm_model, project_id=project_id, output_dir=project_base_output_dir, pdf_config=config.get("pdf_layout", {}))
     
     # Optional Agents (can be initialized based on config or user request)
