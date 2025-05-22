@@ -137,7 +137,7 @@ class ImpaginatorAgent(BaseBookAgent):
                                     "type": "text_with_image",
                                     "text_content": " ".join(parts).strip(),
                                     "image_path": image_map[placeholder_id],
-                                    "image_alt_text": f"Illustration for {chapter.title}",
+                                    "image_alt_text": f"{chapter.title}",
                                     "image_position": image_position
                                 })
                             else:
@@ -154,8 +154,8 @@ class ImpaginatorAgent(BaseBookAgent):
                                 chapter_data["content_blocks"].append({
                                     "type": "image",
                                     "path": image_map[placeholder_id],
-                                    "alt_text": f"Illustration for {chapter.title}",
-                                    "caption": f"Illustration for {chapter.title}"
+                                    "alt_text": f"{chapter.title}",
+                                    "caption": f"{chapter.title}"
                                 })
                         else:
                             # Just add text without image
