@@ -35,6 +35,37 @@ class ImageCreatorAgent(BaseBookAgent):
         self.project_output_dir = os.path.join(output_dir, project_id, "images")
         os.makedirs(self.project_output_dir, exist_ok=True)
 
+    def _run_with_retry(self, prompt: str, additional_args: Dict[str, Any], max_retries: int = 3) -> Any:
+        """
+        Runs self.run() with retry logic.
+        
+        Args:
+            prompt (str): The prompt to send to the agent
+            additional_args (Dict[str, Any]): Additional arguments for the run method
+            max_retries (int): Maximum number of retry attempts (default: 3)
+            
+        Returns:
+            Any: The result from self.run() if successful, None if all attempts fail
+        """
+        for attempt in range(max_retries):
+            try:
+                result = self.run(prompt, additional_args=additional_args)
+                
+                # Check if the result is valid (image path exists)
+                if isinstance(result, str) and os.path.exists(result):
+                    return result
+                else:
+                    print(f"ImageCreatorAgent: Attempt {attempt + 1}/{max_retries} failed - invalid result")
+                    
+            except Exception as e:
+                print(f"ImageCreatorAgent: Attempt {attempt + 1}/{max_retries} failed with error: {str(e)}")
+            
+            # Add delay between retries (except for the last failed attempt)
+            if attempt < max_retries - 1:
+                time.sleep(2)
+        
+        return None
+
     def create_images(self, story_content: StoryContent, book_plan: BookPlan) -> List[GeneratedImage]:
         """
         Generates all images required for the book, including chapter illustrations and the cover.
@@ -68,8 +99,8 @@ class ImageCreatorAgent(BaseBookAgent):
             if i > 0:
                 time.sleep(1)
             
-            # Use the agent to generate the image
-            result = self.run(
+            # Use the agent to generate the image with retry logic
+            result = self._run_with_retry(
                 f"Generate an image for this description: {placeholder.description}. Style: {image_style}",
                 additional_args={
                     'image_id': placeholder.id,
@@ -77,15 +108,15 @@ class ImageCreatorAgent(BaseBookAgent):
                 }
             )
             
-            # Check if image generation was successful
-            if isinstance(result, str) and os.path.exists(result):
+            # Check if image generation was successful after all retries
+            if result is not None:
                 generated_images.append(GeneratedImage(
                     placeholder_id=placeholder.id, 
                     prompt_used=f"{placeholder.description}. Style: {image_style}", 
                     image_path=result
                 ))
             else:
-                print(f"ImageCreatorAgent: Skipping failed image generation for placeholder '{placeholder.id}'")
+                print(f"ImageCreatorAgent: Skipping failed image generation for placeholder '{placeholder.id}' after 3 attempts")
         
         # Generate cover image
         print(f"ImageCreatorAgent: Processing cover image with concept: '{book_plan.cover_concept}'")
@@ -94,8 +125,8 @@ class ImageCreatorAgent(BaseBookAgent):
         if story_content.all_image_placeholders:
             time.sleep(1)
         
-        # Generate cover image
-        cover_result = self.run(
+        # Generate cover image with retry logic
+        cover_result = self._run_with_retry(
             f"Generate a book cover image for this concept: {book_plan.cover_concept}. Style: {image_style}",
             additional_args={
                 'image_id': 'cover',
@@ -103,15 +134,15 @@ class ImageCreatorAgent(BaseBookAgent):
             }
         )
         
-        # Check if cover image generation was successful
-        if isinstance(cover_result, str) and os.path.exists(cover_result):
+        # Check if cover image generation was successful after all retries
+        if cover_result is not None:
             generated_images.append(GeneratedImage(
                 placeholder_id="cover", 
                 prompt_used=f"{book_plan.cover_concept}. Style: {image_style}", 
                 image_path=cover_result
             ))
         else:
-            print(f"ImageCreatorAgent: Warning: Cover image generation failed")
+            print(f"ImageCreatorAgent: Warning: Cover image generation failed after 3 attempts")
             
         print(f"ImageCreatorAgent: Finished image generation. Total images successfully created: {len(generated_images)}")
         return generated_images
