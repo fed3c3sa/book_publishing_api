@@ -35,7 +35,7 @@ suggest_layout_options_prompt: |
   - Color schemes appropriate for the genre and audience
   - Overall mood and feel to convey through layout
   
-  Output your suggestions in a structured format that can be applied to HTML/CSS templates.
+  Output your suggestions in a structured format that can be applied to HTML/CSS templates. Remember to remove hastags from the output.
 
 suggest_theme_prompt: |
   Book Title: {book_title}

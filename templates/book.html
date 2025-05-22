@@ -10,13 +10,31 @@
     /* General style to make the cover image square and larger */
     .cover-image {
         display: block;
-        width: 450px;
-        height: 450px;
+        width: 600px;
+        height: 600px;
         object-fit: cover;
         margin-left: auto;
         margin-right: auto;
-        margin-top: 0.5cm;
-        margin-bottom: 1cm;   /* Reduced from 1.5cm */
+        margin-top: 2cm;
+    }
+
+    /* Title page container to stack title and image properly */
+    .title-page-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        height: 100vh;
+        padding-top: 3cm;
+        box-sizing: border-box;
+    }
+
+    /* Book title positioning */
+    .book-title {
+        text-align: center;
+        margin-bottom: 1cm;
+        z-index: 10;
+        text-transform: uppercase;
     }
 
     /* General style for paragraphs to ensure text is justified and reduce spacing issues */
@@ -27,8 +45,17 @@
         -moz-hyphens: auto;    /* Firefox */
         -ms-hyphens: auto;     /* IE, Edge */
         hyphens: auto;         /* Standard */
+        font-size: 24px;
+        text-transform: uppercase;
         /* Line height can also affect perceived spacing, adjust if necessary:
            line-height: 1.6; (example) */
+    }
+
+    /* Make regular images bigger */
+    .image {
+        width: 600px;
+        height: 600px;
+        object-fit: cover;
     }
 
 
@@ -37,6 +64,7 @@
     .book-title {
         font-family: 'Comic Sans MS', 'Chalkboard SE', 'Kristen ITC', cursive, sans-serif;
         color: {{ title_color|default('#e74c3c') }};
+        text-transform: uppercase;
     }
     .chapter-title {
         font-family: 'Comic Sans MS', 'Chalkboard SE', 'Kristen ITC', cursive, sans-serif;
@@ -71,6 +99,7 @@
     .book-title {
         font-family: 'Luminari', 'Papyrus', 'Times New Roman', serif;
         color: {{ title_color|default('#5D3A9B') }};
+        text-transform: uppercase;
     }
     .chapter-title {
         font-family: 'Luminari', 'Papyrus', 'Times New Roman', serif;
@@ -109,6 +138,7 @@
     .book-title {
         font-family: 'Copperplate', 'Impact', 'Arial Black', sans-serif;
         color: {{ title_color|default('#b33939') }};
+        text-transform: uppercase;
     }
     .chapter-title {
         font-family: 'Copperplate', 'Impact', 'Arial Black', sans-serif;

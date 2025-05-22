@@ -108,7 +108,7 @@ generate_book_plan_prompt: |
   - Create a book that matches the reading level of the target audience.
   - Keep the story structure straightforward and age-appropriate.
   - Ensure each chapter has a clear purpose and flows naturally.
-  - Include 3–6 chapters typically.
+  - Include 7–12 chapters typically.
   - Each chapter should need 1–2 images maximum.
 
   ## HANDLING PROVIDED CONSTRAINTS
