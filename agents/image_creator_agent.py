@@ -34,6 +34,7 @@ class ImageCreatorAgent(BaseBookAgent):
         self.project_id = project_id
         self.project_output_dir = os.path.join(output_dir, project_id, "images")
         os.makedirs(self.project_output_dir, exist_ok=True)
+        self.style_reference_image_path = None  # Track the first generated image
 
     def _run_with_retry(self, prompt: str, additional_args: Dict[str, Any], max_retries: int = 3) -> Any:
         """
@@ -69,6 +70,7 @@ class ImageCreatorAgent(BaseBookAgent):
     def create_images(self, story_content: StoryContent, book_plan: BookPlan) -> List[GeneratedImage]:
         """
         Generates all images required for the book, including chapter illustrations and the cover.
+        The first generated image is used as a style reference for all subsequent images.
 
         Args:
             story_content (StoryContent): The story content with image placeholders and descriptions.
@@ -99,17 +101,30 @@ class ImageCreatorAgent(BaseBookAgent):
             if i > 0:
                 time.sleep(1)
             
+            # Prepare additional args
+            additional_args = {
+                'image_id': placeholder.id,
+                'is_cover': False
+            }
+            
+            # Add style reference if we have one (after first image)
+            if self.style_reference_image_path:
+                additional_args['style_reference_image_path'] = self.style_reference_image_path
+                print(f"ImageCreatorAgent: Using style reference from first image")
+            
             # Use the agent to generate the image with retry logic
             result = self._run_with_retry(
                 f"Generate an image for this description: {placeholder.description}. Style: {image_style}",
-                additional_args={
-                    'image_id': placeholder.id,
-                    'is_cover': False
-                }
+                additional_args=additional_args
             )
             
             # Check if image generation was successful after all retries
             if result is not None:
+                # If this is the first image, save it as style reference
+                if i == 0 and not self.style_reference_image_path:
+                    self.style_reference_image_path = result
+                    print(f"ImageCreatorAgent: First image generated, will use as style reference: {result}")
+                
                 generated_images.append(GeneratedImage(
                     placeholder_id=placeholder.id, 
                     prompt_used=f"{placeholder.description}. Style: {image_style}", 
@@ -125,13 +140,21 @@ class ImageCreatorAgent(BaseBookAgent):
         if story_content.all_image_placeholders:
             time.sleep(1)
         
+        # Prepare additional args for cover
+        cover_additional_args = {
+            'image_id': 'cover',
+            'is_cover': True
+        }
+        
+        # Add style reference if we have one
+        if self.style_reference_image_path:
+            cover_additional_args['style_reference_image_path'] = self.style_reference_image_path
+            print(f"ImageCreatorAgent: Using style reference for cover image")
+        
         # Generate cover image with retry logic
         cover_result = self._run_with_retry(
             f"Generate a book cover image for this concept: {book_plan.cover_concept}. Style: {image_style}",
-            additional_args={
-                'image_id': 'cover',
-                'is_cover': True
-            }
+            additional_args=cover_additional_args
         )
         
         # Check if cover image generation was successful after all retries

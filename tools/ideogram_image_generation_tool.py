@@ -4,7 +4,7 @@ import requests
 import os
 import uuid
 import re
-import time      # still used for the rare retry branch
+import time
 import dotenv
 
 dotenv.load_dotenv("secrets.env")
@@ -12,7 +12,7 @@ dotenv.load_dotenv("secrets.env")
 
 class IdeogramImageGenerationTool(Tool):
     name = "ideogram_image_generator"
-    description = "Generates an image based on a text prompt using Ideogram API (v3 synchronous endpoint)."
+    description = "Generates an image based on a text prompt using Ideogram API (v3 synchronous endpoint) with optional style reference."
     inputs = {
         "prompt": {
             "type": "string",
@@ -26,17 +26,23 @@ class IdeogramImageGenerationTool(Tool):
             ),
             "nullable": True,
         },
+        "style_reference_image_path": {
+            "type": "string",
+            "description": "Optional path to an image to use as style reference",
+            "nullable": True,
+        },
     }
     output_type = "string"
 
-    def forward(self, prompt, style_guide=None):
+    def forward(self, prompt, style_guide=None, style_reference_image_path=None):
         """
-        Generate an image based on the provided prompt and (optionally)
-        an Ideogram v3 style_type.
+        Generate an image based on the provided prompt, optional style type,
+        and optional style reference image.
 
         Args:
             prompt (str): Text description of the image to generate.
             style_guide (str, optional): One of the v3 style_type values.
+            style_reference_image_path (str, optional): Path to image for style reference.
 
         Returns:
             str: Local path to the downloaded PNG.
@@ -56,15 +62,46 @@ class IdeogramImageGenerationTool(Tool):
         output_path = os.path.join(output_dir, image_filename)
 
         # 3. Payload construction (multipart form) ─────────────────────
-        payload = {
-            "prompt": prompt,
-            "aspect_ratio": "1x1",  # default; matches v3 enum
-        }
+        # Build the files dictionary for multipart/form-data
+        files = {}
+        
+        # Add text parameters
+        files['prompt'] = (None, prompt)
+        files['aspect_ratio'] = (None, '1x1')
+        
         if style_guide:
-            payload["style_type"] = style_guide
-
-        #   ─ requests will set Content-Type: multipart/form-data
-        files = {k: (None, str(v)) for k, v in payload.items()}
+            files['style_type'] = (None, style_guide)
+        
+        # Add style reference image if provided
+        if style_reference_image_path and os.path.exists(style_reference_image_path):
+            try:
+                with open(style_reference_image_path, 'rb') as img_file:
+                    # Read the image content
+                    image_content = img_file.read()
+                    
+                    # Check file size (max 10MB)
+                    if len(image_content) > 10 * 1024 * 1024:
+                        print(f"Warning: Style reference image exceeds 10MB limit, skipping")
+                    else:
+                        # Get the file extension to determine MIME type
+                        ext = os.path.splitext(style_reference_image_path)[1].lower()
+                        mime_types = {
+                            '.jpg': 'image/jpeg',
+                            '.jpeg': 'image/jpeg',
+                            '.png': 'image/png',
+                            '.webp': 'image/webp'
+                        }
+                        mime_type = mime_types.get(ext, 'image/jpeg')
+                        
+                        # Add to files with proper filename and MIME type
+                        files['style_reference_images'] = (
+                            os.path.basename(style_reference_image_path),
+                            image_content,
+                            mime_type
+                        )
+                        print(f"Using style reference image: {style_reference_image_path}")
+            except Exception as e:
+                print(f"Warning: Could not read style reference image: {e}")
 
         # 4. Request ───────────────────────────────────────────────────
         try:
@@ -86,7 +123,7 @@ class IdeogramImageGenerationTool(Tool):
                 return f"Error: No image URL returned. Response: {data}"
 
             # optional: tiny retry loop in case the pre-signed URL
-            #           hasn’t propagated yet (rare but possible)
+            #           hasn't propagated yet (rare but possible)
             for _ in range(3):
                 try:
                     img_resp = requests.get(image_url, timeout=60)
