@@ -12,6 +12,7 @@ from .impaginator_agent import ImpaginatorAgent
 from .trend_finder_agent import TrendFinderAgent
 from .style_imitator_agent import StyleImitatorAgent
 from .translator_agent import TranslatorAgent
+from .image_description_agent import ImageDescriptionAgent
 
 __all__ = [
     "BaseBookAgent",
@@ -21,6 +22,7 @@ __all__ = [
     "ImpaginatorAgent",
     "TrendFinderAgent",
     "StyleImitatorAgent",
-    "TranslatorAgent"
+    "TranslatorAgent",
+    "ImageDescriptionAgent"
 ]
 
