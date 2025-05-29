@@ -1,237 +1,113 @@
 # main.py
-import yaml
+import logging
 import os
-import shutil
 from datetime import datetime
+from typing import Dict, List, Optional, Tuple
 import uuid
-import dotenv
-from typing import List
-from tools.image_generation_tool import image_generation_tool
-from tools.ideogram_image_generation_tool import ideogram_image_generation_tool 
-# Assuming smolagents and necessary models are installed and configured
-# For actual LLM interaction, you would need an API key for OpenAI or a running Ollama instance.
-# from smolagents.models.ollama import OllamaChatModel
-# from smolagents.models.openai import OpenAIServerModel
-from smolagents import InferenceClientModel # Generic model placeholder
-from smolagents import OpenAIServerModel
 
-from agents import (
-    IdeatorAgent,
-    StoryWriterAgent,
-    ImageCreatorAgent,
-    ImpaginatorAgent,
-    TrendFinderAgent,
-    StyleImitatorAgent,
-    TranslatorAgent
+from config.config_manager import ConfigManager
+from workflows.book_creation_workflow import BookCreationWorkflow
+from data_models.character import Character
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
-from data_models.book_plan import BookPlan
-from data_models.story_content import StoryContent
-from data_models.generated_image import GeneratedImage
+logger = logging.getLogger(__name__)
 
-# Placeholder for a generic model client if specific ones aren't set up
-# This would need to be replaced with a concrete implementation like OpenAIServerModel or OllamaChatModel
 
-dotenv.load_dotenv("secrets.env")
-def load_config(config_path="config.yaml") -> dict:
-    """Loads the main configuration file."""
+class BookCreationOrchestrator:
+    """Main orchestrator for the book creation process."""
+    
+    def __init__(self, config_path: str = "config.yaml"):
+        """Initialize the orchestrator with configuration."""
+        self.config_manager = ConfigManager(config_path)
+        self.config = self.config_manager.load_config()
+        self.workflow = None
+        
+    def create_project_directory(self) -> str:
+        """Create and return a unique project directory for this book creation run."""
+        project_base_output_dir = self.config.get("output_directory", "outputs")
+        project_id = f"book_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:6]}"
+        project_output_dir = os.path.join(project_base_output_dir, project_id)
+        
+        os.makedirs(project_output_dir, exist_ok=True)
+        logger.info(f"Created project directory: {project_output_dir}")
+        return project_output_dir
+        
+    def setup_workflow(self, project_output_dir: str) -> BookCreationWorkflow:
+        """Setup and return the book creation workflow."""
+        try:
+            workflow = BookCreationWorkflow(
+                config=self.config,
+                project_output_dir=project_output_dir
+            )
+            logger.info("Book creation workflow initialized successfully")
+            return workflow
+        except Exception as e:
+            logger.error(f"Failed to initialize workflow: {e}")
+            raise
+            
+    def run_book_creation(self, user_book_idea: str, characters: Optional[List[Character]] = None) -> Tuple[str, Optional[str]]:
+        """
+        Run the complete book creation process.
+        
+        Args:
+            user_book_idea: The user's book concept
+            characters: Optional list of pre-defined characters
+            
+        Returns:
+            Tuple of (project_directory, pdf_path)
+        """
+        try:
+            logger.info("Starting book creation process")
+            
+            # Create project directory
+            project_output_dir = self.create_project_directory()
+            
+            # Setup workflow
+            self.workflow = self.setup_workflow(project_output_dir)
+            
+            # Run the workflow
+            pdf_path = self.workflow.execute(user_book_idea, characters)
+            
+            logger.info(f"Book creation completed successfully. PDF: {pdf_path}")
+            return project_output_dir, pdf_path
+            
+        except Exception as e:
+            logger.error(f"Book creation failed: {e}")
+            return project_output_dir if 'project_output_dir' in locals() else None, None
+
+
+def main():
+    import dotenv
+    dotenv.load_dotenv("secrets.env")
+    """Main entry point for the book creation application."""
     try:
-        with open(config_path, "r") as f:
-            config = yaml.safe_load(f)
-        print(f"Configuration loaded from {config_path}")
-        return config
-    except FileNotFoundError:
-        print(f"Error: Configuration file {config_path} not found. Exiting.")
-        exit(1)
-    except yaml.YAMLError as e:
-        print(f"Error parsing configuration file {config_path}: {e}. Exiting.")
-        exit(1)
-
-def main_workflow(config: dict, user_book_idea: str):
-    """Orchestrates the main book creation workflow."""
-    project_base_output_dir = config.get("output_directory", "/home/federico/Desktop/personal/book_publishing_api/outputs")
-    # Create a unique project ID for this run
-    project_id = f"book_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:6]}"
-    current_project_output_dir = os.path.join(project_base_output_dir, project_id)
-    os.makedirs(current_project_output_dir, exist_ok=True)
-    print(f"Project output directory: {current_project_output_dir}")
-
-    # --- Initialize LLM Model (Placeholder) ---
-    # Replace with actual model initialization, e.g.:
-    # llm_model = OpenAIServerModel(api_key=config["openai_api_key"], model="gpt-3.5-turbo")
-    # llm_model = OllamaChatModel(model="llama2")
-    api_key=os.getenv("OPENAI_API_KEY")
-    try:
-        llm_model = OpenAIServerModel(
-        api_key=api_key,
-        model_id=config.get("openai_llm_model", "gpt-4o") # Usa gpt-4o o un altro modello desiderato
+        # Initialize orchestrator
+        orchestrator = BookCreationOrchestrator()
+        
+        # Get default book idea from config
+        default_idea = orchestrator.config.get(
+            "default_user_book_idea", 
+            "A children's book about a curious squirrel who explores a magical garden."
         )
-        print(f"Using LLM Model: {llm_model.model_id}")
+        
+        # Create the book
+        project_dir, pdf_path = orchestrator.run_book_creation(default_idea)
+        
+        if pdf_path:
+            print(f"\n✅ Book creation completed successfully!")
+            print(f"📁 Project directory: {project_dir}")
+            print(f"📖 Final PDF: {pdf_path}")
+        else:
+            print("\n❌ Book creation failed. Check logs for details.")
+            
     except Exception as e:
-        print(f"Errore durante l'inizializzazione di OpenAIServerModel: {e}")
-        return None, f"Errore inizializzazione LLM: {e}"
+        logger.error(f"Application failed: {e}")
+        print(f"\n❌ Application failed: {e}")
 
-    # --- Initialize Tools (Conceptual for now, agents might use them internally) ---
-    # web_search_tool = WebSearchTool() # If using smolagents built-in
-    # image_gen_tool = ImageGenerationToolWrapper() # If you have a custom tool wrapper
-    # pdf_tool = PDFToolWrapper()
-    # text_analysis_tool = TextAnalysisToolWrapper()
-    # translation_tool = TranslationToolWrapper()
-
-    # --- Initialize Agents ---
-    print("\n--- Initializing Agents ---")
-    ideator = IdeatorAgent(model=llm_model)
-    story_writer = StoryWriterAgent(model=llm_model)
-    image_creator = ImageCreatorAgent(model=llm_model, project_id=project_id, output_dir=project_base_output_dir, tools=[ideogram_image_generation_tool])
-    impaginator = ImpaginatorAgent(model=llm_model, project_id=project_id, output_dir=project_base_output_dir, pdf_config=config.get("pdf_layout", {}))
-    
-    # Optional Agents (can be initialized based on config or user request)
-    trend_finder = None
-    if config.get("enable_trend_finder", False):
-        # trend_finder_tools = [web_search_tool] # Pass necessary tools
-        trend_finder = TrendFinderAgent(model=llm_model, tools=[]) # tools=[] for placeholder
-        print("TrendFinderAgent enabled.")
-
-    style_imitator = None
-    if config.get("enable_style_imitator", False):
-        # style_imitator_tools = [text_analysis_tool] # Pass necessary tools
-        style_imitator = StyleImitatorAgent(model=llm_model, tools=[])
-        print("StyleImitatorAgent enabled.")
-
-    translator = None
-    if config.get("enable_translator", False):
-        # translator_tools = [translation_tool]
-        translator = TranslatorAgent(model=llm_model, tools=[])
-        print("TranslatorAgent enabled.")
-
-    # --- Workflow Execution ---
-    print("\n--- Starting Book Creation Workflow ---")
-
-    # 1. Trend Finding (Optional)
-    trend_analysis_results = None
-    if trend_finder:
-        print("\nStep 1: Finding Trends...")
-        topic_for_trends = config.get("trend_finder_topic", "childrens books about dragons")
-        genre_for_trends = config.get("trend_finder_genre", "fantasy")
-        trend_analysis_results = trend_finder.find_trends(topic=topic_for_trends, genre=genre_for_trends)
-        print(f"Trend Analysis Results: {trend_analysis_results}")
-
-    # 2. Idea Generation
-    print("\nStep 2: Generating Book Plan...")
-    # Extract additional parameters from config for ideator
-    title = config.get("title", None)
-    genre = config.get("main_genre", None)  # Streamlit uses 'main_genre'
-    target_audience = config.get("target_audience", None)
-    writing_style_guide = config.get("writing_style_guide", None)  # Streamlit uses 'writing_style'
-    image_style_guide = config.get("image_style_guide", None)  # Streamlit uses 'image_style'
-    cover_concept = config.get("cover_concept", None)
-    theme = config.get("theme", None)
-    key_elements = config.get("key_elements", None)
-    
-    # Log what parameters are being used
-    if title:
-        print(f"Using provisional title: {title}")
-    if genre:
-        print(f"Using specified genre: {genre}")
-    if writing_style_guide:
-        print(f"Using specified writing style guide")
-    if image_style_guide:
-        print(f"Using specified image style guide")
-    
-    # Pass all available parameters to the ideator agent
-    book_plan: BookPlan = ideator.generate_initial_idea(
-        user_prompt=user_book_idea, 
-        trend_analysis=trend_analysis_results,
-        title=title,
-        genre=genre,
-        target_audience=target_audience,
-        writing_style_guide=writing_style_guide,
-        image_style_guide=image_style_guide,
-        cover_concept=cover_concept,
-        theme=theme,
-        key_elements=key_elements
-    )
-    if not book_plan or not book_plan.chapters:
-        print("Error: Failed to generate a valid book plan. Exiting.")
-        return
-    print(f"Book Plan Generated: {book_plan.title} with {len(book_plan.chapters)} chapters.")
-    # Save book plan
-    with open(os.path.join(current_project_output_dir, "book_plan.yaml"), "w") as f:
-        yaml.dump(book_plan.__dict__, f, indent=2, default_flow_style=False, allow_unicode=True)
-
-    # 3. Story Writing
-    print("\nStep 3: Writing Story Content...")
-    example_style_text = None
-    if style_imitator and config.get("style_imitation_example_text"): # If style imitation is enabled and example provided
-        print("Analyzing style of example text...")
-        style_desc = style_imitator.analyze_style(config["style_imitation_example_text"])
-        # The StoryWriterAgent would need to be adapted to use this style_desc, or the LLM prompt for StoryWriter updated.
-        # For now, we might just pass the raw example text if the StoryWriter prompt supports it.
-        example_style_text = config["style_imitation_example_text"]
-        print("Style analysis complete. Will attempt to use for story writing.")
-
-    story_content: StoryContent = story_writer.write_story(book_plan, style_example=example_style_text)
-    if not story_content or not story_content.chapters_content:
-        print("Error: Failed to generate story content. Exiting.")
-        return
-    print(f"Story Content Generated for {story_content.book_plan.title}.")
-    # Save story content (e.g., as JSON or individual chapter files)
-    # For simplicity, let's just log it for now or save a summary
-    with open(os.path.join(current_project_output_dir, "story_summary.txt"), "w") as f:
-        f.write(f"Title: {story_content.book_plan.title}\n")
-        for i, chap_content in enumerate(story_content.chapters_content):
-            f.write(f"\nChapter {i+1}: {chap_content.title}\n")
-            f.write(f"{chap_content.text_markdown[:200]}...\n") # Write a snippet
-            f.write(f"Image Placeholders: {len(chap_content.image_placeholders)}\n")
-
-    # 4. Image Creation
-    print("\nStep 4: Generating Images...")
-    generated_images: List[GeneratedImage] = image_creator.create_images(story_content, book_plan)
-    print(f"Image Generation Complete. {len(generated_images)} images processed.")
-    # Log generated image paths
-    with open(os.path.join(current_project_output_dir, "image_log.txt"), "w") as f:
-        for img in generated_images:
-            f.write(f"Placeholder ID: {img.placeholder_id}, Path: {img.image_path}, Error: {img.error_message}\n")
-
-    # 5. PDF Impagination
-    print("\nStep 5: Creating Book PDF...")
-    cover_image_obj = next((img for img in generated_images if img.placeholder_id == "cover" and img.image_path and not img.error_message), None)
-    cover_path = cover_image_obj.image_path if cover_image_obj else None
-    
-    pdf_output_path = impaginator.create_book_pdf(story_content, generated_images, cover_image_path=cover_path)
-    print(f"PDF Creation Result: {pdf_output_path}")
-
-    # 6. Translation (Optional)
-    if translator and config.get("translation_target_language"): 
-        print("\nStep 6: Translating Book (Conceptual - translating title and chapter titles)...")
-        target_lang = config["translation_target_language"]
-        translated_title = translator.translate_text(book_plan.title, target_lang)
-        print(f"Original Title: {book_plan.title} -> Translated Title ({target_lang}): {translated_title}")
-        # In a full implementation, you would iterate through all text content.
-        # For now, just a conceptual step.
-        with open(os.path.join(current_project_output_dir, f"translation_summary_{target_lang}.txt"), "w") as f:
-            f.write(f"Original Title: {book_plan.title}\nTranslated Title ({target_lang}): {translated_title}\n")
-            for i, chap_outline in enumerate(book_plan.chapters):
-                trans_chap_title = translator.translate_text(chap_outline.title, target_lang)
-                f.write(f"Ch {i+1} Original: {chap_outline.title} -> Translated: {trans_chap_title}\n")
-
-    print("\n--- Book Creation Workflow Completed ---")
-    print(f"All outputs saved in project directory: {current_project_output_dir}")
-    print(f"Final PDF (if successful): {pdf_output_path}")
-    return current_project_output_dir, pdf_output_path
 
 if __name__ == "__main__":
-    cfg = load_config()
-    initial_user_idea = cfg.get("default_user_book_idea", "A children's book about a curious squirrel who explores a magical garden.")
-    
-    # Clean up previous outputs if they exist to avoid clutter during testing
-    # output_dir_to_clean = cfg.get("output_directory", "/home/federico/Desktop/personal/book_publishing_api/outputs")
-    # if os.path.exists(output_dir_to_clean):
-    #     print(f"Cleaning up previous output directory: {output_dir_to_clean}")
-    #     # Be careful with shutil.rmtree!
-    #     # for item in os.listdir(output_dir_to_clean):
-    #     #     item_path = os.path.join(output_dir_to_clean, item)
-    #     #     if os.path.isdir(item_path) and item.startswith("book_"):
-    #     #         shutil.rmtree(item_path)
-    #     # print("Cleanup complete.")
-
-    main_workflow(config=cfg, user_book_idea=initial_user_idea)
+    main()
