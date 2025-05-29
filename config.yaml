@@ -1,5 +1,26 @@
 # Configuration for Book Writing Agent Project
 
+# Language Model Configuration
+openai_llm_model: "gpt-4o"
+
+# Default Book Settings
+default_user_book_idea: "A children's book about a curious squirrel who explores a magical garden."
+title: "The Curious Squirrel's Adventure"
+main_genre: "Children's Picture Book"
+target_audience: "Ages 3-7"
+theme: "Curiosity and friendship"
+key_elements: 
+  - "Curious animal protagonist"
+  - "Magical discovery"
+  - "Friendship and helping others"
+  - "Colorful natural setting"
+
+writing_style_guide: "Simple, engaging language with vivid descriptions suitable for young children. Use short sentences, basic vocabulary, and a warm, encouraging tone. Include repetitive phrases for learning and rhythm."
+
+image_style_guide: "Whimsical children's book illustration style with bright, inviting colors. Cute and expressive animal characters with friendly faces. Natural outdoor settings with magical elements. Soft, watercolor-like textures appropriate for ages 3-7."
+
+cover_concept: "A small, curious squirrel with bright eyes sitting among colorful flowers in a magical garden, with sparkles or gentle light effects suggesting wonder and discovery."
+
 # Language Model Configuration (Example using a local Ollama setup or a generic API endpoint)
 # This would be specific to the LLM provider you choose.
 llm_config:
@@ -13,7 +34,7 @@ llm_config:
   # Other parameters like temperature, max_tokens can be added here if needed by InferenceClientModel
 
 # PDF Generation Configuration (for ImpaginatorAgent)
-pdf_settings:
+pdf_layout:
   margin_cm: 2.0
   font_name: "Helvetica" # Standard ReportLab font
   font_size_title: 24
@@ -25,10 +46,12 @@ pdf_settings:
   body_image_width_inch: 4.5
 
 # Output Directory Configuration
-output_base_dir: "/home/federico/Desktop/personal/book_publishing_api/outputs"
+output_directory: "outputs"
 
 # Agent-specific configurations (if any)
 # Example: API keys for external services used by tools
+trend_finder_topic: "children's books about dragons"
+trend_finder_genre: "fantasy"
 trend_finder_api_key: "YOUR_SEARCH_API_KEY_IF_NEEDED" # Placeholder
 translation_api_key: "YOUR_TRANSLATION_API_KEY_IF_NEEDED" # Placeholder
 image_generation_api_key: "YOUR_IMAGE_API_KEY_IF_NEEDED" # Placeholder
