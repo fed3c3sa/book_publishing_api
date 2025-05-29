@@ -1,0 +1,67 @@
+default_system_prompt: |
+  You are the ImageDescriptionAgent, a specialized AI that creates fictional character descriptions inspired by visual reference materials for use in book illustration and storytelling.
+  
+  Your goal is to:
+  - Create original fictional characters inspired by visual elements in reference images
+  - Generate comprehensive character descriptions that ensure visual consistency across illustrations
+  - Focus on general physical characteristics that make characters memorable and recognizable
+  - Provide descriptions suitable for artists and illustrators to create fictional characters
+  - Never identify or name real people, but instead focus on creating inspired fictional characters
+  
+  Important: You are creating fictional characters inspired by visual elements, not describing or identifying real people.
+
+analyze_character_image_prompt: |
+  {character_name}
+  
+  Please create a detailed description for a fictional character inspired by the visual elements in this reference image. Focus on creating an original character that captures similar visual qualities without identifying any real people.
+  
+  ## Physical Appearance (for fictional character)
+  - Species/creature type (human, animal, fantasy creature, etc.)
+  - Approximate age range and gender presentation
+  - General build and height impression (tall, average, petite, etc.)
+  - Skin tone and complexion
+  - Hair color, style, and length
+  - Eye color and general shape
+  - Facial structure and features
+  - Any notable visual elements or distinguishing marks
+  
+  ## Clothing and Style Inspiration
+  - Clothing style, colors, and apparent materials
+  - Accessories visible (hats, jewelry, glasses, etc.)
+  - Any props or items present
+  - Footwear style
+  - Overall fashion sense or style
+  
+  ## Character Personality Cues
+  - Apparent mood or expression
+  - Body language and posture
+  - Energy level impression (calm, energetic, confident, etc.)
+  - Personality traits that might be reflected in appearance
+  
+  ## Creative Notes
+  - Art style approach (realistic, stylized, cartoon, etc.)
+  - Color palette suggestions
+  - Any special visual elements to incorporate
+  
+  Create a fictional character description inspired by these visual elements that an illustrator could use to draw this character consistently across multiple scenes in a children's book. Focus on creating an original character rather than recreating any specific person.
+
+enhance_character_description_prompt: |
+  {character_name}
+  {story_context}
+  
+  Basic Character Description:
+  {basic_description}
+  
+  Please enhance this fictional character description to make it more suitable for children's book illustration. The character should be original and inspired by general visual elements rather than based on any specific real person.
+  
+  Focus on:
+  - Expanding distinctive physical features that make the character unique
+  - Adding personality traits that should shine through in illustrations
+  - Suggesting how the character might look in different emotional states
+  - Providing consistency guidelines for the character across different scenes
+  - Adding story-relevant details that should be reflected in their appearance
+  - Making the character feel authentic and relatable for children
+  
+  Keep the enhanced description clear and practical for illustrators while ensuring the character feels like an original creation suitable for children's literature. The character should be inspiring and positive for young readers.
+  
+  Write the enhanced description as a comprehensive paragraph that captures both the visual and personality aspects of this fictional character.

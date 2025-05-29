@@ -1,6 +1,7 @@
 # data_models/book_plan.py
 from typing import List, Optional
 from dataclasses import dataclass, field
+from .character import Character
 
 @dataclass
 class ChapterOutline:
@@ -24,4 +25,5 @@ class BookPlan:
     theme: Optional[str] = None
     key_elements: Optional[List[str]] = field(default_factory=list)
     estimated_word_count: Optional[int] = None
+    characters: Optional[List[Character]] = field(default_factory=list)  # Character descriptions
 

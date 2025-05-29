@@ -50,6 +50,14 @@ class StoryWriterAgent(BaseBookAgent):
             chapter_outlines_text += f"Images needed: {chapter.image_placeholders_needed}\n\n"
             total_images += chapter.image_placeholders_needed
         
+        # Prepare character descriptions from book plan
+        character_descriptions_text = "No specific characters provided."
+        if book_plan.characters:
+            char_descriptions = []
+            for char in book_plan.characters:
+                char_descriptions.append(f"- **{char.name}** ({char.role}): {char.description}")
+            character_descriptions_text = "\n".join(char_descriptions)
+        
         formatted_prompt = prompt_template.format(
             book_plan_title=book_plan.title,
             book_plan_genre=book_plan.genre,
@@ -58,6 +66,7 @@ class StoryWriterAgent(BaseBookAgent):
             book_plan_theme=book_plan.theme or "N/A",
             book_plan_key_elements=", ".join(book_plan.key_elements) if book_plan.key_elements else "N/A",
             chapter_outlines=chapter_outlines_text,
+            character_descriptions=character_descriptions_text,
             image_style_guide=book_plan.image_style_guide,
             style_example=style_example if style_example else "N/A",
             total_images=total_images
