@@ -3,6 +3,7 @@ from .base_agent import BaseBookAgent
 from smolagents import InferenceClientModel # Ensure InferenceClientModel is imported for type hinting
 from typing import List, Dict, Any, Optional
 from data_models.book_plan import BookPlan, ChapterOutline
+from data_models.character import Character
 import json # For parsing LLM output if it's JSON
 import uuid
 from datetime import datetime
@@ -37,7 +38,8 @@ class IdeatorAgent(BaseBookAgent):
                             image_style_guide: Optional[str] = None,
                             cover_concept: Optional[str] = None,
                             theme: Optional[str] = None,
-                            key_elements: Optional[List[str]] = None) -> BookPlan:
+                            key_elements: Optional[List[str]] = None,
+                            characters: Optional[List[Character]] = None) -> BookPlan:
         """
         Generates a detailed book plan based on a user prompt and optional parameters.
 
@@ -52,6 +54,7 @@ class IdeatorAgent(BaseBookAgent):
             cover_concept (Optional[str]): Optional cover concept description.
             theme (Optional[str]): Optional theme specification.
             key_elements (Optional[List[str]]): Optional list of key elements to include.
+            characters (Optional[List[Character]]): Optional list of character descriptions.
 
         Returns:
             BookPlan: A detailed plan for the book.
@@ -99,6 +102,15 @@ class IdeatorAgent(BaseBookAgent):
             optional_constraints.append(f"Key Elements: {', '.join(key_elements)}")
             print(f"IdeatorAgent: Using specified key elements: {key_elements}")
 
+        # Handle character descriptions
+        if characters:
+            character_descriptions = []
+            for char in characters:
+                character_descriptions.append(f"- {char.name} ({char.role}): {char.description}")
+            characters_str = "Character Descriptions:\n" + "\n".join(character_descriptions)
+            optional_constraints.append(characters_str)
+            print(f"IdeatorAgent: Using {len(characters)} character descriptions")
+
         # Combine optional constraints
         constraints_str = "No additional constraints provided."
         if optional_constraints:
@@ -108,6 +120,13 @@ class IdeatorAgent(BaseBookAgent):
             user_prompt=user_prompt,
             trend_analysis=trend_info_str,
             title=title_str,
+            genre=genre if genre else "Not specified",
+            target_audience=target_audience if target_audience else "Not specified", 
+            theme=theme if theme else "Not specified",
+            key_elements=', '.join(key_elements) if key_elements else "Not specified",
+            cover_concept=cover_concept if cover_concept else "Not specified",
+            writing_style_guide=writing_style_guide if writing_style_guide else "Not specified",
+            image_style_guide=image_style_guide if image_style_guide else "Not specified",
             additional_constraints=constraints_str
         )
         
@@ -115,15 +134,24 @@ class IdeatorAgent(BaseBookAgent):
         
         try:
             # Execute the LLM with the formatted prompt
+            print(f"IdeatorAgent: Executing LLM with formatted prompt...")
             llm_response_dict = self.run(task=formatted_prompt)
-            print(f"IdeatorAgent: Received LLM response, attempting to parse as JSON...")
+            print(f"IdeatorAgent: Received LLM response type: {type(llm_response_dict)}")
+            print(f"IdeatorAgent: Received LLM response (first 300 chars): {str(llm_response_dict)[:300]}")
             
             # Try to parse the LLM response as JSON
-            plan_dict = json.loads(llm_response_dict)
+            if isinstance(llm_response_dict, str):
+                plan_dict = json.loads(llm_response_dict)
+            else:
+                # If it's already a dict, use it directly
+                plan_dict = llm_response_dict
+                
             print(f"IdeatorAgent: Successfully parsed LLM response as JSON")
+            print(f"IdeatorAgent: Plan dict keys: {list(plan_dict.keys()) if isinstance(plan_dict, dict) else 'Not a dict'}")
             
         except json.JSONDecodeError as e:
             print(f"IdeatorAgent: Error parsing LLM response as JSON: {e}. Using fallback plan.")
+            print(f"IdeatorAgent: Raw LLM response was: {llm_response_dict[:500] if 'llm_response_dict' in locals() else 'No response received'}")
             # Fallback plan in case of JSON parsing error
             # Use provided parameters if available, otherwise use fallback values
             fallback_title = title if title else "The Magical Forest Adventure"
@@ -152,6 +180,8 @@ class IdeatorAgent(BaseBookAgent):
             }
         except Exception as e:
             print(f"IdeatorAgent: Unexpected error during LLM execution: {e}. Using fallback plan.")
+            import traceback
+            print(f"IdeatorAgent: Full traceback: {traceback.format_exc()}")
             # More comprehensive fallback for any other execution errors
             # Use provided parameters if available, otherwise use fallback values
             fallback_title = title if title else "The Little Dragon Who Couldn't Breathe Fire"
@@ -181,32 +211,84 @@ class IdeatorAgent(BaseBookAgent):
                 "key_elements": fallback_key_elements
             }
 
+        print(f"IdeatorAgent: About to access plan_dict fields...")
+        print(f"IdeatorAgent: plan_dict type: {type(plan_dict)}")
+        print(f"IdeatorAgent: plan_dict contents: {plan_dict}")
+
         # Generate unique project ID
         project_id = f"book_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:6]}"
         
         # Create BookPlan object from the parsed (or fallback) dictionary
         # Use provided parameters to override LLM output if specified
-        final_title = title if title else plan_dict.get("title", "Untitled Book")
-        final_genre = genre if genre else plan_dict.get("genre", "Unknown Genre")
-        final_target_audience = target_audience if target_audience else plan_dict.get("target_audience", "General Audience")
-        final_writing_style = writing_style_guide if writing_style_guide else plan_dict.get("writing_style_guide", "Standard writing style.")
-        final_image_style = str(plan_dict.get("image_style_guide")) if plan_dict.get("image_style_guide") else image_style_guide if image_style_guide else "Standard image style."
-        final_cover_concept = cover_concept if cover_concept else plan_dict.get("cover_concept", "A generic book cover.")
-        final_theme = theme if theme else plan_dict.get("theme")
-        final_key_elements = key_elements if key_elements else plan_dict.get("key_elements", [])
+        print(f"IdeatorAgent: Creating BookPlan with project_id: {project_id}")
         
-        book_plan = BookPlan(
-            project_id=project_id,
-            title=final_title,
-            genre=final_genre,
-            target_audience=final_target_audience,
-            writing_style_guide=final_writing_style,
-            image_style_guide=final_image_style,
-            cover_concept=final_cover_concept,
-            chapters=[ChapterOutline(**ch) for ch in plan_dict.get("chapters", [])],
-            theme=final_theme,
-            key_elements=final_key_elements
-        )
+        try:
+            final_title = title if title else plan_dict.get("title", "Untitled Book")
+            print(f"IdeatorAgent: final_title: {final_title}")
+            
+            final_genre = genre if genre else plan_dict.get("genre", "Unknown Genre")
+            print(f"IdeatorAgent: final_genre: {final_genre}")
+            
+            final_target_audience = target_audience if target_audience else plan_dict.get("target_audience", "General Audience")
+            print(f"IdeatorAgent: final_target_audience: {final_target_audience}")
+            
+            final_writing_style = writing_style_guide if writing_style_guide else plan_dict.get("writing_style_guide", "Standard writing style.")
+            print(f"IdeatorAgent: final_writing_style: {final_writing_style}")
+            
+            final_image_style = str(plan_dict.get("image_style_guide")) if plan_dict.get("image_style_guide") else image_style_guide if image_style_guide else "Standard image style."
+            print(f"IdeatorAgent: final_image_style: {final_image_style}")
+            
+            final_cover_concept = cover_concept if cover_concept else plan_dict.get("cover_concept", "A generic book cover.")
+            print(f"IdeatorAgent: final_cover_concept: {final_cover_concept}")
+            
+            final_theme = theme if theme else plan_dict.get("theme")
+            print(f"IdeatorAgent: final_theme: {final_theme}")
+            
+            final_key_elements = key_elements if key_elements else plan_dict.get("key_elements", [])
+            print(f"IdeatorAgent: final_key_elements: {final_key_elements}")
+            
+            # Extract chapters from nested structure or fallback to direct access
+            chapters_data = []
+            if "enhanced_story_structure" in plan_dict and "chapter_flow" in plan_dict["enhanced_story_structure"]:
+                chapters_data = plan_dict["enhanced_story_structure"]["chapter_flow"]
+                print(f"IdeatorAgent: Found {len(chapters_data)} chapters in enhanced_story_structure.chapter_flow")
+            elif "chapters" in plan_dict:
+                chapters_data = plan_dict["chapters"]
+                print(f"IdeatorAgent: Found {len(chapters_data)} chapters in direct chapters field")
+            else:
+                print(f"IdeatorAgent: No chapters found in response, using fallback chapters")
+                chapters_data = [
+                    {"title": "The Beginning", "summary": "Starting the adventure", "image_placeholders_needed": 1},
+                    {"title": "The Journey", "summary": "Continuing the story", "image_placeholders_needed": 1},
+                    {"title": "The Resolution", "summary": "Ending the story", "image_placeholders_needed": 1}
+                ]
+            
+        except Exception as e:
+            print(f"IdeatorAgent: Error accessing plan_dict fields: {e}")
+            import traceback
+            print(f"IdeatorAgent: Full traceback in field access: {traceback.format_exc()}")
+            raise e
         
-        print(f"IdeatorAgent: Generated book plan for '{book_plan.title}' with Project ID: {book_plan.project_id}")
-        return book_plan
+        try:
+            book_plan = BookPlan(
+                project_id=project_id,
+                title=final_title,
+                genre=final_genre,
+                target_audience=final_target_audience,
+                writing_style_guide=final_writing_style,
+                image_style_guide=final_image_style,
+                cover_concept=final_cover_concept,
+                chapters=[ChapterOutline(**ch) for ch in chapters_data],
+                theme=final_theme,
+                key_elements=final_key_elements,
+                characters=characters or []  # Include characters in the book plan
+            )
+            
+            print(f"IdeatorAgent: Generated book plan for '{book_plan.title}' with Project ID: {book_plan.project_id}")
+            return book_plan
+            
+        except Exception as e:
+            print(f"IdeatorAgent: Error creating BookPlan object: {e}")
+            import traceback
+            print(f"IdeatorAgent: Full traceback in BookPlan creation: {traceback.format_exc()}")
+            raise e
