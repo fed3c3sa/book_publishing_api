@@ -1,0 +1,42 @@
+{
+  "character_name": "Sunny",
+  "character_type": "main",
+  "species": "sunflower",
+  "ideogram_character_seed": "Sunny è un girasole alto e allegro con un grande sorriso fatto di semi al centro. Ha un gambo spesso e verde e grandi foglie verdi. I suoi petali sono di un giallo dorato brillante. È sempre ottimista e ama far ridere gli altri.",
+  "physical_description": {
+    "size": "girasole alto",
+    "exact_colors": {
+      "primary": "giallo dorato brillante",
+      "secondary": "verde intenso",
+      "details": "sorriso di semi marrone al centro"
+    },
+    "distinctive_features": [
+      "sorriso di semi",
+      "petali giallo dorato",
+      "gambo spesso"
+    ],
+    "fixed_elements": [
+      "sorriso di semi",
+      "gambo spesso e verde",
+      "grandi foglie verdi"
+    ],
+    "proportions": "gambo lungo e spesso con petali grandi e prominenti",
+    "facial_structure": {
+      "eyes": "non applicabile",
+      "nose": "non applicabile",
+      "mouth": "sorriso grande fatto di semi"
+    }
+  },
+  "consistency_formula": "Sunny è un girasole alto con petali giallo dorato brillante, gambo spesso e verde, grandi foglie verdi e un sorriso di semi marrone al centro.",
+  "style_anchors": [
+    "colorato",
+    "vivace",
+    "giocoso"
+  ],
+  "personality_traits": [
+    "ottimista",
+    "allegro",
+    "divertente"
+  ],
+  "visual_style_notes": "Lo stile dovrebbe essere luminoso e colorato, con un'atmosfera giocosa e amichevole adatta ai bambini."
+}

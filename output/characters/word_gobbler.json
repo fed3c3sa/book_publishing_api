@@ -1,0 +1,41 @@
+{
+  "character_name": "Word Gobbler",
+  "character_type": "main",
+  "species": "shadow creature",
+  "ideogram_character_seed": "The Word Gobbler, a gentle and sad creature made of swirling shadows and forgotten letters, with gentle purple eyes, resembling a cross between a cloud and a friendly ghost, surrounded by floating letters like fireflies.",
+  "physical_description": {
+    "size": "medium-sized shadowy figure",
+    "exact_colors": {
+      "primary": "misty charcoal gray",
+      "secondary": "soft lavender",
+      "details": "glowing letters in soft white and pale yellow floating around"
+    },
+    "distinctive_features": [
+      "swirling shadowy form",
+      "gentle purple eyes",
+      "floating letters"
+    ],
+    "fixed_elements": [
+      "shadowy mist form",
+      "floating letters around body"
+    ],
+    "proportions": "amorphous body with no distinct limbs, resembling a cloud",
+    "facial_structure": {
+      "eyes": "large, gentle, round purple eyes",
+      "nose": "none visible",
+      "mouth": "small, subtle smile"
+    }
+  },
+  "consistency_formula": "Always depict the Word Gobbler as a medium-sized shadowy figure with swirling misty charcoal gray form, gentle purple eyes, and floating letters in soft white and pale yellow.",
+  "style_anchors": [
+    "whimsical",
+    "ethereal",
+    "soft edges"
+  ],
+  "personality_traits": [
+    "lonely",
+    "curious",
+    "gentle"
+  ],
+  "visual_style_notes": "The Word Gobbler should be illustrated with a soft, ethereal style that emphasizes its gentle and non-threatening nature. The mood should be whimsical yet slightly melancholic, capturing its loneliness and curiosity."
+}

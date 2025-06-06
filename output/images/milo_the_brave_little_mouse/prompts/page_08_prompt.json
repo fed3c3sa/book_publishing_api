@@ -1,0 +1,19 @@
+{
+  "image_prompt": "The back cover illustration depicts Milo, Luna, Pip, and the Word Gobbler happily reading together in a cozy library setting. Milo, a tiny brown mouse with soft gray patches on his belly and ears, wears small round glasses, a tiny blue vest with small white buttons, and carries a miniature satchel made from a thimble. His large, curious dark eyes and kind, determined expression are highlighted as his whiskers twitch with excitement. Luna, a wise old owl with shimmering silver and white feathers, bright golden eyes, and a small brass reading monocle, perches on a bookshelf. Tiny scrolls are tied to her feet with brown leather ties, and her gentle, thoughtful expression is evident. Pip, a cheerful bright green cricket with darker green stripes and glowing soft yellow antennae, holds a matchstick harmonica. His small round black eyes and cheerful expression capture his energetic nature. The Word Gobbler, a gentle shadow creature made of swirling misty charcoal gray shadows and forgotten letters, has gentle purple eyes and a small, subtle smile. Floating letters in soft white and pale yellow surround him like fireflies. The characters are surrounded by books safely back on the shelves, creating a peaceful and content atmosphere.",
+  "style_specifications": "The illustration should be in a children's book style with a soft watercolor technique. The art should be whimsical and charming, with a warm magical atmosphere. Soft lines and inviting colors should be used to appeal to children.",
+  "composition_notes": "The scene is a medium-wide shot capturing all characters in a cozy library setting. The perspective should be at eye level with Milo, emphasizing the characters' interactions and the surrounding bookshelves. The focal point is the group of characters reading together.",
+  "character_placement": "Milo is seated on a small pile of books, Luna is perched on a nearby bookshelf, Pip is next to Milo with his harmonica, and the Word Gobbler hovers gently above them with floating letters around. The characters should be positioned in a semicircle, facing each other to show their engagement in reading.",
+  "background_elements": "The background features tall bookshelves filled with colorful books, a warm wooden floor, and soft lighting from a nearby lamp. The library should feel cozy and inviting, with a magical touch to the atmosphere.",
+  "color_palette": "Warm chestnut brown, soft dove gray, shimmering silver, pure white, bright golden, bright green, darker green, misty charcoal gray, soft lavender, and glowing soft yellow. The mood should be peaceful and content, with a cozy, warm atmosphere.",
+  "technical_specs": "Resolution should be 300 DPI for print quality, with an aspect ratio of 8.5:11 suitable for a children's book cover. Ensure high-quality settings for vibrant colors and soft details.",
+  "page_metadata": {
+    "page_number": 8,
+    "page_type": "back_cover",
+    "characters_present": [
+      "Milo",
+      "Luna",
+      "Pip",
+      "Word Gobbler"
+    ]
+  }
+}

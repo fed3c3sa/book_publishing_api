@@ -1,0 +1,41 @@
+{
+  "character_name": "Luna",
+  "character_type": "main",
+  "species": "owl",
+  "ideogram_character_seed": "Luna is a wise old owl with silver and white feathers, bright golden eyes, a reading monocle, and tiny scrolls tied to her feet. She lives in the library's tallest bookshelf and is the keeper of the library's secrets, speaking in gentle, thoughtful whispers.",
+  "physical_description": {
+    "size": "medium owl",
+    "exact_colors": {
+      "primary": "shimmering silver",
+      "secondary": "pure white",
+      "details": "bright golden eyes, small brass monocle, brown leather scroll ties"
+    },
+    "distinctive_features": [
+      "bright golden eyes",
+      "small reading monocle",
+      "tiny scrolls tied to feet"
+    ],
+    "fixed_elements": [
+      "reading monocle",
+      "scrolls on feet"
+    ],
+    "proportions": "standard owl proportions with slightly larger eyes",
+    "facial_structure": {
+      "eyes": "large, round, bright golden eyes",
+      "nose": "small, sharp beak with a silver sheen",
+      "mouth": "small beak with a gentle, thoughtful expression"
+    }
+  },
+  "consistency_formula": "Luna the owl with silver and white feathers, bright golden eyes, a reading monocle, and scrolls tied to her feet, always on the tallest bookshelf",
+  "style_anchors": [
+    "whimsical",
+    "storybook",
+    "gentle"
+  ],
+  "personality_traits": [
+    "wise",
+    "gentle",
+    "thoughtful"
+  ],
+  "visual_style_notes": "The art style should be whimsical and gentle, with a focus on soft lines and a warm, inviting color palette to reflect Luna's wise and gentle nature."
+}

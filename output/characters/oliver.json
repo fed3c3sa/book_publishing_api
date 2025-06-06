@@ -1,0 +1,43 @@
+{
+  "character_name": "Oliver",
+  "character_type": "main",
+  "species": "human",
+  "ideogram_character_seed": "Oliver is a 7-year-old boy with messy blonde hair and blue eyes. He wears a green t-shirt, brown shorts, and hiking boots. He carries a wooden walking stick and has a determined, serious expression. Protective of his sister, wary but appreciative of gentle nature.",
+  "physical_description": {
+    "size": "small child",
+    "exact_colors": {
+      "primary": "sunshine blonde hair",
+      "secondary": "sky blue eyes",
+      "details": "forest green t-shirt, earthy brown shorts, dark brown hiking boots"
+    },
+    "distinctive_features": [
+      "messy hair",
+      "wooden walking stick",
+      "serious expression"
+    ],
+    "fixed_elements": [
+      "green t-shirt",
+      "brown shorts",
+      "hiking boots",
+      "wooden walking stick"
+    ],
+    "proportions": "average proportions for a 7-year-old boy",
+    "facial_structure": {
+      "eyes": "medium-sized, round sky blue eyes",
+      "nose": "small, slightly upturned nose",
+      "mouth": "small mouth with a determined, serious expression"
+    }
+  },
+  "consistency_formula": "7-year-old boy with messy blonde hair, sky blue eyes, green t-shirt, brown shorts, hiking boots, wooden walking stick, serious expression",
+  "style_anchors": [
+    "cartoonish",
+    "vibrant",
+    "playful"
+  ],
+  "personality_traits": [
+    "protective",
+    "wary",
+    "appreciative"
+  ],
+  "visual_style_notes": "The art style should be colorful and engaging, with a focus on Oliver's protective and determined nature. His serious expression should be balanced with a sense of adventure and curiosity."
+}

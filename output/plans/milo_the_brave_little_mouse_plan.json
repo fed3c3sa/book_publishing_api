@@ -1,0 +1,1113 @@
+{
+  "book_title": "Milo the Brave Little Mouse",
+  "book_summary": "Milo, a tiny mouse living in an old library, discovers that the words in the books are disappearing into the night. With the help of his friends Luna the owl and Pip the cricket, Milo embarks on an adventure to find the Word Gobbler and save the stories before morning.",
+  "target_age": "4-7",
+  "themes": [
+    "courage",
+    "friendship",
+    "facing fears",
+    "the power of stories",
+    "helping others"
+  ],
+  "pages": [
+    {
+      "page_number": 1,
+      "page_type": "cover",
+      "scene_description": "The cover shows Milo peeking out from a hole in the library wall, with books and letters floating around him.",
+      "visual_elements": [
+        "Milo",
+        "floating letters",
+        "library books"
+      ],
+      "characters_present": [
+        "Milo"
+      ],
+      "mood_tone": "curious and inviting",
+      "text_content_brief": "Title and author name displayed.",
+      "character_details": [
+        {
+          "character_name": "Milo",
+          "character_type": "main",
+          "species": "mouse",
+          "ideogram_character_seed": "Milo is a tiny brown mouse with soft gray patches on his belly and ears, large curious dark eyes, small round glasses, a tiny blue vest with small buttons, and a miniature satchel made from a thimble. His whiskers twitch when nervous, and he has a kind, determined expression.",
+          "physical_description": {
+            "size": "tiny mouse",
+            "exact_colors": {
+              "primary": "warm chestnut brown",
+              "secondary": "soft dove gray",
+              "details": "gray patches on belly and ears, blue vest with small white buttons"
+            },
+            "distinctive_features": [
+              "large curious dark eyes",
+              "small round glasses",
+              "miniature satchel made from a thimble"
+            ],
+            "fixed_elements": [
+              "small round glasses",
+              "tiny blue vest",
+              "miniature satchel"
+            ],
+            "proportions": "small body with proportionally large head",
+            "facial_structure": {
+              "eyes": "large round dark eyes",
+              "nose": "tiny pink nose",
+              "mouth": "small mouth with a kind, determined expression"
+            }
+          },
+          "consistency_formula": "Milo is a tiny brown mouse with gray patches, large dark eyes, small round glasses, a blue vest, and a thimble satchel. Always include twitching whiskers and a kind expression.",
+          "style_anchors": [
+            "whimsical",
+            "storybook",
+            "charming"
+          ],
+          "personality_traits": [
+            "curious",
+            "kind",
+            "determined"
+          ],
+          "visual_style_notes": "The art style should be whimsical and charming, with a focus on warm, inviting colors and soft lines to appeal to children."
+        }
+      ],
+      "page_id": "page_01",
+      "estimated_word_count": 20
+    },
+    {
+      "page_number": 2,
+      "page_type": "story",
+      "scene_description": "Milo is nestled in his cozy nook inside the library wall, surrounded by tiny books. He looks worried as he notices letters drifting away from the pages.",
+      "visual_elements": [
+        "Milo",
+        "tiny books",
+        "floating letters"
+      ],
+      "characters_present": [
+        "Milo"
+      ],
+      "mood_tone": "mysterious and intriguing",
+      "text_content_brief": "Milo loves reading but is worried when he sees words floating away.",
+      "character_details": [
+        {
+          "character_name": "Milo",
+          "character_type": "main",
+          "species": "mouse",
+          "ideogram_character_seed": "Milo is a tiny brown mouse with soft gray patches on his belly and ears, large curious dark eyes, small round glasses, a tiny blue vest with small buttons, and a miniature satchel made from a thimble. His whiskers twitch when nervous, and he has a kind, determined expression.",
+          "physical_description": {
+            "size": "tiny mouse",
+            "exact_colors": {
+              "primary": "warm chestnut brown",
+              "secondary": "soft dove gray",
+              "details": "gray patches on belly and ears, blue vest with small white buttons"
+            },
+            "distinctive_features": [
+              "large curious dark eyes",
+              "small round glasses",
+              "miniature satchel made from a thimble"
+            ],
+            "fixed_elements": [
+              "small round glasses",
+              "tiny blue vest",
+              "miniature satchel"
+            ],
+            "proportions": "small body with proportionally large head",
+            "facial_structure": {
+              "eyes": "large round dark eyes",
+              "nose": "tiny pink nose",
+              "mouth": "small mouth with a kind, determined expression"
+            }
+          },
+          "consistency_formula": "Milo is a tiny brown mouse with gray patches, large dark eyes, small round glasses, a blue vest, and a thimble satchel. Always include twitching whiskers and a kind expression.",
+          "style_anchors": [
+            "whimsical",
+            "storybook",
+            "charming"
+          ],
+          "personality_traits": [
+            "curious",
+            "kind",
+            "determined"
+          ],
+          "visual_style_notes": "The art style should be whimsical and charming, with a focus on warm, inviting colors and soft lines to appeal to children."
+        }
+      ],
+      "page_id": "page_02",
+      "estimated_word_count": 25
+    },
+    {
+      "page_number": 3,
+      "page_type": "story",
+      "scene_description": "Milo ventures into the library, meeting Luna the owl perched on the tallest bookshelf. Luna explains the legend of the Word Gobbler.",
+      "visual_elements": [
+        "Luna",
+        "tall bookshelf",
+        "library setting"
+      ],
+      "characters_present": [
+        "Milo",
+        "Luna"
+      ],
+      "mood_tone": "informative and gentle",
+      "text_content_brief": "Luna tells Milo about the Word Gobbler and the disappearing words.",
+      "character_details": [
+        {
+          "character_name": "Milo",
+          "character_type": "main",
+          "species": "mouse",
+          "ideogram_character_seed": "Milo is a tiny brown mouse with soft gray patches on his belly and ears, large curious dark eyes, small round glasses, a tiny blue vest with small buttons, and a miniature satchel made from a thimble. His whiskers twitch when nervous, and he has a kind, determined expression.",
+          "physical_description": {
+            "size": "tiny mouse",
+            "exact_colors": {
+              "primary": "warm chestnut brown",
+              "secondary": "soft dove gray",
+              "details": "gray patches on belly and ears, blue vest with small white buttons"
+            },
+            "distinctive_features": [
+              "large curious dark eyes",
+              "small round glasses",
+              "miniature satchel made from a thimble"
+            ],
+            "fixed_elements": [
+              "small round glasses",
+              "tiny blue vest",
+              "miniature satchel"
+            ],
+            "proportions": "small body with proportionally large head",
+            "facial_structure": {
+              "eyes": "large round dark eyes",
+              "nose": "tiny pink nose",
+              "mouth": "small mouth with a kind, determined expression"
+            }
+          },
+          "consistency_formula": "Milo is a tiny brown mouse with gray patches, large dark eyes, small round glasses, a blue vest, and a thimble satchel. Always include twitching whiskers and a kind expression.",
+          "style_anchors": [
+            "whimsical",
+            "storybook",
+            "charming"
+          ],
+          "personality_traits": [
+            "curious",
+            "kind",
+            "determined"
+          ],
+          "visual_style_notes": "The art style should be whimsical and charming, with a focus on warm, inviting colors and soft lines to appeal to children."
+        },
+        {
+          "character_name": "Luna",
+          "character_type": "main",
+          "species": "owl",
+          "ideogram_character_seed": "Luna is a wise old owl with silver and white feathers, bright golden eyes, a reading monocle, and tiny scrolls tied to her feet. She lives in the library's tallest bookshelf and is the keeper of the library's secrets, speaking in gentle, thoughtful whispers.",
+          "physical_description": {
+            "size": "medium owl",
+            "exact_colors": {
+              "primary": "shimmering silver",
+              "secondary": "pure white",
+              "details": "bright golden eyes, small brass monocle, brown leather scroll ties"
+            },
+            "distinctive_features": [
+              "bright golden eyes",
+              "small reading monocle",
+              "tiny scrolls tied to feet"
+            ],
+            "fixed_elements": [
+              "reading monocle",
+              "scrolls on feet"
+            ],
+            "proportions": "standard owl proportions with slightly larger eyes",
+            "facial_structure": {
+              "eyes": "large, round, bright golden eyes",
+              "nose": "small, sharp beak with a silver sheen",
+              "mouth": "small beak with a gentle, thoughtful expression"
+            }
+          },
+          "consistency_formula": "Luna the owl with silver and white feathers, bright golden eyes, a reading monocle, and scrolls tied to her feet, always on the tallest bookshelf",
+          "style_anchors": [
+            "whimsical",
+            "storybook",
+            "gentle"
+          ],
+          "personality_traits": [
+            "wise",
+            "gentle",
+            "thoughtful"
+          ],
+          "visual_style_notes": "The art style should be whimsical and gentle, with a focus on soft lines and a warm, inviting color palette to reflect Luna's wise and gentle nature."
+        }
+      ],
+      "page_id": "page_03",
+      "estimated_word_count": 25
+    },
+    {
+      "page_number": 4,
+      "page_type": "story",
+      "scene_description": "Milo and Luna fly down to meet Pip, who is playing his matchstick harmonica. Pip eagerly joins the quest to find the Word Gobbler.",
+      "visual_elements": [
+        "Pip",
+        "harmonica",
+        "library floor"
+      ],
+      "characters_present": [
+        "Milo",
+        "Luna",
+        "Pip"
+      ],
+      "mood_tone": "playful and energetic",
+      "text_content_brief": "Pip joins the adventure with a cheerful tune.",
+      "character_details": [
+        {
+          "character_name": "Milo",
+          "character_type": "main",
+          "species": "mouse",
+          "ideogram_character_seed": "Milo is a tiny brown mouse with soft gray patches on his belly and ears, large curious dark eyes, small round glasses, a tiny blue vest with small buttons, and a miniature satchel made from a thimble. His whiskers twitch when nervous, and he has a kind, determined expression.",
+          "physical_description": {
+            "size": "tiny mouse",
+            "exact_colors": {
+              "primary": "warm chestnut brown",
+              "secondary": "soft dove gray",
+              "details": "gray patches on belly and ears, blue vest with small white buttons"
+            },
+            "distinctive_features": [
+              "large curious dark eyes",
+              "small round glasses",
+              "miniature satchel made from a thimble"
+            ],
+            "fixed_elements": [
+              "small round glasses",
+              "tiny blue vest",
+              "miniature satchel"
+            ],
+            "proportions": "small body with proportionally large head",
+            "facial_structure": {
+              "eyes": "large round dark eyes",
+              "nose": "tiny pink nose",
+              "mouth": "small mouth with a kind, determined expression"
+            }
+          },
+          "consistency_formula": "Milo is a tiny brown mouse with gray patches, large dark eyes, small round glasses, a blue vest, and a thimble satchel. Always include twitching whiskers and a kind expression.",
+          "style_anchors": [
+            "whimsical",
+            "storybook",
+            "charming"
+          ],
+          "personality_traits": [
+            "curious",
+            "kind",
+            "determined"
+          ],
+          "visual_style_notes": "The art style should be whimsical and charming, with a focus on warm, inviting colors and soft lines to appeal to children."
+        },
+        {
+          "character_name": "Luna",
+          "character_type": "main",
+          "species": "owl",
+          "ideogram_character_seed": "Luna is a wise old owl with silver and white feathers, bright golden eyes, a reading monocle, and tiny scrolls tied to her feet. She lives in the library's tallest bookshelf and is the keeper of the library's secrets, speaking in gentle, thoughtful whispers.",
+          "physical_description": {
+            "size": "medium owl",
+            "exact_colors": {
+              "primary": "shimmering silver",
+              "secondary": "pure white",
+              "details": "bright golden eyes, small brass monocle, brown leather scroll ties"
+            },
+            "distinctive_features": [
+              "bright golden eyes",
+              "small reading monocle",
+              "tiny scrolls tied to feet"
+            ],
+            "fixed_elements": [
+              "reading monocle",
+              "scrolls on feet"
+            ],
+            "proportions": "standard owl proportions with slightly larger eyes",
+            "facial_structure": {
+              "eyes": "large, round, bright golden eyes",
+              "nose": "small, sharp beak with a silver sheen",
+              "mouth": "small beak with a gentle, thoughtful expression"
+            }
+          },
+          "consistency_formula": "Luna the owl with silver and white feathers, bright golden eyes, a reading monocle, and scrolls tied to her feet, always on the tallest bookshelf",
+          "style_anchors": [
+            "whimsical",
+            "storybook",
+            "gentle"
+          ],
+          "personality_traits": [
+            "wise",
+            "gentle",
+            "thoughtful"
+          ],
+          "visual_style_notes": "The art style should be whimsical and gentle, with a focus on soft lines and a warm, inviting color palette to reflect Luna's wise and gentle nature."
+        },
+        {
+          "character_name": "Pip",
+          "character_type": "main",
+          "species": "cricket",
+          "ideogram_character_seed": "Pip is a cheerful, bright green cricket with darker green stripes, tiny glowing antennae, and a matchstick harmonica. He lives in the library's old radiator and is known for his musical wings and energetic, helpful nature.",
+          "physical_description": {
+            "size": "small cricket",
+            "exact_colors": {
+              "primary": "bright green",
+              "secondary": "darker green",
+              "details": "darker green stripes on body, glowing soft yellow antennae"
+            },
+            "distinctive_features": [
+              "tiny glowing antennae",
+              "darker green stripes",
+              "matchstick harmonica"
+            ],
+            "fixed_elements": [
+              "glowing antennae",
+              "matchstick harmonica"
+            ],
+            "proportions": "proportionate cricket body with slightly elongated wings",
+            "facial_structure": {
+              "eyes": "small round black eyes",
+              "nose": "tiny cricket nose",
+              "mouth": "small mouth often in a cheerful expression"
+            }
+          },
+          "consistency_formula": "Pip is a bright green cricket with darker green stripes, glowing antennae, and a matchstick harmonica, always cheerful and energetic.",
+          "style_anchors": [
+            "whimsical",
+            "vibrant",
+            "playful"
+          ],
+          "personality_traits": [
+            "cheerful",
+            "energetic",
+            "helpful"
+          ],
+          "visual_style_notes": "The art style should be colorful and whimsical, capturing Pip's cheerful and energetic nature. The glowing antennae should be subtly highlighted to show his unique feature."
+        }
+      ],
+      "page_id": "page_04",
+      "estimated_word_count": 20
+    },
+    {
+      "page_number": 5,
+      "page_type": "story",
+      "scene_description": "The trio follows a trail of floating letters through the library, encountering shadows and whispers as they go.",
+      "visual_elements": [
+        "floating letters",
+        "shadows",
+        "library corridors"
+      ],
+      "characters_present": [
+        "Milo",
+        "Luna",
+        "Pip"
+      ],
+      "mood_tone": "adventurous and slightly eerie",
+      "text_content_brief": "They follow the letters, feeling both excited and scared.",
+      "character_details": [
+        {
+          "character_name": "Milo",
+          "character_type": "main",
+          "species": "mouse",
+          "ideogram_character_seed": "Milo is a tiny brown mouse with soft gray patches on his belly and ears, large curious dark eyes, small round glasses, a tiny blue vest with small buttons, and a miniature satchel made from a thimble. His whiskers twitch when nervous, and he has a kind, determined expression.",
+          "physical_description": {
+            "size": "tiny mouse",
+            "exact_colors": {
+              "primary": "warm chestnut brown",
+              "secondary": "soft dove gray",
+              "details": "gray patches on belly and ears, blue vest with small white buttons"
+            },
+            "distinctive_features": [
+              "large curious dark eyes",
+              "small round glasses",
+              "miniature satchel made from a thimble"
+            ],
+            "fixed_elements": [
+              "small round glasses",
+              "tiny blue vest",
+              "miniature satchel"
+            ],
+            "proportions": "small body with proportionally large head",
+            "facial_structure": {
+              "eyes": "large round dark eyes",
+              "nose": "tiny pink nose",
+              "mouth": "small mouth with a kind, determined expression"
+            }
+          },
+          "consistency_formula": "Milo is a tiny brown mouse with gray patches, large dark eyes, small round glasses, a blue vest, and a thimble satchel. Always include twitching whiskers and a kind expression.",
+          "style_anchors": [
+            "whimsical",
+            "storybook",
+            "charming"
+          ],
+          "personality_traits": [
+            "curious",
+            "kind",
+            "determined"
+          ],
+          "visual_style_notes": "The art style should be whimsical and charming, with a focus on warm, inviting colors and soft lines to appeal to children."
+        },
+        {
+          "character_name": "Luna",
+          "character_type": "main",
+          "species": "owl",
+          "ideogram_character_seed": "Luna is a wise old owl with silver and white feathers, bright golden eyes, a reading monocle, and tiny scrolls tied to her feet. She lives in the library's tallest bookshelf and is the keeper of the library's secrets, speaking in gentle, thoughtful whispers.",
+          "physical_description": {
+            "size": "medium owl",
+            "exact_colors": {
+              "primary": "shimmering silver",
+              "secondary": "pure white",
+              "details": "bright golden eyes, small brass monocle, brown leather scroll ties"
+            },
+            "distinctive_features": [
+              "bright golden eyes",
+              "small reading monocle",
+              "tiny scrolls tied to feet"
+            ],
+            "fixed_elements": [
+              "reading monocle",
+              "scrolls on feet"
+            ],
+            "proportions": "standard owl proportions with slightly larger eyes",
+            "facial_structure": {
+              "eyes": "large, round, bright golden eyes",
+              "nose": "small, sharp beak with a silver sheen",
+              "mouth": "small beak with a gentle, thoughtful expression"
+            }
+          },
+          "consistency_formula": "Luna the owl with silver and white feathers, bright golden eyes, a reading monocle, and scrolls tied to her feet, always on the tallest bookshelf",
+          "style_anchors": [
+            "whimsical",
+            "storybook",
+            "gentle"
+          ],
+          "personality_traits": [
+            "wise",
+            "gentle",
+            "thoughtful"
+          ],
+          "visual_style_notes": "The art style should be whimsical and gentle, with a focus on soft lines and a warm, inviting color palette to reflect Luna's wise and gentle nature."
+        },
+        {
+          "character_name": "Pip",
+          "character_type": "main",
+          "species": "cricket",
+          "ideogram_character_seed": "Pip is a cheerful, bright green cricket with darker green stripes, tiny glowing antennae, and a matchstick harmonica. He lives in the library's old radiator and is known for his musical wings and energetic, helpful nature.",
+          "physical_description": {
+            "size": "small cricket",
+            "exact_colors": {
+              "primary": "bright green",
+              "secondary": "darker green",
+              "details": "darker green stripes on body, glowing soft yellow antennae"
+            },
+            "distinctive_features": [
+              "tiny glowing antennae",
+              "darker green stripes",
+              "matchstick harmonica"
+            ],
+            "fixed_elements": [
+              "glowing antennae",
+              "matchstick harmonica"
+            ],
+            "proportions": "proportionate cricket body with slightly elongated wings",
+            "facial_structure": {
+              "eyes": "small round black eyes",
+              "nose": "tiny cricket nose",
+              "mouth": "small mouth often in a cheerful expression"
+            }
+          },
+          "consistency_formula": "Pip is a bright green cricket with darker green stripes, glowing antennae, and a matchstick harmonica, always cheerful and energetic.",
+          "style_anchors": [
+            "whimsical",
+            "vibrant",
+            "playful"
+          ],
+          "personality_traits": [
+            "cheerful",
+            "energetic",
+            "helpful"
+          ],
+          "visual_style_notes": "The art style should be colorful and whimsical, capturing Pip's cheerful and energetic nature. The glowing antennae should be subtly highlighted to show his unique feature."
+        }
+      ],
+      "page_id": "page_05",
+      "estimated_word_count": 20
+    },
+    {
+      "page_number": 6,
+      "page_type": "story",
+      "scene_description": "They find the Word Gobbler, a gentle shadow creature surrounded by letters. It explains it didn't mean to take the words, it just wanted to read them.",
+      "visual_elements": [
+        "Word Gobbler",
+        "floating letters",
+        "shadowy corner"
+      ],
+      "characters_present": [
+        "Milo",
+        "Luna",
+        "Pip",
+        "Word Gobbler"
+      ],
+      "mood_tone": "empathetic and understanding",
+      "text_content_brief": "The Word Gobbler reveals it loves stories too.",
+      "character_details": [
+        {
+          "character_name": "Milo",
+          "character_type": "main",
+          "species": "mouse",
+          "ideogram_character_seed": "Milo is a tiny brown mouse with soft gray patches on his belly and ears, large curious dark eyes, small round glasses, a tiny blue vest with small buttons, and a miniature satchel made from a thimble. His whiskers twitch when nervous, and he has a kind, determined expression.",
+          "physical_description": {
+            "size": "tiny mouse",
+            "exact_colors": {
+              "primary": "warm chestnut brown",
+              "secondary": "soft dove gray",
+              "details": "gray patches on belly and ears, blue vest with small white buttons"
+            },
+            "distinctive_features": [
+              "large curious dark eyes",
+              "small round glasses",
+              "miniature satchel made from a thimble"
+            ],
+            "fixed_elements": [
+              "small round glasses",
+              "tiny blue vest",
+              "miniature satchel"
+            ],
+            "proportions": "small body with proportionally large head",
+            "facial_structure": {
+              "eyes": "large round dark eyes",
+              "nose": "tiny pink nose",
+              "mouth": "small mouth with a kind, determined expression"
+            }
+          },
+          "consistency_formula": "Milo is a tiny brown mouse with gray patches, large dark eyes, small round glasses, a blue vest, and a thimble satchel. Always include twitching whiskers and a kind expression.",
+          "style_anchors": [
+            "whimsical",
+            "storybook",
+            "charming"
+          ],
+          "personality_traits": [
+            "curious",
+            "kind",
+            "determined"
+          ],
+          "visual_style_notes": "The art style should be whimsical and charming, with a focus on warm, inviting colors and soft lines to appeal to children."
+        },
+        {
+          "character_name": "Luna",
+          "character_type": "main",
+          "species": "owl",
+          "ideogram_character_seed": "Luna is a wise old owl with silver and white feathers, bright golden eyes, a reading monocle, and tiny scrolls tied to her feet. She lives in the library's tallest bookshelf and is the keeper of the library's secrets, speaking in gentle, thoughtful whispers.",
+          "physical_description": {
+            "size": "medium owl",
+            "exact_colors": {
+              "primary": "shimmering silver",
+              "secondary": "pure white",
+              "details": "bright golden eyes, small brass monocle, brown leather scroll ties"
+            },
+            "distinctive_features": [
+              "bright golden eyes",
+              "small reading monocle",
+              "tiny scrolls tied to feet"
+            ],
+            "fixed_elements": [
+              "reading monocle",
+              "scrolls on feet"
+            ],
+            "proportions": "standard owl proportions with slightly larger eyes",
+            "facial_structure": {
+              "eyes": "large, round, bright golden eyes",
+              "nose": "small, sharp beak with a silver sheen",
+              "mouth": "small beak with a gentle, thoughtful expression"
+            }
+          },
+          "consistency_formula": "Luna the owl with silver and white feathers, bright golden eyes, a reading monocle, and scrolls tied to her feet, always on the tallest bookshelf",
+          "style_anchors": [
+            "whimsical",
+            "storybook",
+            "gentle"
+          ],
+          "personality_traits": [
+            "wise",
+            "gentle",
+            "thoughtful"
+          ],
+          "visual_style_notes": "The art style should be whimsical and gentle, with a focus on soft lines and a warm, inviting color palette to reflect Luna's wise and gentle nature."
+        },
+        {
+          "character_name": "Pip",
+          "character_type": "main",
+          "species": "cricket",
+          "ideogram_character_seed": "Pip is a cheerful, bright green cricket with darker green stripes, tiny glowing antennae, and a matchstick harmonica. He lives in the library's old radiator and is known for his musical wings and energetic, helpful nature.",
+          "physical_description": {
+            "size": "small cricket",
+            "exact_colors": {
+              "primary": "bright green",
+              "secondary": "darker green",
+              "details": "darker green stripes on body, glowing soft yellow antennae"
+            },
+            "distinctive_features": [
+              "tiny glowing antennae",
+              "darker green stripes",
+              "matchstick harmonica"
+            ],
+            "fixed_elements": [
+              "glowing antennae",
+              "matchstick harmonica"
+            ],
+            "proportions": "proportionate cricket body with slightly elongated wings",
+            "facial_structure": {
+              "eyes": "small round black eyes",
+              "nose": "tiny cricket nose",
+              "mouth": "small mouth often in a cheerful expression"
+            }
+          },
+          "consistency_formula": "Pip is a bright green cricket with darker green stripes, glowing antennae, and a matchstick harmonica, always cheerful and energetic.",
+          "style_anchors": [
+            "whimsical",
+            "vibrant",
+            "playful"
+          ],
+          "personality_traits": [
+            "cheerful",
+            "energetic",
+            "helpful"
+          ],
+          "visual_style_notes": "The art style should be colorful and whimsical, capturing Pip's cheerful and energetic nature. The glowing antennae should be subtly highlighted to show his unique feature."
+        },
+        {
+          "character_name": "Word Gobbler",
+          "character_type": "main",
+          "species": "shadow creature",
+          "ideogram_character_seed": "The Word Gobbler, a gentle and sad creature made of swirling shadows and forgotten letters, with gentle purple eyes, resembling a cross between a cloud and a friendly ghost, surrounded by floating letters like fireflies.",
+          "physical_description": {
+            "size": "medium-sized shadowy figure",
+            "exact_colors": {
+              "primary": "misty charcoal gray",
+              "secondary": "soft lavender",
+              "details": "glowing letters in soft white and pale yellow floating around"
+            },
+            "distinctive_features": [
+              "swirling shadowy form",
+              "gentle purple eyes",
+              "floating letters"
+            ],
+            "fixed_elements": [
+              "shadowy mist form",
+              "floating letters around body"
+            ],
+            "proportions": "amorphous body with no distinct limbs, resembling a cloud",
+            "facial_structure": {
+              "eyes": "large, gentle, round purple eyes",
+              "nose": "none visible",
+              "mouth": "small, subtle smile"
+            }
+          },
+          "consistency_formula": "Always depict the Word Gobbler as a medium-sized shadowy figure with swirling misty charcoal gray form, gentle purple eyes, and floating letters in soft white and pale yellow.",
+          "style_anchors": [
+            "whimsical",
+            "ethereal",
+            "soft edges"
+          ],
+          "personality_traits": [
+            "lonely",
+            "curious",
+            "gentle"
+          ],
+          "visual_style_notes": "The Word Gobbler should be illustrated with a soft, ethereal style that emphasizes its gentle and non-threatening nature. The mood should be whimsical yet slightly melancholic, capturing its loneliness and curiosity."
+        }
+      ],
+      "page_id": "page_06",
+      "estimated_word_count": 20
+    },
+    {
+      "page_number": 7,
+      "page_type": "story",
+      "scene_description": "Milo suggests they all read together, sharing stories with the Word Gobbler. The letters return to the books as they read.",
+      "visual_elements": [
+        "Milo",
+        "Luna",
+        "Pip",
+        "Word Gobbler",
+        "books"
+      ],
+      "characters_present": [
+        "Milo",
+        "Luna",
+        "Pip",
+        "Word Gobbler"
+      ],
+      "mood_tone": "warm and joyful",
+      "text_content_brief": "They all read together, and the words return.",
+      "character_details": [
+        {
+          "character_name": "Milo",
+          "character_type": "main",
+          "species": "mouse",
+          "ideogram_character_seed": "Milo is a tiny brown mouse with soft gray patches on his belly and ears, large curious dark eyes, small round glasses, a tiny blue vest with small buttons, and a miniature satchel made from a thimble. His whiskers twitch when nervous, and he has a kind, determined expression.",
+          "physical_description": {
+            "size": "tiny mouse",
+            "exact_colors": {
+              "primary": "warm chestnut brown",
+              "secondary": "soft dove gray",
+              "details": "gray patches on belly and ears, blue vest with small white buttons"
+            },
+            "distinctive_features": [
+              "large curious dark eyes",
+              "small round glasses",
+              "miniature satchel made from a thimble"
+            ],
+            "fixed_elements": [
+              "small round glasses",
+              "tiny blue vest",
+              "miniature satchel"
+            ],
+            "proportions": "small body with proportionally large head",
+            "facial_structure": {
+              "eyes": "large round dark eyes",
+              "nose": "tiny pink nose",
+              "mouth": "small mouth with a kind, determined expression"
+            }
+          },
+          "consistency_formula": "Milo is a tiny brown mouse with gray patches, large dark eyes, small round glasses, a blue vest, and a thimble satchel. Always include twitching whiskers and a kind expression.",
+          "style_anchors": [
+            "whimsical",
+            "storybook",
+            "charming"
+          ],
+          "personality_traits": [
+            "curious",
+            "kind",
+            "determined"
+          ],
+          "visual_style_notes": "The art style should be whimsical and charming, with a focus on warm, inviting colors and soft lines to appeal to children."
+        },
+        {
+          "character_name": "Luna",
+          "character_type": "main",
+          "species": "owl",
+          "ideogram_character_seed": "Luna is a wise old owl with silver and white feathers, bright golden eyes, a reading monocle, and tiny scrolls tied to her feet. She lives in the library's tallest bookshelf and is the keeper of the library's secrets, speaking in gentle, thoughtful whispers.",
+          "physical_description": {
+            "size": "medium owl",
+            "exact_colors": {
+              "primary": "shimmering silver",
+              "secondary": "pure white",
+              "details": "bright golden eyes, small brass monocle, brown leather scroll ties"
+            },
+            "distinctive_features": [
+              "bright golden eyes",
+              "small reading monocle",
+              "tiny scrolls tied to feet"
+            ],
+            "fixed_elements": [
+              "reading monocle",
+              "scrolls on feet"
+            ],
+            "proportions": "standard owl proportions with slightly larger eyes",
+            "facial_structure": {
+              "eyes": "large, round, bright golden eyes",
+              "nose": "small, sharp beak with a silver sheen",
+              "mouth": "small beak with a gentle, thoughtful expression"
+            }
+          },
+          "consistency_formula": "Luna the owl with silver and white feathers, bright golden eyes, a reading monocle, and scrolls tied to her feet, always on the tallest bookshelf",
+          "style_anchors": [
+            "whimsical",
+            "storybook",
+            "gentle"
+          ],
+          "personality_traits": [
+            "wise",
+            "gentle",
+            "thoughtful"
+          ],
+          "visual_style_notes": "The art style should be whimsical and gentle, with a focus on soft lines and a warm, inviting color palette to reflect Luna's wise and gentle nature."
+        },
+        {
+          "character_name": "Pip",
+          "character_type": "main",
+          "species": "cricket",
+          "ideogram_character_seed": "Pip is a cheerful, bright green cricket with darker green stripes, tiny glowing antennae, and a matchstick harmonica. He lives in the library's old radiator and is known for his musical wings and energetic, helpful nature.",
+          "physical_description": {
+            "size": "small cricket",
+            "exact_colors": {
+              "primary": "bright green",
+              "secondary": "darker green",
+              "details": "darker green stripes on body, glowing soft yellow antennae"
+            },
+            "distinctive_features": [
+              "tiny glowing antennae",
+              "darker green stripes",
+              "matchstick harmonica"
+            ],
+            "fixed_elements": [
+              "glowing antennae",
+              "matchstick harmonica"
+            ],
+            "proportions": "proportionate cricket body with slightly elongated wings",
+            "facial_structure": {
+              "eyes": "small round black eyes",
+              "nose": "tiny cricket nose",
+              "mouth": "small mouth often in a cheerful expression"
+            }
+          },
+          "consistency_formula": "Pip is a bright green cricket with darker green stripes, glowing antennae, and a matchstick harmonica, always cheerful and energetic.",
+          "style_anchors": [
+            "whimsical",
+            "vibrant",
+            "playful"
+          ],
+          "personality_traits": [
+            "cheerful",
+            "energetic",
+            "helpful"
+          ],
+          "visual_style_notes": "The art style should be colorful and whimsical, capturing Pip's cheerful and energetic nature. The glowing antennae should be subtly highlighted to show his unique feature."
+        },
+        {
+          "character_name": "Word Gobbler",
+          "character_type": "main",
+          "species": "shadow creature",
+          "ideogram_character_seed": "The Word Gobbler, a gentle and sad creature made of swirling shadows and forgotten letters, with gentle purple eyes, resembling a cross between a cloud and a friendly ghost, surrounded by floating letters like fireflies.",
+          "physical_description": {
+            "size": "medium-sized shadowy figure",
+            "exact_colors": {
+              "primary": "misty charcoal gray",
+              "secondary": "soft lavender",
+              "details": "glowing letters in soft white and pale yellow floating around"
+            },
+            "distinctive_features": [
+              "swirling shadowy form",
+              "gentle purple eyes",
+              "floating letters"
+            ],
+            "fixed_elements": [
+              "shadowy mist form",
+              "floating letters around body"
+            ],
+            "proportions": "amorphous body with no distinct limbs, resembling a cloud",
+            "facial_structure": {
+              "eyes": "large, gentle, round purple eyes",
+              "nose": "none visible",
+              "mouth": "small, subtle smile"
+            }
+          },
+          "consistency_formula": "Always depict the Word Gobbler as a medium-sized shadowy figure with swirling misty charcoal gray form, gentle purple eyes, and floating letters in soft white and pale yellow.",
+          "style_anchors": [
+            "whimsical",
+            "ethereal",
+            "soft edges"
+          ],
+          "personality_traits": [
+            "lonely",
+            "curious",
+            "gentle"
+          ],
+          "visual_style_notes": "The Word Gobbler should be illustrated with a soft, ethereal style that emphasizes its gentle and non-threatening nature. The mood should be whimsical yet slightly melancholic, capturing its loneliness and curiosity."
+        }
+      ],
+      "page_id": "page_07",
+      "estimated_word_count": 20
+    },
+    {
+      "page_number": 8,
+      "page_type": "back_cover",
+      "scene_description": "The back cover shows Milo, Luna, Pip, and the Word Gobbler happily reading together, with books safely back on the shelves.",
+      "visual_elements": [
+        "Milo",
+        "Luna",
+        "Pip",
+        "Word Gobbler",
+        "books"
+      ],
+      "characters_present": [
+        "Milo",
+        "Luna",
+        "Pip",
+        "Word Gobbler"
+      ],
+      "mood_tone": "peaceful and content",
+      "text_content_brief": "A happy ending with friends and stories.",
+      "character_details": [
+        {
+          "character_name": "Milo",
+          "character_type": "main",
+          "species": "mouse",
+          "ideogram_character_seed": "Milo is a tiny brown mouse with soft gray patches on his belly and ears, large curious dark eyes, small round glasses, a tiny blue vest with small buttons, and a miniature satchel made from a thimble. His whiskers twitch when nervous, and he has a kind, determined expression.",
+          "physical_description": {
+            "size": "tiny mouse",
+            "exact_colors": {
+              "primary": "warm chestnut brown",
+              "secondary": "soft dove gray",
+              "details": "gray patches on belly and ears, blue vest with small white buttons"
+            },
+            "distinctive_features": [
+              "large curious dark eyes",
+              "small round glasses",
+              "miniature satchel made from a thimble"
+            ],
+            "fixed_elements": [
+              "small round glasses",
+              "tiny blue vest",
+              "miniature satchel"
+            ],
+            "proportions": "small body with proportionally large head",
+            "facial_structure": {
+              "eyes": "large round dark eyes",
+              "nose": "tiny pink nose",
+              "mouth": "small mouth with a kind, determined expression"
+            }
+          },
+          "consistency_formula": "Milo is a tiny brown mouse with gray patches, large dark eyes, small round glasses, a blue vest, and a thimble satchel. Always include twitching whiskers and a kind expression.",
+          "style_anchors": [
+            "whimsical",
+            "storybook",
+            "charming"
+          ],
+          "personality_traits": [
+            "curious",
+            "kind",
+            "determined"
+          ],
+          "visual_style_notes": "The art style should be whimsical and charming, with a focus on warm, inviting colors and soft lines to appeal to children."
+        },
+        {
+          "character_name": "Luna",
+          "character_type": "main",
+          "species": "owl",
+          "ideogram_character_seed": "Luna is a wise old owl with silver and white feathers, bright golden eyes, a reading monocle, and tiny scrolls tied to her feet. She lives in the library's tallest bookshelf and is the keeper of the library's secrets, speaking in gentle, thoughtful whispers.",
+          "physical_description": {
+            "size": "medium owl",
+            "exact_colors": {
+              "primary": "shimmering silver",
+              "secondary": "pure white",
+              "details": "bright golden eyes, small brass monocle, brown leather scroll ties"
+            },
+            "distinctive_features": [
+              "bright golden eyes",
+              "small reading monocle",
+              "tiny scrolls tied to feet"
+            ],
+            "fixed_elements": [
+              "reading monocle",
+              "scrolls on feet"
+            ],
+            "proportions": "standard owl proportions with slightly larger eyes",
+            "facial_structure": {
+              "eyes": "large, round, bright golden eyes",
+              "nose": "small, sharp beak with a silver sheen",
+              "mouth": "small beak with a gentle, thoughtful expression"
+            }
+          },
+          "consistency_formula": "Luna the owl with silver and white feathers, bright golden eyes, a reading monocle, and scrolls tied to her feet, always on the tallest bookshelf",
+          "style_anchors": [
+            "whimsical",
+            "storybook",
+            "gentle"
+          ],
+          "personality_traits": [
+            "wise",
+            "gentle",
+            "thoughtful"
+          ],
+          "visual_style_notes": "The art style should be whimsical and gentle, with a focus on soft lines and a warm, inviting color palette to reflect Luna's wise and gentle nature."
+        },
+        {
+          "character_name": "Pip",
+          "character_type": "main",
+          "species": "cricket",
+          "ideogram_character_seed": "Pip is a cheerful, bright green cricket with darker green stripes, tiny glowing antennae, and a matchstick harmonica. He lives in the library's old radiator and is known for his musical wings and energetic, helpful nature.",
+          "physical_description": {
+            "size": "small cricket",
+            "exact_colors": {
+              "primary": "bright green",
+              "secondary": "darker green",
+              "details": "darker green stripes on body, glowing soft yellow antennae"
+            },
+            "distinctive_features": [
+              "tiny glowing antennae",
+              "darker green stripes",
+              "matchstick harmonica"
+            ],
+            "fixed_elements": [
+              "glowing antennae",
+              "matchstick harmonica"
+            ],
+            "proportions": "proportionate cricket body with slightly elongated wings",
+            "facial_structure": {
+              "eyes": "small round black eyes",
+              "nose": "tiny cricket nose",
+              "mouth": "small mouth often in a cheerful expression"
+            }
+          },
+          "consistency_formula": "Pip is a bright green cricket with darker green stripes, glowing antennae, and a matchstick harmonica, always cheerful and energetic.",
+          "style_anchors": [
+            "whimsical",
+            "vibrant",
+            "playful"
+          ],
+          "personality_traits": [
+            "cheerful",
+            "energetic",
+            "helpful"
+          ],
+          "visual_style_notes": "The art style should be colorful and whimsical, capturing Pip's cheerful and energetic nature. The glowing antennae should be subtly highlighted to show his unique feature."
+        },
+        {
+          "character_name": "Word Gobbler",
+          "character_type": "main",
+          "species": "shadow creature",
+          "ideogram_character_seed": "The Word Gobbler, a gentle and sad creature made of swirling shadows and forgotten letters, with gentle purple eyes, resembling a cross between a cloud and a friendly ghost, surrounded by floating letters like fireflies.",
+          "physical_description": {
+            "size": "medium-sized shadowy figure",
+            "exact_colors": {
+              "primary": "misty charcoal gray",
+              "secondary": "soft lavender",
+              "details": "glowing letters in soft white and pale yellow floating around"
+            },
+            "distinctive_features": [
+              "swirling shadowy form",
+              "gentle purple eyes",
+              "floating letters"
+            ],
+            "fixed_elements": [
+              "shadowy mist form",
+              "floating letters around body"
+            ],
+            "proportions": "amorphous body with no distinct limbs, resembling a cloud",
+            "facial_structure": {
+              "eyes": "large, gentle, round purple eyes",
+              "nose": "none visible",
+              "mouth": "small, subtle smile"
+            }
+          },
+          "consistency_formula": "Always depict the Word Gobbler as a medium-sized shadowy figure with swirling misty charcoal gray form, gentle purple eyes, and floating letters in soft white and pale yellow.",
+          "style_anchors": [
+            "whimsical",
+            "ethereal",
+            "soft edges"
+          ],
+          "personality_traits": [
+            "lonely",
+            "curious",
+            "gentle"
+          ],
+          "visual_style_notes": "The Word Gobbler should be illustrated with a soft, ethereal style that emphasizes its gentle and non-threatening nature. The mood should be whimsical yet slightly melancholic, capturing its loneliness and curiosity."
+        }
+      ],
+      "page_id": "page_08",
+      "estimated_word_count": 20
+    }
+  ],
+  "story_arc": {
+    "beginning": "Pages 2-3",
+    "middle": "Pages 4-6",
+    "end": "Pages 7-8"
+  },
+  "metadata": {
+    "original_story_idea": "\nMilo is a tiny mouse who lives in the walls of an old library. He loves reading books but is too scared to \nventure out during the day when humans are around. One night, he discovers that all the books in the library \nare losing their words - they're floating away like leaves in the wind! Milo must overcome his fears and \ngo on an adventure through the library to find the mysterious Word Gobbler and save all the stories before \nmorning comes. Along the way, he meets helpful friends and learns that being small doesn't mean being powerless.\n",
+    "num_characters": 4,
+    "requested_pages": 8,
+    "target_age_group": "4-7",
+    "language": "English"
+  },
+  "statistics": {
+    "total_pages": 8,
+    "story_pages": 6,
+    "total_characters": 4,
+    "main_characters": 4,
+    "estimated_total_words": 170
+  }
+}

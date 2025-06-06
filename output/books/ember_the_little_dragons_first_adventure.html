@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Ember the Little Dragon's First Adventure</title>
+    <style>
+        body { font-family: 'Comic Sans MS', cursive, sans-serif; margin: 0; padding: 20px; background-color: #f0f8ff; }
+        .book-container { max-width: 800px; margin: 0 auto; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .book-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+        .book-title { font-size: 2.5em; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .book-summary { font-size: 1.2em; margin-top: 15px; opacity: 0.9; }
+        .page { position: relative; margin: 20px; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .page-image { width: 100%; height: 400px; object-fit: cover; }
+        .page-text { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: white; padding: 20px; font-size: 1.1em; line-height: 1.6; }
+        .page-number { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.8); color: #333; padding: 5px 10px; border-radius: 15px; font-weight: bold; }
+        .cover-page { text-align: center; position: relative; }
+        .cover-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); color: white; padding: 30px; border-radius: 15px; }
+        @media (max-width: 600px) { .book-container { margin: 10px; } .page { margin: 10px; } }
+    </style>
+</head>
+<body>
+    <div class='book-container'>
+        <div class='book-header'>
+            <h1 class='book-title'>Ember the Little Dragon's First Adventure</h1>
+            <p class='book-summary'>Ember, a small dragon who breathes colorful flower petals, must overcome her fear of flying to help lost village children find their way home from the Enchanted Forest. Along the way, she discovers the beauty of her unique gift and the strength within her.</p>
+        </div>
+        <div class='page cover-page'>
+            <img src='cover.png' alt='Book Cover' class='page-image'>
+            <div class='cover-text'>
+                <h2>Ember the Little Dragon's First Adventure</h2>
+            </div>
+        </div>
+        <div class='page'>
+            <div class='page-number'>2</div>
+            <img src='page_02.png' alt='Page 2' class='page-image'>
+            <div class='page-text'>
+                Near the village's sunny edge, little Ember gleamed, 
+Breathing flower petals, as she happily dreamed. 
+Up above in the sky, dragons twirled with grace, 
+Ember watched with wonder, a big smile on her face.
+            </div>
+        </div>
+        <div class='page'>
+            <div class='page-number'>3</div>
+            <img src='page_03.png' alt='Page 3' class='page-image'>
+            <div class='page-text'>
+                Maya and Oliver skipped with glee, 
+Through the forest, wild and free. 
+"Hello, Ember!" they chimed aloud, 
+"This Enchanted Forest makes us proud!" 
+With twinkling eyes and hearts so bright, 
+They hugged their friend with all their might.
+            </div>
+        </div>
+        <div class='page'>
+            <div class='page-number'>4</div>
+            <img src='page_04.png' alt='Page 4' class='page-image'>
+            <div class='page-text'>
+                Deep in the forest, where the sunbeams play, 
+Maya and Oliver danced away. 
+But oh dear, they wandered too far, 
+'Where are we?' whispered Oliver, 'Under this sparkling star.' 
+Ember's eyes were wide, filled with worry and care, 
+'We'll find our way back, together, I swear!' 
+With a gentle breeze and a path unclear, 
+They held hands tight, to chase away fear.
+            </div>
+        </div>
+        <div class='page'>
+            <div class='page-number'>5</div>
+            <img src='page_05.png' alt='Page 5' class='page-image'>
+            <div class='page-text'>
+                With a shimmer and a twinkle, Willow appeared, 
+Her voice like a song, gentle and clear. 
+'Ember, dear Ember, spread your wings wide, 
+Soar above the trees, let the stars be your guide.' 
+Maya and Oliver looked up with delight, 
+'Fly high, dear Ember, into the night!' 
+Ember's heart fluttered, courage began to grow, 
+As Willow whispered, 'Trust yourself, let your spirit glow.'
+            </div>
+        </div>
+        <div class='page'>
+            <div class='page-number'>6</div>
+            <img src='page_06.png' alt='Page 6' class='page-image'>
+            <div class='page-text'>
+                Ember stood still, her eyes wide with fright, 
+But Maya and Oliver held her tight. 
+'You can do it, Ember, just take a breath, 
+Remember your gift, it's like magic,' they said. 
+Ember took a step, her wings began to glow, 
+With her friends by her side, she was ready to go.
+            </div>
+        </div>
+        <div class='page'>
+            <div class='page-number'>7</div>
+            <img src='page_07.png' alt='Page 7' class='page-image'>
+            <div class='page-text'>
+                With a deep breath, Ember soared up high, 
+Her wings so bright, they lit the sky. 
+Petals danced in colors bold, 
+A magical trail, a sight to behold. 
+'Look at me!' Ember laughed with glee, 
+'Flying's fun when you're brave and free!'
+            </div>
+        </div>
+        <div class='page'>
+            <div class='page-number'>8</div>
+            <img src='page_08.png' alt='Page 8' class='page-image'>
+            <div class='page-text'>
+                From way up high, Ember did see, 
+The village below, as cozy as can be. 
+'Look!' she chirped, with a joyful cheer, 
+'We're almost home, no need to fear!' 
+Maya and Oliver clapped with delight, 
+'You did it, Ember! What a wonderful flight!' 
+Proud of her wings, so strong and bright, 
+Ember led them down, safe through the night.
+            </div>
+        </div>
+        <div class='page'>
+            <div class='page-number'>9</div>
+            <img src='page_09.png' alt='Page 9' class='page-image'>
+            <div class='page-text'>
+                Back in the village, what a sight to see, 
+Ember's bravery brought such glee! 
+The children cheered and danced around, 
+With petals and giggles all over the ground. 
+'You're so special!' they all did say, 
+'Being different makes you bright as day!' 
+Ember smiled, her heart so light, 
+Knowing she was loved, felt just right.
+            </div>
+        </div>
+        <div class='page'>
+            <div class='page-number'>10</div>
+            <img src='page_10.png' alt='Page 10' class='page-image'>
+            <div class='page-text'>
+                Under Willow's gentle leaves, Ember rests with ease. 
+Petals dance around her, like a soft, sweet breeze. 
+'You are brave,' whispers Willow, in the quiet of the night, 
+'Your heart is full of courage, shining oh so bright!' 
+Ember's smile grows wide, feeling love all around, 
+Knowing friends like Willow make her life profound.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

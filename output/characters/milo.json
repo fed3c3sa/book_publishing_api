@@ -1,0 +1,42 @@
+{
+  "character_name": "Milo",
+  "character_type": "main",
+  "species": "mouse",
+  "ideogram_character_seed": "Milo is a tiny brown mouse with soft gray patches on his belly and ears, large curious dark eyes, small round glasses, a tiny blue vest with small buttons, and a miniature satchel made from a thimble. His whiskers twitch when nervous, and he has a kind, determined expression.",
+  "physical_description": {
+    "size": "tiny mouse",
+    "exact_colors": {
+      "primary": "warm chestnut brown",
+      "secondary": "soft dove gray",
+      "details": "gray patches on belly and ears, blue vest with small white buttons"
+    },
+    "distinctive_features": [
+      "large curious dark eyes",
+      "small round glasses",
+      "miniature satchel made from a thimble"
+    ],
+    "fixed_elements": [
+      "small round glasses",
+      "tiny blue vest",
+      "miniature satchel"
+    ],
+    "proportions": "small body with proportionally large head",
+    "facial_structure": {
+      "eyes": "large round dark eyes",
+      "nose": "tiny pink nose",
+      "mouth": "small mouth with a kind, determined expression"
+    }
+  },
+  "consistency_formula": "Milo is a tiny brown mouse with gray patches, large dark eyes, small round glasses, a blue vest, and a thimble satchel. Always include twitching whiskers and a kind expression.",
+  "style_anchors": [
+    "whimsical",
+    "storybook",
+    "charming"
+  ],
+  "personality_traits": [
+    "curious",
+    "kind",
+    "determined"
+  ],
+  "visual_style_notes": "The art style should be whimsical and charming, with a focus on warm, inviting colors and soft lines to appeal to children."
+}

@@ -1,0 +1,42 @@
+{
+  "character_name": "Maya",
+  "character_type": "main",
+  "species": "human",
+  "ideogram_character_seed": "Maya is a curious 6-year-old girl with curly brown hair, bright green eyes, and freckles. She wears a red dress with white polka dots, yellow rain boots, and carries a small backpack. She loves exploring nature and is unafraid of dragons, showing a warm, encouraging smile.",
+  "physical_description": {
+    "size": "small child",
+    "exact_colors": {
+      "primary": "chestnut brown",
+      "secondary": "vibrant green",
+      "details": "red dress with white polka dots, yellow rain boots"
+    },
+    "distinctive_features": [
+      "curly brown hair",
+      "bright green eyes",
+      "freckles on cheeks"
+    ],
+    "fixed_elements": [
+      "red dress with white polka dots",
+      "yellow rain boots",
+      "small backpack"
+    ],
+    "proportions": "average proportions for a 6-year-old girl",
+    "facial_structure": {
+      "eyes": "large, bright green eyes",
+      "nose": "small, slightly upturned nose",
+      "mouth": "small mouth with a warm, encouraging smile"
+    }
+  },
+  "consistency_formula": "Maya, a curious 6-year-old with curly brown hair, bright green eyes, freckles, wearing a red dress with white polka dots and yellow rain boots, carrying a small backpack, always smiling warmly.",
+  "style_anchors": [
+    "whimsical",
+    "bright",
+    "child-friendly"
+  ],
+  "personality_traits": [
+    "curious",
+    "brave",
+    "friendly"
+  ],
+  "visual_style_notes": "The art style should be colorful and whimsical, capturing the adventurous and friendly nature of Maya. The mood should be light-hearted and engaging for children."
+}

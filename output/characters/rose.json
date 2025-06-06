@@ -1,0 +1,42 @@
+{
+  "character_name": "Rose",
+  "character_type": "main",
+  "species": "talking flower",
+  "ideogram_character_seed": "Rose is a talking red rose flower with a kind face formed by her petals, a gentle voice, and a wise personality. Her stem is green with small thorns, and she has several green leaves. She is the leader of the garden flowers.",
+  "physical_description": {
+    "size": "medium-sized flower",
+    "exact_colors": {
+      "primary": "vibrant crimson red",
+      "secondary": "lush forest green",
+      "details": "small emerald green thorns on the stem"
+    },
+    "distinctive_features": [
+      "kind face formed by petals",
+      "small thorns on stem",
+      "several green leaves"
+    ],
+    "fixed_elements": [
+      "kind face",
+      "green stem with thorns",
+      "green leaves"
+    ],
+    "proportions": "large bloom with a prominent face, slender stem",
+    "facial_structure": {
+      "eyes": "petal-shaped, deep brown, medium size",
+      "nose": "subtle, formed by petal curves",
+      "mouth": "small, gentle smile formed by petal arrangement"
+    }
+  },
+  "consistency_formula": "A talking red rose flower with a kind face formed by petals, vibrant crimson red petals, lush forest green stem with small emerald green thorns, and several green leaves.",
+  "style_anchors": [
+    "whimsical",
+    "botanical",
+    "storybook"
+  ],
+  "personality_traits": [
+    "wise",
+    "gentle",
+    "leader"
+  ],
+  "visual_style_notes": "The art style should be whimsical and colorful, capturing the magical and nurturing essence of a talking flower. The mood should be serene and inviting, appealing to a young audience."
+}

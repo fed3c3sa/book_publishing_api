@@ -1,120 +1,217 @@
-# Book Writing Agent Project
+# Children's Book Generator 🎨📚
 
-Questo progetto implementa un sistema multi-agente per la scrittura di libri, utilizzando Python e il framework `smolagents`.
+An AI-powered tool for creating beautiful, personalized children's books with custom characters, engaging stories, and professional illustrations.
 
-## Descrizione
+## Features ✨
 
-Lo strumento è progettato per orchestrare diversi agenti AI, ognuno con un ruolo specifico nel processo di creazione del libro, dall'ideazione alla generazione del PDF finale. L'obiettivo è produrre libri pronti per la pubblicazione, ad esempio su piattaforme come Amazon Kindle Direct Publishing (KDP).
+- **Character Creation**: Extract detailed character descriptions from text or images using GPT-4o
+- **Story Planning**: Generate age-appropriate story structures with page-by-page breakdowns
+- **Image Generation**: Create consistent, beautiful illustrations using Ideogram AI
+- **Text Generation**: Craft engaging, age-appropriate text content for each page
+- **PDF Assembly**: Combine images and text into professional PDF books with full-page backgrounds
+- **HTML Output**: Generate interactive HTML versions of your books
+- **Modular Architecture**: Well-organized, maintainable code structure
 
-## Agenti Coinvolti
+## Quick Start 🚀
 
-Il sistema è composto dai seguenti agenti principali:
+### 1. Setup
 
-1.  **IdeatorAgent**: Responsabile dell'ideazione del libro. Definisce il concetto generale, lo stile del libro, lo stile delle immagini e orchestra il lavoro degli altri agenti.
-2.  **StoryWriterAgent**: Scrive il contenuto testuale del libro basandosi sul piano fornito dall'IdeatorAgent. Inserisce placeholder per le immagini che verranno create dall'ImageCreatorAgent.
-3.  **ImageCreatorAgent**: Utilizza modelli generativi (attualmente simulati) per creare le immagini richieste dallo StoryWriterAgent, inclusa la copertina del libro.
-4.  **ImpaginatorAgent**: Raccoglie il testo e le immagini prodotte dagli altri agenti e formatta il tutto in un file PDF pronto per la pubblicazione.
+```bash
+# Clone or download the project
+cd children_book_generator
 
-### Agenti Facoltativi
+# Install dependencies
+pip install -r requirements.txt
 
-Il sistema può includere anche i seguenti agenti opzionali per funzionalità aggiuntive:
-
-*   **TrendFinderAgent**: Ricerca i libri più venduti su Amazon (o altre fonti web) relativi a un determinato argomento o genere, fornendo informazioni utili per la creazione del libro.
-*   **StyleImitatorAgent**: Data una porzione di testo come esempio, analizza lo stile di scrittura e permette allo StoryWriterAgent di imitarlo.
-*   **TranslatorAgent**: Traduce il testo del libro in altre lingue.
-
-## Struttura del Progetto
-
-```
-/book_writing_agent
-|-- agents/                 # Moduli per i singoli agenti (Ideator, StoryWriter, etc.)
-|   |-- __init__.py
-|   |-- base_agent.py
-|   |-- ideator_agent.py
-|   |-- story_writer_agent.py
-|   |-- image_creator_agent.py
-|   |-- impaginator_agent.py
-|   |-- trend_finder_agent.py
-|   |-- style_imitator_agent.py
-|   `-- translator_agent.py
-|-- data_models/            # Definizioni Pydantic per le strutture dati (BookPlan, StoryContent, etc.)
-|   |-- __init__.py
-|   |-- book_plan.py
-|   |-- story_content.py
-|   |-- image_request.py
-|   `-- generated_image.py
-|-- prompts/                # File YAML contenenti i prompt per gli LLM usati dagli agenti
-|   |-- ideator_prompts.yaml
-|   |-- story_writer_prompts.yaml
-|   |-- image_creator_prompts.yaml
-|   |-- impaginator_prompts.yaml
-|   |-- trend_finder_prompts.yaml
-|   |-- style_imitator_prompts.yaml
-|   `-- translator_prompts.yaml
-|-- tools/                  # Strumenti ausiliari (es. generazione PDF, wrapper per API esterne)
-|   |-- __init__.py
-|   |-- pdf_generator_tool.py
-|   |-- image_generation_tool.py
-|   |-- web_search_tool.py
-|   |-- text_analysis_tool.py
-|   `-- translation_tool.py
-|-- outputs/                # Directory per i libri generati (NON versionata)
-|   `-- book_YYYYMMDD_HHMMSS_UUID/
-|       |-- book_plan.yaml
-|       |-- story_summary.txt
-|       |-- image_log.txt
-|       |-- images/
-|       |   |-- chapter1_image1.png
-|       |   `-- cover.png
-|       `-- nome_libro.pdf
-|-- config.yaml             # File di configurazione principale (modelli LLM, API keys, etc.)
-|-- main.py                 # Script principale per avviare il workflow di creazione del libro
-|-- requirements.txt        # (Da generare) Dipendenze Python del progetto
-`-- README.md               # Questo file
+# Configure API keys
+cp secrets.env.template secrets.env
+# Edit secrets.env with your actual API keys
 ```
 
-## Come Iniziare
+### 2. Configure Your Book
 
-1.  **Clonare il repository.**
-2.  **Installare le dipendenze**: Idealmente, creare un ambiente virtuale e installare le dipendenze da `requirements.txt` (da generare con `pip freeze > requirements.txt`).
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # Su Linux/macOS
-    # venv\Scripts\activate    # Su Windows
-    pip install -r requirements.txt
-    ```
-3.  **Configurare `config.yaml`**: Aggiornare il file `config.yaml` con le proprie configurazioni, in particolare per i modelli LLM (es. API key di OpenAI, endpoint di Ollama, etc.) e le chiavi API per eventuali servizi esterni (ricerca web, traduzione, generazione immagini).
-4.  **Eseguire lo script principale**:
-    ```bash
-    python book_writing_agent/main.py
-    ```
-    Questo avvierà il workflow di creazione del libro basato sull'idea di default specificata in `config.yaml` o su un input fornito.
+Edit the configuration section in `main.py`:
 
-## Eseguire l'Applicazione Streamlit
+```python
+# Book Configuration
+BOOK_TITLE = "Your Book Title"
+STORY_IDEA = "Your story concept..."
+NUM_PAGES = 8
+AGE_GROUP = "3-6"
+LANGUAGE = "English"
 
-Per utilizzare l'interfaccia utente basata sul web:
+# Character Configuration
+CHARACTERS = [
+    {
+        "type": "text",  # or "image"
+        "name": "Character Name",
+        "character_type": "main",  # "main", "secondary", "background"
+        "content": "Character description...",
+    }
+]
+```
 
-1.  Assicurati di aver installato tutte le dipendenze, inclusa Streamlit (vedi sezione "Come Iniziare").
-2.  Naviga nella directory principale del progetto (`book_writing_agent`).
-3.  Esegui il seguente comando nel tuo terminale:
-    ```bash
-    streamlit run streamlit_app.py
-    ```
-4.  Streamlit avvierà un server di sviluppo locale e aprirà l'applicazione nel tuo browser web predefinito. Potrai interagire con la UI per generare i libri.
+### 3. Generate Your Book
 
-## Funzionalità Chiave
+```bash
+python main.py
+```
 
-*   **Architettura Modulare**: Ogni agente ha responsabilità ben definite, facilitando la manutenzione e l'estensione.
-*   **Configurabilità**: I prompt degli agenti, i modelli LLM e altri parametri sono configurabili tramite file YAML.
-*   **Workflow Flessibile**: Gli agenti opzionali possono essere abilitati o disabilitati tramite `config.yaml`.
-*   **Output Multiplo**: Il sistema genera non solo il PDF finale del libro, ma anche file intermedi come il piano del libro, i log delle immagini e i riassunti della storia.
-*   **Simulazione LLM**: Attualmente, le interazioni con i modelli LLM e i tool di generazione immagini sono simulate per permettere l'esecuzione senza API key reali. Per un funzionamento completo, è necessario integrare veri modelli LLM e servizi di generazione immagini.
+The script will:
+1. Process your character descriptions
+2. Create a detailed story plan
+3. Generate illustrations for each page
+4. Create text content for each page
+5. Assemble everything into PDF and HTML formats
 
-## Contribuire
+## Requirements 📋
 
-I contributi sono benvenuti! Si prega di aprire una issue o una pull request per discutere modifiche o nuove funzionalità.
+### API Keys Required
 
-## Licenza
+- **OpenAI API Key**: For GPT-4o text generation and character analysis
+- **Ideogram API Key**: For image generation
 
-Questo progetto è rilasciato sotto la Licenza MIT (o altra licenza da definire).
+### Python Dependencies
+
+- `openai>=1.0.0` - OpenAI API client
+- `requests>=2.31.0` - HTTP requests for Ideogram API
+- `reportlab>=4.0.0` - PDF generation
+- `Pillow>=10.0.0` - Image processing
+- `python-dotenv>=1.0.0` - Environment variable management
+- `pydantic>=2.0.0` - Data validation
+
+## Project Structure 📁
+
+```
+children_book_generator/
+├── main.py                 # Main script - configure and run here
+├── requirements.txt        # Python dependencies
+├── secrets.env.template    # API keys template
+├── src/                    # Source code modules
+│   ├── ai_clients/         # OpenAI and Ideogram API clients
+│   ├── character_processing/ # Character description extraction
+│   ├── book_planning/      # Story structure and planning
+│   ├── content_generation/ # Image and text generation
+│   ├── pdf_generation/     # PDF and HTML assembly
+│   └── utils/              # Configuration and utilities
+├── prompts/                # AI prompt templates
+├── output/                 # Generated content (created automatically)
+│   ├── characters/         # Character description files
+│   ├── plans/              # Book plan files
+│   ├── images/             # Generated illustrations
+│   ├── texts/              # Generated text content
+│   └── books/              # Final PDF and HTML books
+├── examples/               # Example configurations
+└── docs/                   # Additional documentation
+```
+
+## Configuration Guide 🔧
+
+### Character Types
+
+- **Main**: Primary characters that appear throughout the story
+- **Secondary**: Important supporting characters
+- **Background**: Minor characters or crowd elements
+
+### Age Groups
+
+- **3-5**: Very simple language, basic concepts
+- **3-6**: Simple sentences, repetitive patterns
+- **6-8**: Slightly more complex vocabulary
+- **6-9**: Longer sentences, more descriptive
+- **9-12**: Rich vocabulary, character development
+
+### Art Styles
+
+Examples of art style descriptions:
+- `"children's book illustration, watercolor style, bright and colorful"`
+- `"cartoon style, friendly characters, vibrant colors"`
+- `"digital art, soft pastels, dreamy atmosphere"`
+- `"hand-drawn style, pencil and crayon, playful"`
+
+## Advanced Usage 💡
+
+### Using Image-Based Characters
+
+```python
+CHARACTERS = [
+    {
+        "type": "image",
+        "name": "Luna",
+        "character_type": "main",
+        "content": ["/path/to/character_image1.jpg", "/path/to/character_image2.png"],
+        "additional_description": "Luna is brave and curious"
+    }
+]
+```
+
+### Custom Themes
+
+```python
+THEMES = ["friendship", "courage", "environmental awareness", "problem-solving"]
+```
+
+### Multiple Languages
+
+The system supports multiple languages. Simply change:
+
+```python
+LANGUAGE = "Spanish"  # or "French", "German", etc.
+```
+
+## Output Files 📄
+
+### Generated Files
+
+- **PDF Book**: Professional book with full-page background images and text overlays
+- **HTML Book**: Interactive web version with responsive design
+- **Character Files**: JSON files with detailed character descriptions
+- **Story Plan**: Complete page-by-page story structure
+- **Individual Images**: High-quality illustrations for each page
+- **Text Files**: Generated text content for each page
+
+### File Organization
+
+All outputs are organized in the `output/` directory by book title and content type for easy management and reuse.
+
+## Troubleshooting 🔧
+
+### Common Issues
+
+1. **API Key Errors**
+   - Ensure your API keys are correctly set in `secrets.env`
+   - Check that your OpenAI account has GPT-4o access
+   - Verify your Ideogram API key is active
+
+2. **Image Generation Fails**
+   - Check your internet connection
+   - Ensure Ideogram API has sufficient credits
+   - Try simplifying character descriptions
+
+3. **PDF Generation Issues**
+   - Ensure all required fonts are available
+   - Check that image files exist and are accessible
+   - Verify sufficient disk space
+
+### Getting Help
+
+- Check the `docs/` directory for detailed documentation
+- Review example configurations in `examples/`
+- Ensure all dependencies are properly installed
+
+## License 📜
+
+This project is provided as-is for educational and creative purposes. Please ensure you comply with the terms of service for OpenAI and Ideogram APIs.
+
+## Contributing 🤝
+
+This is a modular system designed for easy extension. You can:
+- Add new AI service integrations
+- Create custom prompt templates
+- Implement additional output formats
+- Enhance the PDF layout system
+
+---
+
+**Happy Book Creating! 🎉📚**
 

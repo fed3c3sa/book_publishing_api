@@ -1,0 +1,41 @@
+{
+  "character_name": "Willow",
+  "character_type": "main",
+  "species": "tree spirit",
+  "ideogram_character_seed": "Willow is an ancient, wise tree spirit with a face formed in the bark of an old willow tree. Her kind, twinkling eyes are made of amber sap, and her mouth is formed by the natural curves in the bark. Moss grows around her features like hair, and fireflies often rest on her branches. She speaks in a gentle, whispering voice.",
+  "physical_description": {
+    "size": "large tree",
+    "exact_colors": {
+      "primary": "earthy brown",
+      "secondary": "emerald green",
+      "details": "amber eyes, mossy green hair, glowing fireflies"
+    },
+    "distinctive_features": [
+      "face formed in bark",
+      "amber sap eyes",
+      "moss hair"
+    ],
+    "fixed_elements": [
+      "fireflies on branches",
+      "gentle, whispering expression"
+    ],
+    "proportions": "large, sprawling branches with a prominent face in the trunk",
+    "facial_structure": {
+      "eyes": "twinkling amber sap eyes",
+      "nose": "subtle, formed by bark texture",
+      "mouth": "naturally curved bark"
+    }
+  },
+  "consistency_formula": "Willow, the tree spirit with a face in the bark, amber sap eyes, moss hair, and fireflies on branches",
+  "style_anchors": [
+    "whimsical",
+    "nature-inspired",
+    "soft, glowing"
+  ],
+  "personality_traits": [
+    "wise",
+    "kind",
+    "gentle"
+  ],
+  "visual_style_notes": "The art style should be whimsical and nature-inspired, with a soft, glowing effect to emphasize her ethereal presence. The mood should be calming and magical, suitable for a children's book."
+}

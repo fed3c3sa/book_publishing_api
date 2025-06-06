@@ -1,0 +1,41 @@
+{
+  "character_name": "Ember",
+  "character_type": "main",
+  "species": "dragon",
+  "ideogram_character_seed": "Ember is a small, young dragon with soft lavender scales, large amber eyes, small growing wings, and a golden bell around her neck. She breathes colorful flower petals and has a kind, gentle expression.",
+  "physical_description": {
+    "size": "small dragon",
+    "exact_colors": {
+      "primary": "soft lavender",
+      "secondary": "golden",
+      "details": "shimmering scales in sunlight, colorful flower petals (roses, daisies, sunflowers) when breathing"
+    },
+    "distinctive_features": [
+      "soft lavender scales",
+      "large amber eyes",
+      "small growing wings"
+    ],
+    "fixed_elements": [
+      "golden bell around neck",
+      "breathes colorful flower petals"
+    ],
+    "proportions": "small body with large eyes and small wings",
+    "facial_structure": {
+      "eyes": "large, expressive, amber",
+      "nose": "small, rounded",
+      "mouth": "small with a kind, gentle smile"
+    }
+  },
+  "consistency_formula": "small dragon with soft lavender scales, large amber eyes, small wings, golden bell, and flower petal breath",
+  "style_anchors": [
+    "whimsical",
+    "soft colors",
+    "gentle expressions"
+  ],
+  "personality_traits": [
+    "shy",
+    "brave",
+    "kind"
+  ],
+  "visual_style_notes": "The art style should be whimsical and soft, with a focus on gentle expressions and a magical, friendly atmosphere."
+}

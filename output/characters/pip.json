@@ -1,0 +1,41 @@
+{
+  "character_name": "Pip",
+  "character_type": "main",
+  "species": "cricket",
+  "ideogram_character_seed": "Pip is a cheerful, bright green cricket with darker green stripes, tiny glowing antennae, and a matchstick harmonica. He lives in the library's old radiator and is known for his musical wings and energetic, helpful nature.",
+  "physical_description": {
+    "size": "small cricket",
+    "exact_colors": {
+      "primary": "bright green",
+      "secondary": "darker green",
+      "details": "darker green stripes on body, glowing soft yellow antennae"
+    },
+    "distinctive_features": [
+      "tiny glowing antennae",
+      "darker green stripes",
+      "matchstick harmonica"
+    ],
+    "fixed_elements": [
+      "glowing antennae",
+      "matchstick harmonica"
+    ],
+    "proportions": "proportionate cricket body with slightly elongated wings",
+    "facial_structure": {
+      "eyes": "small round black eyes",
+      "nose": "tiny cricket nose",
+      "mouth": "small mouth often in a cheerful expression"
+    }
+  },
+  "consistency_formula": "Pip is a bright green cricket with darker green stripes, glowing antennae, and a matchstick harmonica, always cheerful and energetic.",
+  "style_anchors": [
+    "whimsical",
+    "vibrant",
+    "playful"
+  ],
+  "personality_traits": [
+    "cheerful",
+    "energetic",
+    "helpful"
+  ],
+  "visual_style_notes": "The art style should be colorful and whimsical, capturing Pip's cheerful and energetic nature. The glowing antennae should be subtly highlighted to show his unique feature."
+}

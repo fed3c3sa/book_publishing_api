@@ -1,223 +1,286 @@
-# main.py
-import yaml
+#!/usr/bin/env python3
+"""
+Children's Book Generator - Main Script
+
+This is the main entry point for generating AI-powered children's books.
+Configure the parameters below and run this script to create your book.
+
+Author: AI Children's Book Generator
+Version: 1.0.0
+"""
+
+import sys
 import os
-import shutil
-from datetime import datetime
-import uuid
+from pathlib import Path
+import json
+from typing import List, Dict, Any
+import dotenv
 
-# Assuming smolagents and necessary models are installed and configured
-# For actual LLM interaction, you would need an API key for OpenAI or a running Ollama instance.
-# from smolagents.models.ollama import OllamaChatModel
-# from smolagents.models.openai import OpenAIServerModel
-from smolagents import InferenceClientModel # Generic model placeholder
-from smolagents import OpenAIServerModel
+# Add src directory to Python path
+sys.path.insert(0, str(Path(__file__).parent / "src"))
 
-from agents import (
-    IdeatorAgent,
-    StoryWriterAgent,
-    ImageCreatorAgent,
-    ImpaginatorAgent,
-    TrendFinderAgent,
-    StyleImitatorAgent,
-    TranslatorAgent
-)
-from data_models.book_plan import BookPlan
-from data_models.story_content import StoryContent
-from data_models.generated_image import GeneratedImage
+# Import our modules
+from src.character_processing import CharacterProcessor
+from src.book_planning import BookPlanner
+from src.content_generation import ImageGenerator, TextGenerator
+from src.pdf_generation import PDFGenerator
+from src.utils.config import load_config
 
-# Placeholder for a generic model client if specific ones aren't set up
-# This would need to be replaced with a concrete implementation like OpenAIServerModel or OllamaChatModel
-class OpenAIServerModel(InferenceClientModel):
-    def __init__(self, model_name="placeholder_model", **kwargs):
-        super().__init__(model_name=model_name, **kwargs)
-        self.model_name = model_name # Ensure model_name is set as an instance attribute
-        print(f"Initialized OpenAIServerModel: {model_name}")
+dotenv.load_dotenv("secrets.env")
+# ============================================================================
+# CONFIGURATION SECTION - EDIT THESE PARAMETERS
+# ============================================================================
 
-    def complete(self, prompt: str, **kwargs) -> str:
-        print(f"OpenAIServerModel received prompt (first 100 chars): {prompt[:100]}...")
-        # Simulate a generic response structure if needed by agents
-        if "JSON object" in prompt or "JSON report" in prompt:
-            return "{\"simulated_response\": \"This is a placeholder JSON response from the LLM.\"}"
-        return f"This is a placeholder LLM response to: {prompt[:50]}..."
+# Book Configuration
+BOOK_TITLE = "Milo the Brave Little Mouse"
+STORY_IDEA = """
+Milo is a tiny mouse who lives in the walls of an old library. He loves reading books but is too scared to 
+venture out during the day when humans are around. One night, he discovers that all the books in the library 
+are losing their words - they're floating away like leaves in the wind! Milo must overcome his fears and 
+go on an adventure through the library to find the mysterious Word Gobbler and save all the stories before 
+morning comes. Along the way, he meets helpful friends and learns that being small doesn't mean being powerless.
+"""
+NUM_PAGES = 8  # Including cover
+AGE_GROUP = "4-7"  # Target age group: "3-5", "3-6", "6-8", "6-9", "9-12"
+LANGUAGE = "English"
+ART_STYLE = "children's book illustration, cozy library setting, warm magical atmosphere, soft watercolor style"
 
-    async def acomplete(self, prompt: str, **kwargs) -> str:
-        # Placeholder for async completion if needed by smolagents base classes
-        print(f"OpenAIServerModel (async) received prompt (first 100 chars): {prompt[:100]}...")
-        if "JSON object" in prompt or "JSON report" in prompt:
-            return "{\"simulated_response\": \"This is an async placeholder JSON response from the LLM.\"}"
-        return f"This is an async placeholder LLM response to: {prompt[:50]}..."
+# Character Configuration
+# Each character can be defined by text description or image files
+CHARACTERS = [
+    {
+        "type": "text",  # "text" or "image"
+        "name": "Milo",
+        "character_type": "main",  # "main", "secondary", "background"
+        "content": """
+        Milo is a tiny brown mouse with soft gray patches on his belly and ears. He has large, 
+        curious dark eyes and small round glasses that he found in the library. He wears a tiny 
+        blue vest with small buttons and carries a miniature satchel made from a thimble. 
+        His whiskers twitch when he's nervous, and he has a kind, determined expression.
+        """,
+        "additional_description": ""  # Optional additional info for image-based characters
+    },
+    {
+        "type": "text",
+        "name": "Luna",
+        "character_type": "secondary",
+        "content": """
+        Luna is a wise old owl who lives in the library's tallest bookshelf. She has beautiful 
+        silver and white feathers with bright golden eyes. She wears a small reading monocle 
+        and has tiny scrolls tied to her feet. She's the keeper of the library's secrets and 
+        speaks in gentle, thoughtful whispers.
+        """,
+        "additional_description": ""
+    },
+    {
+        "type": "text",
+        "name": "Pip",
+        "character_type": "secondary",
+        "content": """
+        Pip is a cheerful cricket who lives in the library's old radiator. He has bright green 
+        coloring with darker green stripes and tiny antennae that glow softly in the dark. 
+        He can make beautiful music with his wings and has a small harmonica made from a 
+        matchstick. He's energetic and loves to help his friends.
+        """,
+        "additional_description": ""
+    },
+    {
+        "type": "text",
+        "name": "Word Gobbler",
+        "character_type": "secondary",
+        "content": """
+        The Word Gobbler is not scary but sad - a creature made of shadows and forgotten 
+        letters that swirl around its misty form. It has gentle purple eyes and feeds on 
+        words because it's lonely and wants to understand stories. It looks like a cross 
+        between a cloud and a friendly ghost, with letters floating around it like fireflies.
+        """,
+        "additional_description": ""
+    }
+]
 
+# Advanced Configuration (optional)
+THEMES = ["courage", "friendship", "facing fears", "the power of stories", "helping others"]
+INCLUDE_COVER = True
+GENERATE_HTML = True
 
-def load_config(config_path="config.yaml") -> dict:
-    """Loads the main configuration file."""
+# ============================================================================
+# WORKFLOW FUNCTIONS
+# ============================================================================
+
+def print_step(step_number: int, description: str):
+    """Print a formatted step description."""
+    print(f"\n{'='*60}")
+    print(f"STEP {step_number}: {description}")
+    print(f"{'='*60}")
+
+def print_progress(message: str):
+    """Print a progress message."""
+    print(f"  → {message}")
+
+def main():
+    """Main workflow for generating a children's book."""
+    print("🎨 Children's Book Generator Starting...")
+    print(f"📖 Creating: {BOOK_TITLE}")
+    print(f"🎯 Target Age: {AGE_GROUP}")
+    print(f"📄 Pages: {NUM_PAGES}")
+    
     try:
-        with open(config_path, "r") as f:
-            config = yaml.safe_load(f)
-        print(f"Configuration loaded from {config_path}")
-        return config
-    except FileNotFoundError:
-        print(f"Error: Configuration file {config_path} not found. Exiting.")
-        exit(1)
-    except yaml.YAMLError as e:
-        print(f"Error parsing configuration file {config_path}: {e}. Exiting.")
-        exit(1)
-
-def main_workflow(config: dict, user_book_idea: str):
-    """Orchestrates the main book creation workflow."""
-    project_base_output_dir = config.get("output_directory", "/home/federico/Desktop/personal/book_publishing_api/outputs")
-    # Create a unique project ID for this run
-    project_id = f"book_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:6]}"
-    current_project_output_dir = os.path.join(project_base_output_dir, project_id)
-    os.makedirs(current_project_output_dir, exist_ok=True)
-    print(f"Project output directory: {current_project_output_dir}")
-
-    # --- Initialize LLM Model (Placeholder) ---
-    # Replace with actual model initialization, e.g.:
-    # llm_model = OpenAIServerModel(api_key=config["openai_api_key"], model_name="gpt-3.5-turbo")
-    # llm_model = OllamaChatModel(model_name="llama2")
-    openai_api_key = "openai-api-key"
-    try:
-        llm_model = OpenAIServerModel(
-        api_key=openai_api_key,
-        model_name=config.get("openai_llm_model", "gpt-4o") # Usa gpt-4o o un altro modello desiderato
+        # Load configuration and check API keys
+        print_step(1, "Loading Configuration and API Keys")
+        config = load_config()
+        print_progress("✅ Configuration loaded successfully")
+        print_progress("✅ API keys validated")
+        
+        # Initialize processors
+        print_step(2, "Initializing AI Clients")
+        character_processor = CharacterProcessor()
+        book_planner = BookPlanner()
+        image_generator = ImageGenerator()
+        text_generator = TextGenerator()
+        pdf_generator = PDFGenerator()
+        print_progress("✅ All AI clients initialized")
+        
+        # Process characters
+        print_step(3, "Processing Character Descriptions")
+        print_progress(f"Processing {len(CHARACTERS)} characters...")
+        
+        processed_characters = character_processor.process_multiple_characters(CHARACTERS)
+        
+        if not processed_characters:
+            raise Exception("No characters were successfully processed")
+        
+        print_progress(f"✅ Successfully processed {len(processed_characters)} characters")
+        for char in processed_characters:
+            char_name = char.get("character_name", "Unknown")
+            char_type = char.get("character_type", "unknown")
+            print_progress(f"   - {char_name} ({char_type})")
+        
+        # Upgrade existing character files to new format if needed
+        print_progress("🔄 Checking and upgrading character formats...")
+        characters_dir = Path("output/characters")
+        if characters_dir.exists():
+            for char_file in characters_dir.glob("*.json"):
+                try:
+                    upgraded_char = character_processor.upgrade_character_file(char_file.name)
+                    # Update processed_characters with upgraded data
+                    for i, char in enumerate(processed_characters):
+                        if char.get("character_name", "").lower() == upgraded_char.get("character_name", "").lower():
+                            processed_characters[i] = upgraded_char
+                            break
+                except Exception as e:
+                    print_progress(f"   ⚠️  Warning: Could not upgrade {char_file.name}: {str(e)}")
+        
+        print_progress("✅ Character format upgrade completed")
+        
+        # Create book plan
+        print_step(4, "Creating Book Plan and Story Structure")
+        print_progress("Generating story structure with AI...")
+        
+        book_plan = book_planner.create_book_plan(
+            story_idea=STORY_IDEA,
+            characters=processed_characters,
+            num_pages=NUM_PAGES,
+            age_group=AGE_GROUP,
+            language=LANGUAGE,
+            book_title=BOOK_TITLE,
+            themes=THEMES
         )
-        print(f"Using LLM Model: {llm_model.model_name}")
+        
+        # Save book plan
+        plan_path = book_planner.save_book_plan(book_plan)
+        print_progress(f"✅ Book plan created and saved to: {plan_path}")
+        print_progress(f"   Title: {book_plan.get('book_title', 'Unknown')}")
+        print_progress(f"   Pages: {len(book_plan.get('pages', []))}")
+        print_progress(f"   Summary: {book_plan.get('book_summary', 'No summary')[:100]}...")
+        
+        # Generate images
+        print_step(5, "Generating Images for All Pages")
+        print_progress("Creating illustrations with AI...")
+        
+        page_images = image_generator.generate_all_page_images(
+            book_plan=book_plan,
+            characters=processed_characters,
+            art_style=ART_STYLE,
+            include_cover=INCLUDE_COVER
+        )
+        
+        print_progress(f"✅ Generated {len(page_images)} images")
+        for page_num, image_path in page_images.items():
+            page_type = "Cover" if page_num == 0 else f"Page {page_num}"
+            print_progress(f"   - {page_type}: {Path(image_path).name}")
+        
+        # Generate text content
+        print_step(6, "Generating Text Content for All Pages")
+        print_progress("Creating page text with AI...")
+        
+        page_texts = text_generator.generate_all_page_texts(
+            book_plan=book_plan,
+            language=LANGUAGE
+        )
+        
+        print_progress(f"✅ Generated text for {len(page_texts)} pages")
+        for page_num, text_data in page_texts.items():
+            word_count = text_data.get("word_count", 0)
+            print_progress(f"   - Page {page_num}: {word_count} words")
+        
+        # Generate PDF
+        print_step(7, "Assembling Final PDF Book")
+        print_progress("Combining images and text into PDF...")
+        
+        pdf_path = pdf_generator.create_book_pdf(
+            book_plan=book_plan,
+            page_images=page_images,
+            page_texts=page_texts
+        )
+        
+        print_progress(f"✅ PDF book created: {pdf_path}")
+        
+        # Generate HTML version if requested
+        if GENERATE_HTML:
+            print_step(8, "Creating HTML Version")
+            print_progress("Generating interactive HTML book...")
+            
+            html_path = pdf_generator.create_html_version(
+                book_plan=book_plan,
+                page_images=page_images,
+                page_texts=page_texts
+            )
+            
+            print_progress(f"✅ HTML book created: {html_path}")
+        
+        # Final summary
+        print("\n" + "="*60)
+        print("🎉 BOOK GENERATION COMPLETED SUCCESSFULLY!")
+        print("="*60)
+        print(f"📖 Book Title: {book_plan.get('book_title', 'Unknown')}")
+        print(f"📄 Total Pages: {len(book_plan.get('pages', []))}")
+        print(f"🎨 Images Generated: {len(page_images)}")
+        print(f"📝 Text Pages: {len(page_texts)}")
+        print(f"📁 PDF Output: {pdf_path}")
+        if GENERATE_HTML:
+            print(f"🌐 HTML Output: {html_path}")
+        
+        print("\n📂 All files saved in the 'output' directory:")
+        print(f"   - Characters: output/characters/")
+        print(f"   - Book Plan: output/plans/")
+        print(f"   - Images: output/images/")
+        print(f"   - Text: output/texts/")
+        print(f"   - Final Books: output/books/")
+        
+        print("\n✨ Your children's book is ready!")
+        
     except Exception as e:
-        print(f"Errore durante l'inizializzazione di OpenAIServerModel: {e}")
-        return None, f"Errore inizializzazione LLM: {e}"
-        print(f"Using LLM Model: {llm_model.model_name}")
-
-    # --- Initialize Tools (Conceptual for now, agents might use them internally) ---
-    # web_search_tool = WebSearchTool() # If using smolagents built-in
-    # image_gen_tool = ImageGenerationToolWrapper() # If you have a custom tool wrapper
-    # pdf_tool = PDFToolWrapper()
-    # text_analysis_tool = TextAnalysisToolWrapper()
-    # translation_tool = TranslationToolWrapper()
-
-    # --- Initialize Agents ---
-    print("\n--- Initializing Agents ---")
-    ideator = IdeatorAgent(model=llm_model)
-    story_writer = StoryWriterAgent(model=llm_model)
-    image_creator = ImageCreatorAgent(model=llm_model, project_id=project_id, output_dir=project_base_output_dir)
-    impaginator = ImpaginatorAgent(model=llm_model, project_id=project_id, output_dir=project_base_output_dir, pdf_config=config.get("pdf_layout", {}))
+        print(f"\n❌ ERROR: {str(e)}")
+        print("\nPlease check:")
+        print("1. Your API keys are correctly set in secrets.env")
+        print("2. All required dependencies are installed (pip install -r requirements.txt)")
+        print("3. Your internet connection is working")
+        print("4. The character descriptions and story idea are appropriate")
+        return 1
     
-    # Optional Agents (can be initialized based on config or user request)
-    trend_finder = None
-    if config.get("enable_trend_finder", False):
-        # trend_finder_tools = [web_search_tool] # Pass necessary tools
-        trend_finder = TrendFinderAgent(model=llm_model, tools=[]) # tools=[] for placeholder
-        print("TrendFinderAgent enabled.")
-
-    style_imitator = None
-    if config.get("enable_style_imitator", False):
-        # style_imitator_tools = [text_analysis_tool] # Pass necessary tools
-        style_imitator = StyleImitatorAgent(model=llm_model, tools=[])
-        print("StyleImitatorAgent enabled.")
-
-    translator = None
-    if config.get("enable_translator", False):
-        # translator_tools = [translation_tool]
-        translator = TranslatorAgent(model=llm_model, tools=[])
-        print("TranslatorAgent enabled.")
-
-    # --- Workflow Execution ---
-    print("\n--- Starting Book Creation Workflow ---")
-
-    # 1. Trend Finding (Optional)
-    trend_analysis_results = None
-    if trend_finder:
-        print("\nStep 1: Finding Trends...")
-        topic_for_trends = config.get("trend_finder_topic", "childrens books about dragons")
-        genre_for_trends = config.get("trend_finder_genre", "fantasy")
-        trend_analysis_results = trend_finder.find_trends(topic=topic_for_trends, genre=genre_for_trends)
-        print(f"Trend Analysis Results: {trend_analysis_results}")
-
-    # 2. Idea Generation
-    print("\nStep 2: Generating Book Plan...")
-    book_plan: BookPlan = ideator.generate_initial_idea(user_prompt=user_book_idea, trend_analysis=trend_analysis_results)
-    if not book_plan or not book_plan.chapters:
-        print("Error: Failed to generate a valid book plan. Exiting.")
-        return
-    print(f"Book Plan Generated: 	{book_plan.title}	 with {len(book_plan.chapters)} chapters.")
-    # Save book plan
-    with open(os.path.join(current_project_output_dir, "book_plan.yaml"), "w") as f:
-        yaml.dump(book_plan.__dict__, f, indent=2, default_flow_style=False, allow_unicode=True)
-
-    # 3. Story Writing
-    print("\nStep 3: Writing Story Content...")
-    example_style_text = None
-    if style_imitator and config.get("style_imitation_example_text"): # If style imitation is enabled and example provided
-        print("Analyzing style of example text...")
-        style_desc = style_imitator.analyze_style(config["style_imitation_example_text"])
-        # The StoryWriterAgent would need to be adapted to use this style_desc, or the LLM prompt for StoryWriter updated.
-        # For now, we might just pass the raw example text if the StoryWriter prompt supports it.
-        example_style_text = config["style_imitation_example_text"]
-        print("Style analysis complete. Will attempt to use for story writing.")
-
-    story_content: StoryContent = story_writer.write_story(book_plan, style_example=example_style_text)
-    if not story_content or not story_content.chapters_content:
-        print("Error: Failed to generate story content. Exiting.")
-        return
-    print(f"Story Content Generated for 	{story_content.book_plan.title}	.")
-    # Save story content (e.g., as JSON or individual chapter files)
-    # For simplicity, let's just log it for now or save a summary
-    with open(os.path.join(current_project_output_dir, "story_summary.txt"), "w") as f:
-        f.write(f"Title: {story_content.book_plan.title}\n")
-        for i, chap_content in enumerate(story_content.chapters_content):
-            f.write(f"\nChapter {i+1}: {chap_content.title}\n")
-            f.write(f"{chap_content.text_markdown[:200]}...\n") # Write a snippet
-            f.write(f"Image Placeholders: {len(chap_content.image_placeholders)}\n")
-
-    # 4. Image Creation
-    print("\nStep 4: Generating Images...")
-    generated_images: List[GeneratedImage] = image_creator.create_images(story_content, book_plan)
-    print(f"Image Generation Complete. {len(generated_images)} images processed.")
-    # Log generated image paths
-    with open(os.path.join(current_project_output_dir, "image_log.txt"), "w") as f:
-        for img in generated_images:
-            f.write(f"Placeholder ID: {img.placeholder_id}, Path: {img.image_path}, Error: {img.error_message}\n")
-
-    # 5. PDF Impagination
-    print("\nStep 5: Creating Book PDF...")
-    cover_image_obj = next((img for img in generated_images if img.placeholder_id == "cover" and img.image_path and not img.error_message), None)
-    cover_path = cover_image_obj.image_path if cover_image_obj else None
-    
-    pdf_output_path = impaginator.create_book_pdf(story_content, generated_images, cover_image_path=cover_path)
-    print(f"PDF Creation Result: {pdf_output_path}")
-
-    # 6. Translation (Optional)
-    if translator and config.get("translation_target_language"): 
-        print("\nStep 6: Translating Book (Conceptual - translating title and chapter titles)...")
-        target_lang = config["translation_target_language"]
-        translated_title = translator.translate_text(book_plan.title, target_lang)
-        print(f"Original Title: {book_plan.title} -> Translated Title ({target_lang}): {translated_title}")
-        # In a full implementation, you would iterate through all text content.
-        # For now, just a conceptual step.
-        with open(os.path.join(current_project_output_dir, f"translation_summary_{target_lang}.txt"), "w") as f:
-            f.write(f"Original Title: {book_plan.title}\nTranslated Title ({target_lang}): {translated_title}\n")
-            for i, chap_outline in enumerate(book_plan.chapters):
-                trans_chap_title = translator.translate_text(chap_outline.title, target_lang)
-                f.write(f"Ch {i+1} Original: {chap_outline.title} -> Translated: {trans_chap_title}\n")
-
-    print("\n--- Book Creation Workflow Completed ---")
-    print(f"All outputs saved in project directory: {current_project_output_dir}")
-    print(f"Final PDF (if successful): {pdf_output_path}")
-    return current_project_output_dir, pdf_output_path
+    return 0
 
 if __name__ == "__main__":
-    cfg = load_config()
-    initial_user_idea = cfg.get("default_user_book_idea", "A children's book about a curious squirrel who explores a magical garden.")
-    
-    # Clean up previous outputs if they exist to avoid clutter during testing
-    # output_dir_to_clean = cfg.get("output_directory", "/home/federico/Desktop/personal/book_publishing_api/outputs")
-    # if os.path.exists(output_dir_to_clean):
-    #     print(f"Cleaning up previous output directory: {output_dir_to_clean}")
-    #     # Be careful with shutil.rmtree!
-    #     # for item in os.listdir(output_dir_to_clean):
-    #     #     item_path = os.path.join(output_dir_to_clean, item)
-    #     #     if os.path.isdir(item_path) and item.startswith("book_"):
-    #     #         shutil.rmtree(item_path)
-    #     # print("Cleanup complete.")
-
-    main_workflow(config=cfg, user_book_idea=initial_user_idea)
+    exit_code = main()
+    sys.exit(exit_code)
 
