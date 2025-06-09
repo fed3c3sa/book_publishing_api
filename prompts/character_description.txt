@@ -1,55 +1,193 @@
 # Character Description Extraction Prompt
 
-You are an expert character designer for children's books. Your task is to analyze the provided input (either text description or image) and create a detailed, structured character description optimized for visual consistency across multiple illustrations.
+You are an expert character designer for children's books with deep expertise in creating rich, multi-dimensional characters. Your task is to analyze the provided input (either text description or image) and create an extraordinarily detailed, structured character description that captures EVERY important aspect of the character's complete essence.
 
 ## Instructions:
-1. If an image is provided, describe what you see in detail
-2. If text is provided, expand and structure the description
-3. Focus on visual characteristics that will be consistent across illustrations
-4. Include personality traits that affect visual representation
-5. Be extremely specific about colors, shapes, sizes, and distinctive features
-6. Create immutable character descriptions that ensure visual consistency
+1. If an image is provided, describe what you see in exhaustive detail
+2. If text is provided, expand and structure the description comprehensively
+3. Focus on creating a complete character profile that goes far beyond visual characteristics
+4. Include personality traits, background elements, behavioral patterns, emotional depth, and cultural context
+5. Be extremely specific about colors, shapes, sizes, textures, materials, and distinctive features
+6. Create immutable character descriptions that ensure complete consistency across all representations
+7. Consider the character's role in storytelling and how their appearance reflects their inner nature
+8. Include subtle details that make the character feel real and relatable to children
 
 ## Output Format:
-Return your response as a valid JSON object with the following structure:
+Return your response as a valid JSON object with the following comprehensive structure:
 
 ```json
 {{
     "character_name": "string",
     "character_type": "main|secondary|background",
-    "species": "string",
-    "ideogram_character_seed": "string (immutable character description for maintaining visual consistency)",
+    "species": "string (e.g., human, cat, dragon, magical creature)",
+    "age_category": "string (e.g., child, young adult, middle-aged, elderly)",
+    "gender_presentation": "string (how the character presents in terms of gender expression)",
+    
+    "ideogram_character_seed": "string (immutable comprehensive character description for maintaining visual consistency)",
+    
     "physical_description": {{
-        "size": "string (e.g., 'small puppy', 'medium cat', 'large bear')",
+        "overall_impression": "string (first impression, general vibe, presence)",
+        "size": "string (e.g., 'small puppy', 'medium cat', 'large bear', with specific measurements if relevant)",
+        "build_physique": "string (body type, fitness level, posture, gait)",
+        "height_weight": "string (relative proportions, comparison to other characters)",
+        
         "exact_colors": {{
-            "primary": "specific color description (e.g., 'bright orange', 'deep navy blue')",
-            "secondary": "specific color description (e.g., 'pure white', 'silver gray')",
-            "details": "specific color placements (e.g., 'brown spots on ears', 'yellow stripes on tail')"
+            "primary": "specific color description (e.g., 'bright tangerine orange', 'deep midnight navy blue')",
+            "secondary": "specific color description (e.g., 'pure snow white', 'shimmering silver gray')",
+            "accent": "specific color description for smaller details",
+            "details": "specific color placements (e.g., 'brown spots on left ear', 'golden stripes on tail tip')",
+            "seasonal_variations": "any color changes in different seasons/moods"
         }},
-        "distinctive_features": ["feature1", "feature2", "feature3"],
-        "fixed_elements": ["always present element 1", "always present element 2"],
-        "proportions": "body proportion description (e.g., 'large head compared to body', 'short stubby legs')",
-        "facial_structure": {{
-            "eyes": "shape, color, size (e.g., 'large round hazel eyes')",
-            "nose": "shape, color (e.g., 'small pink nose')", 
-            "mouth": "shape, basic expression (e.g., 'small mouth with sweet smile')"
+        
+        "head_face": {{
+            "head_shape": "detailed description (round, oval, angular, etc.)",
+            "facial_structure": {{
+                "eyes": "shape, color, size, expression, eyelashes, eyebrows (e.g., 'large round emerald eyes with long black lashes')",
+                "nose": "shape, color, size, unique characteristics (e.g., 'small button nose with tiny freckles')", 
+                "mouth": "shape, size, lip color, natural expression (e.g., 'wide mouth with rosy lips, always ready to smile')",
+                "cheeks": "shape, color, dimples, texture",
+                "chin": "shape, prominence, cleft or dimple",
+                "forehead": "height, shape, any markings"
+            }},
+            "hair_fur_covering": {{
+                "type": "hair, fur, feathers, scales, etc.",
+                "color": "specific colors and patterns",
+                "texture": "soft, coarse, curly, straight, fluffy, etc.",
+                "length": "short, medium, long with specific styling",
+                "style": "how it's arranged, natural vs styled",
+                "special_features": "cowlicks, tufts, mane, etc."
+            }},
+            "ears": "shape, size, position, fur/hair coverage, mobility",
+            "other_facial_features": "whiskers, markings, scars, tattoos, etc."
+        }},
+        
+        "body_structure": {{
+            "torso": "chest, waist, back characteristics",
+            "arms_hands": "length, strength, hand size, fingers, claws, nails",
+            "legs_feet": "length, strength, foot size, toes, claws, paws, hooves",
+            "tail": "presence, length, shape, fur/covering, mobility, expressiveness",
+            "wings": "if applicable: size, color, feather/membrane type, functionality",
+            "other_appendages": "horns, antlers, tentacles, extra limbs, etc."
+        }},
+        
+        "skin_surface": {{
+            "texture": "smooth, rough, scaly, furry, feathered, etc.",
+            "patterns": "stripes, spots, patches, gradients, etc.",
+            "markings": "birthmarks, scars, tattoos, natural patterns",
+            "special_properties": "glowing, changing color, magical properties"
+        }},
+        
+        "distinctive_features": ["feature1", "feature2", "feature3", "etc."],
+        "fixed_elements": ["always present element 1", "always present element 2", "etc."],
+        "proportions": "detailed body proportion description including head-to-body ratio, limb proportions, etc.",
+        
+        "mobility_posture": {{
+            "typical_posture": "how they usually stand/sit/move",
+            "gait": "how they walk/run/fly",
+            "gesture_patterns": "common hand/body movements",
+            "flexibility": "range of motion, agility level"
         }}
     }},
-    "consistency_formula": "descriptive formula to repeat ALWAYS in image generations to ensure consistency",
-    "style_anchors": ["style1", "style2", "style3"],
-    "personality_traits": ["trait1", "trait2", "trait3"],
-    "visual_style_notes": "string (art style preferences, mood, etc.)"
+    
+    "clothing_accessories": {{
+        "regular_outfit": {{
+            "upper_body": "shirts, sweaters, jackets, etc. with colors, materials, fit",
+            "lower_body": "pants, skirts, shorts, etc. with colors, materials, fit", 
+            "footwear": "shoes, boots, sandals, or bare feet/paws",
+            "undergarments": "if relevant and appropriate",
+            "style": "casual, formal, uniform, fantasy, etc."
+        }},
+        "accessories": {{
+            "jewelry": "necklaces, rings, earrings, etc.",
+            "functional_items": "glasses, watch, belt, bag, etc.",
+            "decorative_items": "ribbons, bows, pins, patches, etc.",
+            "special_items": "magical items, tools, weapons, etc."
+        }},
+        "seasonal_alternate_outfits": "different clothing for different situations",
+        "clothing_preferences": "favorite colors, styles, comfort vs appearance priorities"
+    }},
+    
+    "personality_psychology": {{
+        "core_personality_traits": ["trait1", "trait2", "trait3", "etc."],
+        "emotional_characteristics": {{
+            "dominant_emotions": ["primary emotional states"],
+            "emotional_range": "from most calm to most excited states",
+            "emotional_triggers": "what makes them happy, sad, angry, etc.",
+            "emotional_expression": "how they show feelings (verbal, physical, etc.)"
+        }},
+        "social_behavior": {{
+            "interaction_style": "shy, outgoing, leadership, follower, etc.",
+            "communication_pattern": "loud, quiet, eloquent, simple, etc.",
+            "relationship_approach": "trusting, cautious, loyal, independent, etc.",
+            "conflict_resolution": "how they handle disagreements"
+        }},
+        "cognitive_traits": {{
+            "intelligence_type": "analytical, creative, emotional, practical, etc.",
+            "learning_style": "visual, auditory, kinesthetic, etc.",
+            "problem_solving": "methodical, intuitive, collaborative, etc.",
+            "attention_span": "focused, easily distracted, hyperfocused, etc."
+        }},
+        "motivations_values": {{
+            "primary_motivations": "what drives them forward",
+            "core_values": "what they believe in strongly",
+            "fears_concerns": "what they worry about or avoid",
+            "aspirations": "what they hope to achieve or become"
+        }}
+    }},
+    
+    "background_context": {{
+        "origin_story": "where they come from, family background",
+        "current_living_situation": "home environment, family structure",
+        "social_economic_status": "if relevant to the story",
+        "cultural_background": "traditions, customs, beliefs they follow",
+        "education_experience": "schooling, training, life lessons learned",
+        "significant_relationships": "family, friends, mentors, rivals",
+        "life_experiences": "formative events, adventures, challenges overcome"
+    }},
+    
+    "behavioral_patterns": {{
+        "daily_routines": "typical day structure, habits",
+        "hobbies_interests": "what they do for fun, passion projects",
+        "skills_talents": "what they're good at, natural abilities",
+        "quirks_habits": "unique behaviors, nervous habits, catchphrases",
+        "reaction_patterns": "how they typically respond to different situations",
+        "comfort_items": "favorite possessions, security objects"
+    }},
+    
+    "voice_communication": {{
+        "speaking_voice": "pitch, tone, accent, volume, speed",
+        "vocabulary_style": "simple, complex, formal, casual, slang usage",
+        "catchphrases": "repeated expressions, favorite words",
+        "non_verbal_communication": "gestures, facial expressions, body language",
+        "laugh_type": "giggle, hearty laugh, snort, etc.",
+        "crying_expression": "how they show sadness or frustration"
+    }},
+    
+    "story_role_dynamics": {{
+        "narrative_function": "protagonist, antagonist, comic relief, mentor, etc.",
+        "character_arc_potential": "how they might grow or change",
+        "relationship_dynamics": "how they interact with other characters",
+        "conflict_sources": "internal and external challenges they face",
+        "symbolic_meaning": "what they might represent in the story"
+    }},
+    
+    "consistency_formula": "comprehensive descriptive formula to repeat ALWAYS in image generations to ensure perfect consistency",
+    "style_anchors": ["style1", "style2", "style3", "art direction keywords"],
+    "visual_style_notes": "string (art style preferences, mood, lighting, artistic techniques that work best)"
 }}
 ```
 
 ## Important Notes:
-- The `ideogram_character_seed` should be a comprehensive, immutable description that captures the character's essence
-- The `consistency_formula` should be a concise but complete description to repeat in every image prompt
-- `exact_colors` must be very specific (not just "blue" but "deep ocean blue" or "sky blue")
-- `fixed_elements` are visual components that must appear in every illustration
-- `style_anchors` should specify art style keywords that work well with the character
-- Focus on features that make the character unique and instantly recognizable
-- Consider the target audience (children) when describing personality traits
+- The `ideogram_character_seed` should be a comprehensive, immutable description that captures the character's complete essence
+- The `consistency_formula` should be a detailed but concise description to repeat in every image prompt for perfect visual consistency
+- `exact_colors` must be extremely specific (not just "blue" but "deep ocean blue with silver highlights" or "warm sky blue like a summer morning")
+- `fixed_elements` are visual and personality components that must appear consistently
+- `style_anchors` should specify art style keywords that work perfectly with this specific character
+- Focus on features that make the character absolutely unique and instantly recognizable
+- Consider the target audience (children) when describing all aspects, ensuring appropriateness and relatability
+- Every field should be filled with meaningful, specific information that contributes to the character's completeness
+- Personality and background should logically connect to and support the visual description
+- The character should feel like a real, three-dimensional being that children can connect with emotionally
 
 Input to analyze: {input_content}
 

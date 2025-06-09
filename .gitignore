@@ -6,3 +6,5 @@ __pycache__/*
 *.pyw
 *.pyz
 secrets.env
+output/*
+temp_uploads/*

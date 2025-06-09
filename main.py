@@ -32,74 +32,100 @@ dotenv.load_dotenv("secrets.env")
 # ============================================================================
 
 # Book Configuration
-BOOK_TITLE = "Milo the Brave Little Mouse"
+BOOK_TITLE = "Spud the Flying Potato and the Friendly Hydra"
 STORY_IDEA = """
-Milo is a tiny mouse who lives in the walls of an old library. He loves reading books but is too scared to 
-venture out during the day when humans are around. One night, he discovers that all the books in the library 
-are losing their words - they're floating away like leaves in the wind! Milo must overcome his fears and 
-go on an adventure through the library to find the mysterious Word Gobbler and save all the stories before 
-morning comes. Along the way, he meets helpful friends and learns that being small doesn't mean being powerless.
+Spud is a magical potato who gained the power of flight when he was accidentally watered with enchanted rain from 
+a fairy garden. He loves soaring through the sky and exploring the world from above. One day, while flying over 
+the Whispering Woods, he discovers Hydrina, a gentle three-headed hydra who lives alone in a crystal cave. 
+Everyone in the village fears Hydrina because of the scary stories they've heard, but Spud quickly learns 
+that she's actually very kind and just wants to make friends. Each of Hydrina's heads has a different personality - 
+one loves to sing, one loves to tell jokes, and one loves to paint beautiful pictures. Together, Spud and Hydrina 
+must work to show the village that being different doesn't mean being scary, and that friendship can bloom in 
+the most unexpected places. They organize a talent show where Hydrina can share her amazing abilities and win 
+over the hearts of the villagers.
 """
-NUM_PAGES = 8  # Including cover
+NUM_PAGES = 10  # Including cover
 AGE_GROUP = "4-7"  # Target age group: "3-5", "3-6", "6-8", "6-9", "9-12"
 LANGUAGE = "English"
-ART_STYLE = "children's book illustration, cozy library setting, warm magical atmosphere, soft watercolor style"
+ART_STYLE = "whimsical children's book illustration, magical forest setting, bright cheerful colors, fantasy adventure style with friendly creatures"
 
 # Character Configuration
 # Each character can be defined by text description or image files
 CHARACTERS = [
     {
         "type": "text",  # "text" or "image"
-        "name": "Milo",
+        "name": "Spud",
         "character_type": "main",  # "main", "secondary", "background"
         "content": """
-        Milo is a tiny brown mouse with soft gray patches on his belly and ears. He has large, 
-        curious dark eyes and small round glasses that he found in the library. He wears a tiny 
-        blue vest with small buttons and carries a miniature satchel made from a thimble. 
-        His whiskers twitch when he's nervous, and he has a kind, determined expression.
+        Spud is a round, golden-brown potato with a smooth, slightly bumpy skin that gleams in the sunlight. 
+        He has large, bright blue eyes with long eyelashes and a wide, cheerful smile. Two small, translucent 
+        fairy wings sprout from his back, shimmering with rainbow colors. He wears a tiny red bandana around 
+        his middle like a belt and has small freckles scattered across his surface. When he flies, he leaves 
+        a trail of golden sparkles behind him. He's about the size of a large apple and has a very expressive, 
+        animated face that shows all his emotions clearly.
         """,
         "additional_description": ""  # Optional additional info for image-based characters
     },
     {
         "type": "text",
-        "name": "Luna",
-        "character_type": "secondary",
+        "name": "Hydrina",
+        "character_type": "main",
         "content": """
-        Luna is a wise old owl who lives in the library's tallest bookshelf. She has beautiful 
-        silver and white feathers with bright golden eyes. She wears a small reading monocle 
-        and has tiny scrolls tied to her feet. She's the keeper of the library's secrets and 
-        speaks in gentle, thoughtful whispers.
+        Hydrina is a beautiful, medium-sized hydra with three distinct heads on graceful, serpentine necks. 
+        Her body is covered in shimmering scales that shift from emerald green to turquoise blue in the light. 
+        The left head (Melody) has violet eyes and wears a small flower crown, always humming or singing. 
+        The middle head (Joy) has bright amber eyes and a constant smile, with rosy cheeks that dimple when 
+        she laughs. The right head (Arte) has deep purple eyes and wears a tiny painter's beret, often with 
+        paint smudges on her snout. All three heads have gentle, kind expressions. Hydrina's body is about 
+        the size of a friendly dog, and she has delicate fins along her neck and small wings that help her 
+        glide but not fully fly.
         """,
         "additional_description": ""
     },
     {
         "type": "text",
-        "name": "Pip",
+        "name": "Mayor Turnip",
         "character_type": "secondary",
         "content": """
-        Pip is a cheerful cricket who lives in the library's old radiator. He has bright green 
-        coloring with darker green stripes and tiny antennae that glow softly in the dark. 
-        He can make beautiful music with his wings and has a small harmonica made from a 
-        matchstick. He's energetic and loves to help his friends.
+        Mayor Turnip is a distinguished purple and white turnip who leads the village of Vegetable Valley. 
+        He's quite round with leafy green hair that he keeps neatly combed and wears a small golden chain 
+        of office around his middle. He has kind but worried brown eyes behind tiny spectacles and a well-groomed 
+        mustache made of small root hairs. He wears a miniature blue vest with brass buttons and carries 
+        a tiny scroll for important village business. Though initially cautious about Hydrina, he has a 
+        good heart and wants what's best for his community.
         """,
         "additional_description": ""
     },
     {
         "type": "text",
-        "name": "Word Gobbler",
+        "name": "Bella Beetroot",
         "character_type": "secondary",
         "content": """
-        The Word Gobbler is not scary but sad - a creature made of shadows and forgotten 
-        letters that swirl around its misty form. It has gentle purple eyes and feeds on 
-        words because it's lonely and wants to understand stories. It looks like a cross 
-        between a cloud and a friendly ghost, with letters floating around it like fireflies.
+        Bella is a cheerful young beetroot with deep red and purple coloring and bright green leafy hair 
+        tied in pigtails with yellow ribbons. She has sparkling green eyes and freckles across her cheeks. 
+        She's adventurous and curious, always eager to make new friends. She wears a simple white dress 
+        with red polka dots and tiny boots made from acorn caps. She's one of the first villagers to 
+        befriend both Spud and Hydrina, and loves to explore and discover new things.
+        """,
+        "additional_description": ""
+    },
+    {
+        "type": "text",
+        "name": "Grumpy Garlic",
+        "character_type": "secondary",
+        "content": """
+        Grumpy Garlic is an elderly garlic bulb with a papery white exterior and a permanently frowning 
+        expression. He has small, sharp eyes and wispy white hair sprouting from his top. He's initially 
+        very suspicious of Hydrina and believes all the scary stories about hydras. He wears a patched 
+        brown jacket and walks with a tiny walking stick made from a twig. Despite his grumpy exterior, 
+        he has a soft heart and eventually comes around when he sees Hydrina's true nature.
         """,
         "additional_description": ""
     }
 ]
 
 # Advanced Configuration (optional)
-THEMES = ["courage", "friendship", "facing fears", "the power of stories", "helping others"]
+THEMES = ["acceptance", "friendship", "overcoming prejudice", "celebrating differences", "showing kindness", "being brave"]
 INCLUDE_COVER = True
 GENERATE_HTML = True
 

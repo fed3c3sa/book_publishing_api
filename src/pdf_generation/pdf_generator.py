@@ -268,7 +268,7 @@ class PDFGenerator:
         page_number: int
     ) -> None:
         """
-        Add a text page with cool font, all caps, and elegant frame.
+        Add a text page with child-friendly font and elegant frame.
         
         Args:
             canvas_obj: ReportLab canvas object
@@ -277,8 +277,8 @@ class PDFGenerator:
         """
         page_width, page_height = self.page_size
         
-        # Get page text
-        page_text = text_data.get("page_text", "").upper()  # Convert to all caps
+        # Get page text (keep original capitalization for better readability)
+        page_text = text_data.get("page_text", "")
         if not page_text:
             canvas_obj.showPage()
             return
@@ -286,10 +286,10 @@ class PDFGenerator:
         # Draw elegant frame around the page
         self._draw_text_page_frame(canvas_obj, page_width, page_height)
         
-        # Text styling - cool font, large size
-        font_name = "Helvetica-Bold"
-        font_size = 18
-        line_height = font_size * 1.4
+        # Child-friendly text styling
+        font_name = "Times-Roman"  # More readable serif font for children
+        font_size = 20  # Larger size for easier reading
+        line_height = font_size * 1.6  # More generous line spacing
         
         # Text area dimensions (inside frame)
         text_margin = self.margin + 30  # Extra margin inside frame
@@ -323,8 +323,8 @@ class PDFGenerator:
         # Center text vertically on page
         start_y = (page_height + total_text_height) / 2
         
-        # Set text color to elegant dark color
-        canvas_obj.setFillColor(colors.Color(0.2, 0.2, 0.3))  # Dark blue-gray
+        # Set text color to child-friendly dark color
+        canvas_obj.setFillColor(colors.Color(0.1, 0.1, 0.2))  # Very dark blue for good contrast
         
         # Draw each line centered
         for i, line in enumerate(lines):
