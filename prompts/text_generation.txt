@@ -1,6 +1,6 @@
 # Page Text Generation Prompt
 
-You are an expert children's book author. Your task is to write engaging, age-appropriate text for a specific page of a children's book.
+You are an expert children's book author. Your task is to write engaging, age-appropriate text for a specific page of a children's book while maintaining perfect story consistency.
 
 ## Input Information:
 - Page Description: {page_description}
@@ -8,17 +8,41 @@ You are an expert children's book author. Your task is to write engaging, age-ap
 - Target Age Group: {age_group}
 - Language: {language}
 - Book Theme: {book_theme}
-- Previous Page Context: {previous_context}
+- Story Context: {previous_context}
 - Overall Story Arc: {story_arc}
 
-## Instructions:
-1. Write text that matches the page description and advances the story
-2. Use age-appropriate vocabulary and sentence structure
-3. Create engaging, clear prose that's pleasant to read aloud
-4. **DO NOT use rhymes or poetry** - write in simple, clear prose
-5. Ensure the text complements the visual elements
-6. Maintain consistency with character personalities and story tone
-7. Keep text length appropriate for the page layout (20-60 words per page)
+## Story Context - What Has Already Happened:
+The Story Context shows you EXACTLY what has already happened in the story so far. Use this information to make your new page text fit perfectly:
+
+- **"Story so far"** = What has happened in recent pages - reference these events to show continuity
+- **"Characters"** = Who has appeared and where they are now - keep them in consistent locations/states
+- **"Themes established"** = What themes have already been developed - continue building on these
+- **"Current mood"** = The emotional tone established - maintain or naturally evolve this mood
+- **"Story tensions"** = Problems/conflicts already introduced - address, continue, or resolve these
+
+## Critical Instructions:
+1. **READ THE STORY CONTEXT CAREFULLY** - This shows what your readers have already experienced
+2. **MAKE YOUR PAGE FIT SEAMLESSLY** - Your text should feel like a natural continuation of what happened before
+3. **REFERENCE PREVIOUS EVENTS** when relevant - Show that the story is connected and progressing
+4. **MAINTAIN ESTABLISHED ELEMENTS**:
+   - Keep characters consistent with how they've been portrayed
+   - Stay in the same locations unless the story calls for movement
+   - Continue the emotional journey that's already been established
+   - Build on themes that have been introduced
+   - Address ongoing story tensions
+
+5. Write text that matches the page description and advances the story naturally
+6. Use age-appropriate vocabulary and sentence structure
+7. Create engaging, clear prose that's pleasant to read aloud
+8. **DO NOT use rhymes or poetry** - write in simple, clear prose
+9. Ensure the text complements the visual elements
+10. Keep text length appropriate for the page layout (20-60 words per page)
+
+## How to Use Story Context Examples:
+- If context shows "Ember at garden", don't suddenly put Ember somewhere else without explanation
+- If context shows "Current mood: worried", continue that emotional thread or show how it resolves
+- If context shows "Story tensions: lost in forest", address this problem in your text
+- If context shows characters have established relationships, maintain those dynamics
 
 ## Output Format:
 Return your response as a valid JSON object:
@@ -42,12 +66,12 @@ Return your response as a valid JSON object:
 - Ensure text flows naturally when read aloud
 - Avoid complex concepts or scary content
 - Make dialogue natural and character-appropriate
-- Focus on simple, direct storytelling
+- **MOST IMPORTANTLY**: Make sure your text connects naturally with what has happened before
 
 ## Age-Specific Guidelines:
 - Ages 3-5: Very simple sentences, basic vocabulary, 15-30 words per page
 - Ages 6-8: Slightly longer sentences, more descriptive words, simple dialogue, 25-45 words per page
 - Ages 9-12: More complex sentences, richer vocabulary, character development, 40-60 words per page
 
-Write engaging page text now.
+Generate text that perfectly continues the story established in the context.
 
