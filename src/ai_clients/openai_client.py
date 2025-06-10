@@ -276,174 +276,163 @@ Extract ALL these specific details and put them in the JSON structure below:
   "character_name": "{character_name}",
   "character_type": "main",
   "species": "human",
-  "age_category": "young adult", 
-  "gender_presentation": "female",
+  "age_category": "determine from description",
+  "gender_presentation": "determine from description",
   
-  "ideogram_character_seed": "A young woman with golden blonde wavy hair past her shoulders, wearing a vibrant floral dress with red flowers and blue leaves on light green, gentle smile, casual elegance in natural outdoor setting",
+  "ideogram_character_seed": "comprehensive description for visual consistency",
   
   "physical_description": {{
-    "overall_impression": "Confident yet relaxed with casual elegance, approachable demeanor",
-    "size": "medium human size",
-    "build_physique": "Slim and athletic build",
-    "height_weight": "Proportional build for age",
+    "overall_impression": "extract from visual description",
+    "size": "determine size/build from description",
+    "build_physique": "extract body type and posture details",
+    "height_weight": "describe proportions mentioned",
     
     "exact_colors": {{
-      "primary": "Light green background with large red flowers and blue leaves (dress pattern)",
-      "secondary": "Golden blonde with lighter sun-kissed highlights (hair)",
-      "accent": "Thin gold (necklace) and pearl white (earrings)",
-      "details": "Vibrant floral pattern with red flowers, blue leaves on light green dress background",
-      "seasonal_variations": "none"
+      "primary": "most dominant color mentioned",
+      "secondary": "second most prominent color",
+      "accent": "accent colors for details",
+      "details": "specific color placements mentioned",
+      "seasonal_variations": "none unless mentioned"
     }},
     
     "head_face": {{
-      "head_shape": "Oval face shape",
+      "head_shape": "extract from facial description",
       "facial_structure": {{
-        "eyes": "Almond-shaped, medium size, light brown color, with calm and relaxed expression",
-        "nose": "Straight with gentle slope, medium width, slightly rounded nostrils",
-        "mouth": "Medium fullness, soft pink color, with subtle natural smile",
-        "cheeks": "Slightly prominent cheekbones with smooth contour",
-        "chin": "Softly rounded with no cleft",
-        "forehead": "Medium height and width, smooth with no distinctive features"
+        "eyes": "extract eye details from description",
+        "nose": "extract nose details",
+        "mouth": "extract mouth details",
+        "cheeks": "extract cheek details",
+        "chin": "extract chin details",
+        "forehead": "extract forehead details"
       }},
       "hair_fur_covering": {{
         "type": "hair",
-        "color": "Golden blonde with lighter sun-kissed highlights",
-        "texture": "Naturally wavy with slightly tousled appearance",
-        "length": "Falls just past the shoulders",
-        "style": "Center-parted with natural waves cascading down",
-        "special_features": "Slight volume with a few flyaways, giving casual beachy look"
+        "color": "extract exact hair color",
+        "texture": "extract hair texture",
+        "length": "extract hair length",
+        "style": "extract hair style",
+        "special_features": "any unique hair features mentioned"
       }},
-      "ears": "Normal human ears",
-      "other_facial_features": "Light brown eyebrows, medium thickness, gently arched, well-groomed"
+      "ears": "extract ear details if mentioned",
+      "other_facial_features": "any other facial features mentioned"
     }},
     
     "body_structure": {{
-      "torso": "Proportional with visible shoulders, medium shoulder width with gentle slope",
-      "arms_hands": "Right arm relaxed by the side, hands not fully visible",
-      "legs_feet": "Not fully visible in analysis",
+      "torso": "extract torso details",
+      "arms_hands": "extract arm/hand details",
+      "legs_feet": "extract leg/foot details",
       "tail": "none",
       "wings": "none",
-      "other_appendages": "none"
+      "other_appendages": "none unless mentioned"
     }},
     
     "skin_surface": {{
-      "texture": "Smooth with healthy, even appearance",
-      "patterns": "No visible markings or freckles",
-      "markings": "None visible",
-      "special_properties": "Light skin with warm undertones"
+      "texture": "extract skin texture details",
+      "patterns": "any patterns mentioned",
+      "markings": "any markings mentioned",
+      "special_properties": "any special characteristics"
     }},
     
-    "distinctive_features": [
-      "Golden blonde wavy hair with natural highlights",
-      "Vibrant floral dress pattern with red flowers and blue leaves",
-      "Gentle smile with relaxed expression",
-      "Almond-shaped light brown eyes",
-      "Oval face shape with soft features"
-    ],
-    "fixed_elements": [
-      "Hair color and wavy texture",
-      "Dress pattern and colors",
-      "Gentle facial expression",
-      "Proportional balanced features"
-    ],
-    "proportions": "Balanced facial features with harmonious proportions",
+    "distinctive_features": ["list unique features that make character recognizable"],
+    "fixed_elements": ["elements that must always be present"],
+    "proportions": "extract proportion details from description",
     
     "mobility_posture": {{
-      "typical_posture": "Relaxed and slightly angled to the side",
-      "gait": "Confident and graceful",
-      "gesture_patterns": "Confident yet relaxed demeanor",
-      "flexibility": "Natural human flexibility"
+      "typical_posture": "extract posture from description",
+      "gait": "infer movement style",
+      "gesture_patterns": "infer from pose",
+      "flexibility": "infer from appearance"
     }}
   }},
   
   "clothing_accessories": {{
     "regular_outfit": {{
-      "upper_body": "Sleeveless dress with thin straps, featuring vibrant pattern of large red flowers and blue leaves on light green background, deep V neckline with ruffled edge",
-      "lower_body": "Continuation of the flowing dress",
-      "footwear": "Not visible in analysis",
-      "undergarments": "Appropriate undergarments",
-      "style": "Casual summery elegance with loose and flowing fit"
+      "upper_body": "extract upper clothing details",
+      "lower_body": "extract lower clothing details",
+      "footwear": "extract footwear or bare feet",
+      "undergarments": "appropriate undergarments",
+      "style": "extract overall clothing style"
     }},
     "accessories": {{
-      "jewelry": "Simple thin gold necklace and pearl stud earrings",
-      "functional_items": "None visible",
-      "decorative_items": "Floral dress pattern serves as decoration",
-      "special_items": "None"
+      "jewelry": "extract jewelry details",
+      "functional_items": "extract functional accessories",
+      "decorative_items": "extract decorative items",
+      "special_items": "any special accessories"
     }},
-    "seasonal_alternate_outfits": "Summer variations of floral dress style",
-    "clothing_preferences": "Casual elegance with floral patterns and natural fabrics"
+    "seasonal_alternate_outfits": "suggest variations based on current outfit",
+    "clothing_preferences": "infer from current choices"
   }},
   
   "personality_psychology": {{
-    "core_personality_traits": ["Gentle", "Confident", "Relaxed", "Approachable", "Elegant"],
+    "core_personality_traits": ["infer 4-6 traits from appearance and expression"],
     "emotional_characteristics": {{
-      "dominant_emotions": ["Calm", "Content", "Friendly"],
-      "emotional_range": "Confident yet relaxed with casual elegance",
-      "emotional_triggers": "Social situations and creative expression",
-      "emotional_expression": "Gentle and authentic with subtle smile"
+      "dominant_emotions": ["emotions suggested by expression"],
+      "emotional_range": "range suggested by expressiveness",
+      "emotional_triggers": "age-appropriate triggers",
+      "emotional_expression": "how they express emotions"
     }},
     "social_behavior": {{
-      "interaction_style": "Approachable and relaxed",
-      "communication_pattern": "Clear and warm",
-      "relationship_approach": "Friendly and genuine",
-      "conflict_resolution": "Diplomatic and understanding"
+      "interaction_style": "infer from approachability",
+      "communication_pattern": "infer from expression",
+      "relationship_approach": "infer from demeanor",
+      "conflict_resolution": "age-appropriate resolution style"
     }},
     "cognitive_traits": {{
-      "intelligence_type": "Social and aesthetic intelligence",
-      "learning_style": "Visual and experiential",
-      "problem_solving": "Thoughtful and creative",
-      "attention_span": "Good focus when interested"
+      "intelligence_type": "infer from expression and style",
+      "learning_style": "infer preferred learning approach",
+      "problem_solving": "infer approach from appearance",
+      "attention_span": "age-appropriate attention span"
     }},
     "motivations_values": {{
-      "primary_motivations": "Personal expression and authentic connections",
-      "core_values": "Authenticity and natural beauty",
-      "fears_concerns": "Normal social considerations",
-      "aspirations": "Creative fulfillment and meaningful relationships"
+      "primary_motivations": "age-appropriate motivations",
+      "core_values": "values suggested by presentation",
+      "fears_concerns": "age-appropriate concerns",
+      "aspirations": "age-appropriate dreams"
     }}
   }},
   
   "background_context": {{
-    "origin_story": "Comes from supportive background that values natural beauty and authenticity",
-    "current_living_situation": "Comfortable lifestyle with appreciation for outdoor settings",
-    "social_economic_status": "Middle class comfort with quality accessories",
-    "cultural_background": "Contemporary Western culture",
-    "education_experience": "Well-educated with refined aesthetic sense",
-    "significant_relationships": "Strong connections with family and friends",
-    "life_experiences": "Positive experiences that built confidence and poise"
+    "origin_story": "background suggested by appearance",
+    "current_living_situation": "lifestyle suggested by grooming/clothing",
+    "social_economic_status": "comfort level suggested by presentation",
+    "cultural_background": "any cultural elements in styling",
+    "education_experience": "education suggested by presentation",
+    "significant_relationships": "relationships suggested by confidence level",
+    "life_experiences": "experiences appropriate for apparent age"
   }},
   
   "behavioral_patterns": {{
-    "daily_routines": "Well-groomed lifestyle with attention to natural beauty",
-    "hobbies_interests": "Fashion, outdoor activities, social gatherings",
-    "skills_talents": "Aesthetic sense, social skills, natural grace",
-    "quirks_habits": "Attention to styling details while maintaining natural look",
-    "reaction_patterns": "Calm and measured responses with gentle approach",
-    "comfort_items": "Floral patterns, natural fabrics, delicate jewelry"
+    "daily_routines": "routines suggested by presentation",
+    "hobbies_interests": "interests suggested by style choices",
+    "skills_talents": "abilities suggested by confident appearance",
+    "quirks_habits": "unique traits suggested by expression",
+    "reaction_patterns": "response style suggested by demeanor",
+    "comfort_items": "items that would provide comfort"
   }},
   
   "voice_communication": {{
-    "speaking_voice": "Warm and clear with gentle tone",
-    "vocabulary_style": "Articulate and genuine",
-    "catchphrases": "Positive and encouraging expressions",
-    "non_verbal_communication": "Relaxed body language with gentle expressions",
-    "laugh_type": "Genuine warm laughter matching gentle smile",
-    "crying_expression": "Graceful emotional expression"
+    "speaking_voice": "voice type suggested by facial structure",
+    "vocabulary_style": "communication style for age",
+    "catchphrases": "expressions that would fit character",
+    "non_verbal_communication": "gestures and expressions observed",
+    "laugh_type": "laugh style suggested by expression",
+    "crying_expression": "how they would express sadness"
   }},
   
   "story_role_dynamics": {{
-    "narrative_function": "Protagonist or wise supportive friend character",
-    "character_arc_potential": "Growth through relationships and self-discovery",
-    "relationship_dynamics": "Natural connector and supportive friend",
-    "conflict_sources": "Internal growth challenges and external obstacles",
-    "symbolic_meaning": "Represents natural beauty, confidence, and authentic self-expression"
+    "narrative_function": "role suggested by confident/approachable appearance",
+    "character_arc_potential": "growth potential for apparent age",
+    "relationship_dynamics": "how they would interact with others",
+    "conflict_sources": "age-appropriate challenges",
+    "symbolic_meaning": "what this character represents"
   }},
   
-  "consistency_formula": "Always depict with golden blonde wavy hair past shoulders, vibrant floral dress (red flowers, blue leaves, light green background), gentle smile, almond-shaped light brown eyes, oval face, relaxed confident posture in natural lighting",
-  "style_anchors": ["Realistic portrait", "Natural golden hour lighting", "Vibrant floral patterns", "Soft natural textures", "Casual elegance"],
-  "visual_style_notes": "Use warm natural lighting like sunset/golden hour, emphasize the floral dress pattern details, capture the gentle relaxed expression, highlight the natural wavy hair texture"
+  "consistency_formula": "precise formula for maintaining identical appearance across images",
+  "style_anchors": ["art style keywords that work with this character"],
+  "visual_style_notes": "optimal artistic approach for this character"
 }}
 
-Use this structure with the exact details extracted from the visual analysis above."""
+Extract all details from the visual description and organize them into this comprehensive format. Be specific and detailed to ensure consistent image generation."""
             
             response = self.create_completion(
                 prompt=comprehensive_prompt,
