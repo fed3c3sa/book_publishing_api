@@ -15,7 +15,7 @@ from typing import List, Dict, Any, Optional
 from datetime import datetime
 import dotenv
 
-from flask import Flask, request, jsonify, send_file, render_template
+from flask import Flask, request, jsonify, send_file, render_template, send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import base64
@@ -53,6 +53,11 @@ def allowed_file(filename):
 def index():
     """Serve the main frontend page."""
     return render_template('index.html')
+
+@app.route('/assets/<path:filename>')
+def serve_assets(filename):
+    """Serve static assets from the assets directory."""
+    return send_from_directory('assets', filename)
 
 @app.route('/api/generate', methods=['POST'])
 def generate_book():

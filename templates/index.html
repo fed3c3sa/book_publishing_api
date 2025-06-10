@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Children's Book Generator</title>
+    <title>StoryMaker - AI Children's Book Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,89 +15,356 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: 'Fredoka', 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 25%, #FFE66D 50%, #95E1D3 75%, #C7CEEA 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating shapes */
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape-1 {
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 107, 107, 0.3);
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 80px;
+            height: 80px;
+            background: rgba(78, 205, 196, 0.3);
+            top: 60%;
+            right: 10%;
+            animation-delay: 5s;
+        }
+
+        .shape-3 {
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 230, 109, 0.3);
+            bottom: 10%;
+            left: 50%;
+            animation-delay: 10s;
+        }
+
+        .shape-4 {
+            width: 60px;
+            height: 60px;
+            background: rgba(149, 225, 211, 0.3);
+            top: 30%;
+            right: 30%;
+            animation-delay: 15s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        /* Main container */
+        .main-container {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Wizard card */
+        .wizard-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            width: 95%;
+            max-width: 1400px;
+            height: 90vh;
+            max-height: 800px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Left panel - Preview */
+        .preview-panel {
+            width: 40%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
             overflow: hidden;
         }
 
-        .header {
-            background: linear-gradient(45deg, #ff6b6b, #feca57);
+        .preview-title {
             color: white;
-            padding: 30px;
+            font-size: 2.4rem;
+            font-weight: 700;
+            margin-bottom: 40px;
             text-align: center;
+            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        .preview-carousel {
+            position: relative;
+            width: 100%;
+            height: 380px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
+        .preview-image {
+            position: absolute;
+            width: 240px;
+            height: 320px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.5s ease;
+            cursor: pointer;
+            overflow: hidden;
         }
 
-        .content {
-            padding: 40px;
+        .preview-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .section {
+        .preview-image:nth-child(1) { 
+            transform: translateX(-80px) translateY(20px) scale(0.85) rotate(-15deg) rotateY(25deg); 
+            z-index: 1; 
+            opacity: 0.7; 
+        }
+        .preview-image:nth-child(2) { 
+            transform: translateX(-40px) translateY(10px) scale(0.9) rotate(-8deg) rotateY(15deg); 
+            z-index: 2; 
+            opacity: 0.8; 
+        }
+        .preview-image:nth-child(3) { 
+            transform: translateX(0) translateY(0) scale(1) rotate(0deg); 
+            z-index: 3; 
+        }
+        .preview-image:nth-child(4) { 
+            transform: translateX(40px) translateY(10px) scale(0.9) rotate(8deg) rotateY(-15deg); 
+            z-index: 2; 
+            opacity: 0.8; 
+        }
+        .preview-image:nth-child(5) { 
+            transform: translateX(80px) translateY(20px) scale(0.85) rotate(15deg) rotateY(-25deg); 
+            z-index: 1; 
+            opacity: 0.7; 
+        }
+
+        .preview-image:hover {
+            transform: translateY(-20px) scale(1.1) rotate(0deg);
+            z-index: 10;
+            opacity: 1;
+        }
+
+        /* Right panel - Form wizard */
+        .form-panel {
+            flex: 1;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Header */
+        .wizard-header {
+            text-align: center;
             margin-bottom: 40px;
         }
 
-        .section h2 {
-            color: #333;
-            font-size: 1.8rem;
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
             margin-bottom: 20px;
-            border-bottom: 3px solid #ff6b6b;
-            padding-bottom: 10px;
         }
 
+        .logo-icon {
+            font-size: 3rem;
+        }
+
+        .logo-text {
+            font-size: 2.4rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            color: #666;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        /* Progress steps */
+        .progress-steps {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-bottom: 40px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .step-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #E0E0E0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-circle {
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .step.completed .step-circle {
+            background: #4ECDC4;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 1.1rem;
+            color: #999;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-label {
+            color: #333;
+        }
+
+        /* Form content */
+        .form-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        .step-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+            min-height: 0;
+            max-height: calc(100vh - 540px);
+            padding-bottom: 20px;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        .step-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .step-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .step-content::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            border-radius: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Form elements */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            color: #555;
+            margin-bottom: 10px;
+            color: #333;
             font-weight: 600;
+            font-size: 1.2rem;
         }
 
         .form-group input,
         .form-group textarea,
         .form-group select {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e1e8ed;
-            border-radius: 10px;
-            font-size: 1rem;
+            padding: 15px 22px;
+            border: 2px solid #E0E0E0;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-family: 'Fredoka', sans-serif;
             transition: all 0.3s ease;
+            background: #F8F8F8;
         }
 
         .form-group input:focus,
         .form-group textarea:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #4ECDC4;
+            background: white;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+            box-shadow: 0 5px 20px rgba(78, 205, 196, 0.2);
         }
 
         .form-group textarea {
-            height: 120px;
             resize: vertical;
+            min-height: 100px;
         }
 
         .form-row {
@@ -103,399 +373,582 @@
             gap: 20px;
         }
 
-        .characters-section {
-            border: 2px dashed #e1e8ed;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 20px;
-        }
-
-        .character-item {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-left: 4px solid #feca57;
-        }
-
-        .character-header {
-            display: flex;
-            justify-content: between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .character-header h3 {
-            color: #333;
-            flex-grow: 1;
-        }
-
-        .character-type-select {
-            width: auto;
-            margin-left: 15px;
-        }
-
-        .remove-character {
-            background: #ff4757;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-left: 10px;
-        }
-
-        .remove-character:hover {
-            background: #ff3742;
-            transform: scale(1.05);
-        }
-
-        .character-input-type {
-            display: flex;
+        /* Theme tags */
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .radio-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .radio-group input[type="radio"] {
-            width: auto;
-        }
-
-        .file-upload-area {
-            border: 2px dashed #ccc;
-            border-radius: 10px;
-            padding: 30px;
-            text-align: center;
-            background: #fafafa;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .file-upload-area:hover {
-            border-color: #667eea;
-            background: #f0f4ff;
-        }
-
-        .file-upload-area.drag-over {
-            border-color: #667eea;
-            background: #e8f0ff;
-        }
-
-        .btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(45deg, #feca57, #ff9ff3);
-            margin-right: 15px;
-        }
-
-        .btn-secondary:hover {
-            box-shadow: 0 10px 25px rgba(254, 202, 87, 0.3);
-        }
-
-        .progress-section {
-            display: none;
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 30px;
-            margin-top: 30px;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 10px;
-            background: #e1e8ed;
-            border-radius: 5px;
-            overflow: hidden;
-            margin-bottom: 15px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-
-        .progress-message {
-            color: #555;
-            font-size: 1.1rem;
-        }
-
-        .download-section {
-            display: none;
-            text-align: center;
-            padding: 30px;
-            background: linear-gradient(45deg, #2ed573, #1e90ff);
-            color: white;
-            border-radius: 15px;
-            margin-top: 30px;
-        }
-
-        .download-section h3 {
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-        }
-
-        .btn-download {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid white;
-            color: white;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-download:hover {
-            background: white;
-            color: #2ed573;
-        }
-
-        .themes-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
         }
 
         .theme-tag {
-            background: #f1f3f4;
-            border: 1px solid #dadce0;
-            border-radius: 20px;
-            padding: 8px 15px;
-            display: flex;
+            position: relative;
+        }
+
+        .theme-tag input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .theme-tag label {
+            display: block;
+            padding: 12px 18px;
+            background: #F0F0F0;
+            border-radius: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .theme-tag input:checked + label {
+            background: linear-gradient(135deg, #FF6B6B, #FFE66D);
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Character card */
+        .character-card {
+            background: linear-gradient(135deg, #F8F8F8, #E8E8E8);
+            border-radius: 25px;
+            padding: 25px;
+            margin-bottom: 20px;
+            position: relative;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .character-card:hover {
+            border-color: #4ECDC4;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(78, 205, 196, 0.2);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Fredoka', sans-serif;
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
+            gap: 10px;
         }
 
-        .theme-tag input[type="checkbox"] {
-            width: auto;
+        .btn-primary {
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            color: white;
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.3);
         }
 
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95E1D3, #C7CEEA);
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(149, 225, 211, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #4ECDC4;
+            color: #4ECDC4;
+        }
+
+        .btn-outline:hover {
+            background: #4ECDC4;
+            color: white;
+        }
+
+        /* Navigation buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding: 15px 0;
+            border-top: 2px solid #F0F0F0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            bottom: 0;
+            z-index: 10;
+        }
+
+        /* Progress modal */
+        .progress-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .progress-modal {
+            background: white;
+            border-radius: 30px;
+            padding: 60px;
+            text-align: center;
+            max-width: 500px;
+            animation: bounceIn 0.5s ease;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .progress-emoji {
+            font-size: 5rem;
+            animation: spin 2s linear infinite;
+            margin-bottom: 25px;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Success screen */
+        .success-content {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .success-emoji {
+            font-size: 5rem;
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .character-header {
+            .wizard-card {
                 flex-direction: column;
-                align-items: stretch;
-                gap: 10px;
+                height: 95vh;
+                max-height: none;
+                width: 98%;
             }
             
-            .character-type-select {
-                margin-left: 0;
+            .preview-panel {
+                width: 100%;
+                height: 220px;
+                padding: 25px;
+            }
+            
+            .preview-title {
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+            }
+            
+            .preview-carousel {
+                height: 140px;
+            }
+            
+            .preview-image {
+                width: 90px;
+                height: 120px;
+            }
+            
+            .preview-image:nth-child(1) { transform: translateX(-50px) translateY(15px) scale(0.8) rotate(-12deg); }
+            .preview-image:nth-child(2) { transform: translateX(-25px) translateY(8px) scale(0.9) rotate(-6deg); }
+            .preview-image:nth-child(3) { transform: translateX(0) translateY(0) scale(1) rotate(0deg); }
+            .preview-image:nth-child(4) { transform: translateX(25px) translateY(8px) scale(0.9) rotate(6deg); }
+            .preview-image:nth-child(5) { transform: translateX(50px) translateY(15px) scale(0.8) rotate(12deg); }
+            
+            .form-panel {
+                padding: 25px;
+            }
+            
+            .logo-icon {
+                font-size: 2.5rem;
+            }
+            
+            .logo-text {
+                font-size: 2rem;
+            }
+            
+            .tagline {
+                font-size: 1rem;
+            }
+            
+            .progress-steps {
+                gap: 25px;
+            }
+            
+            .step-circle {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+            
+            .step-label {
+                display: none;
+            }
+            
+            .theme-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .form-group label {
+                font-size: 1.1rem;
+            }
+            
+            .form-group input,
+            .form-group textarea,
+            .form-group select {
+                font-size: 1rem;
+                padding: 12px 18px;
+            }
+            
+            .btn {
+                font-size: 1rem;
+                padding: 12px 28px;
+            }
+            
+            .step-content {
+                max-height: calc(100vh - 480px);
+            }
+            
+            .nav-buttons {
+                margin-top: 15px;
+                padding: 15px 0;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📚 Children's Book Generator</h1>
-            <p>Create magical stories with AI-powered illustrations and text</p>
-        </div>
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+    </div>
 
-        <div class="content">
-            <form id="bookForm">
-                <!-- Book Configuration Section -->
-                <div class="section">
-                    <h2>📖 Book Configuration</h2>
-                    
-                    <div class="form-group">
-                        <label for="bookTitle">Book Title *</label>
-                        <input type="text" id="bookTitle" name="bookTitle" required placeholder="Enter your book title...">
+    <div class="main-container">
+        <div class="wizard-card">
+            <!-- Preview Panel -->
+            <div class="preview-panel">
+                <h2 class="preview-title">✨ See The Magic ✨</h2>
+                <div class="preview-carousel">
+                    <div class="preview-image">
+                        <img src="/assets/cover.png" alt="Book Cover">
                     </div>
-
-                    <div class="form-group">
-                        <label for="storyIdea">Story Idea *</label>
-                        <textarea id="storyIdea" name="storyIdea" required placeholder="Describe your story idea in detail..."></textarea>
+                    <div class="preview-image">
+                        <img src="/assets/page_03.png" alt="Page 3">
                     </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="numPages">Number of Pages</label>
-                            <input type="number" id="numPages" name="numPages" value="10" min="6" max="20">
-                        </div>
-                        <div class="form-group">
-                            <label for="ageGroup">Age Group</label>
-                            <select id="ageGroup" name="ageGroup">
-                                <option value="3-5">3-5 years</option>
-                                <option value="4-7" selected>4-7 years</option>
-                                <option value="6-8">6-8 years</option>
-                                <option value="6-9">6-9 years</option>
-                                <option value="9-12">9-12 years</option>
-                            </select>
-                        </div>
+                    <div class="preview-image">
+                        <img src="/assets/page_04.png" alt="Page 4">
                     </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="language">Language</label>
-                            <select id="language" name="language">
-                                <option value="English" selected>English</option>
-                                <option value="Spanish">Spanish</option>
-                                <option value="French">French</option>
-                                <option value="German">German</option>
-                                <option value="Italian">Italian</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="artStyle">Art Style</label>
-                            <input type="text" id="artStyle" name="artStyle" value="whimsical children's book illustration" placeholder="Describe the art style...">
-                        </div>
+                    <div class="preview-image">
+                        <img src="/assets/page_06.png" alt="Page 6">
                     </div>
-
-                    <div class="form-group">
-                        <label>Themes (select all that apply)</label>
-                        <div class="themes-container">
-                            <div class="theme-tag">
-                                <input type="checkbox" id="friendship" name="themes" value="friendship">
-                                <label for="friendship">Friendship</label>
-                            </div>
-                            <div class="theme-tag">
-                                <input type="checkbox" id="adventure" name="themes" value="adventure">
-                                <label for="adventure">Adventure</label>
-                            </div>
-                            <div class="theme-tag">
-                                <input type="checkbox" id="courage" name="themes" value="courage">
-                                <label for="courage">Courage</label>
-                            </div>
-                            <div class="theme-tag">
-                                <input type="checkbox" id="kindness" name="themes" value="kindness">
-                                <label for="kindness">Kindness</label>
-                            </div>
-                            <div class="theme-tag">
-                                <input type="checkbox" id="acceptance" name="themes" value="acceptance">
-                                <label for="acceptance">Acceptance</label>
-                            </div>
-                            <div class="theme-tag">
-                                <input type="checkbox" id="family" name="themes" value="family">
-                                <label for="family">Family</label>
-                            </div>
-                        </div>
+                    <div class="preview-image">
+                        <img src="/assets/page_14.png" alt="Page 14">
                     </div>
                 </div>
-
-                <!-- Characters Section -->
-                <div class="section">
-                    <h2>👥 Characters</h2>
-                    <div class="characters-section">
-                        <div id="charactersContainer">
-                            <!-- Characters will be added here dynamically -->
-                        </div>
-                        <button type="button" class="btn btn-secondary" onclick="addCharacter()">+ Add Character</button>
-                    </div>
-                </div>
-
-                <!-- Generate Button -->
-                <div style="text-align: center;">
-                    <button type="submit" class="btn">🎨 Generate Book</button>
-                </div>
-            </form>
-
-            <!-- Progress Section -->
-            <div id="progressSection" class="progress-section">
-                <h3>📚 Generating Your Book...</h3>
-                <div class="progress-bar">
-                    <div id="progressFill" class="progress-fill"></div>
-                </div>
-                <div id="progressMessage" class="progress-message">Starting generation...</div>
             </div>
 
-            <!-- Download Section -->
-            <div id="downloadSection" class="download-section">
-                <h3>🎉 Your Book is Ready!</h3>
-                <p>Your magical children's book has been generated successfully.</p>
-                <a id="downloadLink" href="#" class="btn-download">📥 Download PDF Book</a>
+            <!-- Form Panel -->
+            <div class="form-panel">
+                <div class="wizard-header">
+                    <div class="logo">
+                        <span class="logo-icon">📚</span>
+                        <span class="logo-text">StoryMaker</span>
+                    </div>
+                    <p class="tagline">Create magical stories in minutes!</p>
+                </div>
+
+                <!-- Progress Steps -->
+                <div class="progress-steps">
+                    <div class="step active" onclick="goToStep(1)">
+                        <div class="step-circle">1</div>
+                        <span class="step-label">Story</span>
+                    </div>
+                    <div class="step" onclick="goToStep(2)">
+                        <div class="step-circle">2</div>
+                        <span class="step-label">Details</span>
+                    </div>
+                    <div class="step" onclick="goToStep(3)">
+                        <div class="step-circle">3</div>
+                        <span class="step-label">Characters</span>
+                    </div>
+                </div>
+
+                <form id="bookForm">
+                    <div class="form-content">
+                        <!-- Step 1: Story -->
+                        <div class="step-content active" id="step1">
+                            <div class="form-group">
+                                <label for="bookTitle">📖 What's your book title?</label>
+                                <input type="text" id="bookTitle" name="bookTitle" required placeholder="The Amazing Adventure of...">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="storyIdea">✨ Tell us your story idea!</label>
+                                <textarea id="storyIdea" name="storyIdea" required placeholder="Once upon a time..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>🎯 Choose your themes:</label>
+                                <div class="theme-grid">
+                                    <div class="theme-tag">
+                                        <input type="checkbox" id="friendship" name="themes" value="friendship">
+                                        <label for="friendship">👫 Friendship</label>
+                                    </div>
+                                    <div class="theme-tag">
+                                        <input type="checkbox" id="adventure" name="themes" value="adventure">
+                                        <label for="adventure">🚀 Adventure</label>
+                                    </div>
+                                    <div class="theme-tag">
+                                        <input type="checkbox" id="courage" name="themes" value="courage">
+                                        <label for="courage">💪 Courage</label>
+                                    </div>
+                                    <div class="theme-tag">
+                                        <input type="checkbox" id="kindness" name="themes" value="kindness">
+                                        <label for="kindness">💖 Kindness</label>
+                                    </div>
+                                    <div class="theme-tag">
+                                        <input type="checkbox" id="family" name="themes" value="family">
+                                        <label for="family">👨‍👩‍👧 Family</label>
+                                    </div>
+                                    <div class="theme-tag">
+                                        <input type="checkbox" id="nature" name="themes" value="nature">
+                                        <label for="nature">🌳 Nature</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Details -->
+                        <div class="step-content" id="step2">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="numPages">📄 Number of Pages</label>
+                                    <select id="numPages" name="numPages">
+                                        <option value="8">8 Pages</option>
+                                        <option value="10" selected>10 Pages</option>
+                                        <option value="12">12 Pages</option>
+                                        <option value="14">14 Pages</option>
+                                        <option value="16">16 Pages</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ageGroup">👶 Age Group</label>
+                                    <select id="ageGroup" name="ageGroup">
+                                        <option value="3-5">3-5 years</option>
+                                        <option value="4-7" selected>4-7 years</option>
+                                        <option value="6-9">6-9 years</option>
+                                        <option value="9-12">9-12 years</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="language">🌍 Language</label>
+                                    <select id="language" name="language">
+                                        <option value="English" selected>English</option>
+                                        <option value="Spanish">Spanish</option>
+                                        <option value="French">French</option>
+                                        <option value="German">German</option>
+                                        <option value="Italian">Italian</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="artStyle">🎨 Art Style</label>
+                                    <input type="text" id="artStyle" name="artStyle" value="whimsical watercolor" placeholder="watercolor, cartoon, digital...">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Characters -->
+                        <div class="step-content" id="step3">
+                            <div id="charactersContainer">
+                                <!-- Characters will be added here -->
+                            </div>
+                            <button type="button" class="btn btn-secondary" onclick="addCharacter()">
+                                <span>➕</span> Add Character
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Navigation -->
+                    <div class="nav-buttons">
+                        <button type="button" class="btn btn-outline" id="prevBtn" onclick="previousStep()" style="display: none;">
+                            ← Back
+                        </button>
+                        <div style="flex: 1;"></div>
+                        <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep()">
+                            Next →
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;">
+                            ✨ Create My Book!
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
+    <!-- Progress Overlay -->
+    <div class="progress-overlay" id="progressOverlay">
+        <div class="progress-modal">
+            <div class="progress-emoji">📚</div>
+            <h2 style="color: #333; margin-bottom: 10px;">Creating Your Story!</h2>
+            <p style="color: #666; margin-bottom: 20px;">Our magical AI is working...</p>
+            <div style="width: 100%; height: 20px; background: #F0F0F0; border-radius: 10px; overflow: hidden;">
+                <div id="progressBar" style="height: 100%; background: linear-gradient(90deg, #FF6B6B, #4ECDC4, #FFE66D); width: 0%; transition: width 0.5s ease;"></div>
+            </div>
+            <p id="progressText" style="color: #999; margin-top: 10px; font-size: 0.9rem;">Starting...</p>
+        </div>
+    </div>
+
     <script>
+        let currentStep = 1;
         let characterCount = 0;
         let currentGenerationId = null;
 
-        // Add initial character
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             addCharacter();
         });
+
+        function goToStep(step) {
+            if (step < currentStep || validateCurrentStep()) {
+                currentStep = step;
+                updateStepDisplay();
+            }
+        }
+
+        function nextStep() {
+            if (validateCurrentStep()) {
+                if (currentStep < 3) {
+                    currentStep++;
+                    updateStepDisplay();
+                }
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStepDisplay();
+            }
+        }
+
+        function updateStepDisplay() {
+            // Update step indicators
+            document.querySelectorAll('.step').forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index + 1 === currentStep) {
+                    step.classList.add('active');
+                } else if (index + 1 < currentStep) {
+                    step.classList.add('completed');
+                }
+            });
+
+            // Update step content
+            document.querySelectorAll('.step-content').forEach((content, index) => {
+                content.classList.remove('active');
+                if (index + 1 === currentStep) {
+                    content.classList.add('active');
+                }
+            });
+
+            // Update navigation buttons
+            document.getElementById('prevBtn').style.display = currentStep === 1 ? 'none' : 'block';
+            document.getElementById('nextBtn').style.display = currentStep === 3 ? 'none' : 'block';
+            document.getElementById('submitBtn').style.display = currentStep === 3 ? 'block' : 'none';
+        }
+
+        function validateCurrentStep() {
+            if (currentStep === 1) {
+                const title = document.getElementById('bookTitle').value.trim();
+                const idea = document.getElementById('storyIdea').value.trim();
+                if (!title || !idea) {
+                    alert('Please fill in your book title and story idea! 📝');
+                    return false;
+                }
+            }
+            return true;
+        }
 
         function addCharacter() {
             characterCount++;
             const container = document.getElementById('charactersContainer');
             
             const characterDiv = document.createElement('div');
-            characterDiv.className = 'character-item';
+            characterDiv.className = 'character-card';
             characterDiv.id = `character-${characterCount}`;
             
             characterDiv.innerHTML = `
-                <div class="character-header">
-                    <h3>Character ${characterCount}</h3>
-                    <select class="character-type-select" name="characterType-${characterCount}">
-                        <option value="main" ${characterCount === 1 ? 'selected' : ''}>Main Character</option>
-                        <option value="secondary" ${characterCount > 1 ? 'selected' : ''}>Secondary Character</option>
-                        <option value="background">Background Character</option>
-                    </select>
-                    ${characterCount > 1 ? `<button type="button" class="remove-character" onclick="removeCharacter(${characterCount})">×</button>` : ''}
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 style="color: #333; font-size: 1.2rem;">Character ${characterCount}</h3>
+                    ${characterCount > 1 ? `<button type="button" class="btn btn-outline" style="padding: 8px 16px; font-size: 0.9rem;" onclick="removeCharacter(${characterCount})">Remove</button>` : ''}
                 </div>
                 
                 <div class="form-group">
-                    <label for="characterName-${characterCount}">Character Name *</label>
-                    <input type="text" id="characterName-${characterCount}" name="characterName-${characterCount}" required placeholder="Enter character name...">
+                    <label for="characterName-${characterCount}">Character Name</label>
+                    <input type="text" id="characterName-${characterCount}" name="characterName-${characterCount}" required placeholder="Give them a name!">
                 </div>
                 
-                <div class="character-input-type">
-                    <div class="radio-group">
-                        <input type="radio" id="textInput-${characterCount}" name="inputType-${characterCount}" value="text" checked onchange="toggleInputType(${characterCount})">
-                        <label for="textInput-${characterCount}">Text Description</label>
+                <div class="form-group">
+                    <label for="characterType-${characterCount}">Character Type</label>
+                    <select id="characterType-${characterCount}" name="characterType-${characterCount}">
+                        <option value="main" ${characterCount === 1 ? 'selected' : ''}>⭐ Main Character</option>
+                        <option value="secondary" ${characterCount > 1 ? 'selected' : ''}>👥 Supporting Character</option>
+                        <option value="background">🎭 Background Character</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Input Method</label>
+                    <div style="display: flex; gap: 20px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="radio" name="inputType-${characterCount}" value="text" checked onchange="toggleInputType(${characterCount})">
+                            <span>📝 Describe</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="radio" name="inputType-${characterCount}" value="image" onchange="toggleInputType(${characterCount})">
+                            <span>📷 Upload</span>
+                        </label>
                     </div>
-                    <div class="radio-group">
-                        <input type="radio" id="imageInput-${characterCount}" name="inputType-${characterCount}" value="image" onchange="toggleInputType(${characterCount})">
-                        <label for="imageInput-${characterCount}">Upload Image</label>
-                    </div>
                 </div>
                 
-                <div id="textInputArea-${characterCount}" class="form-group">
-                    <label for="characterDescription-${characterCount}">Character Description *</label>
-                    <textarea id="characterDescription-${characterCount}" name="characterDescription-${characterCount}" required placeholder="Describe your character's appearance, personality, and traits..."></textarea>
+                <div id="textInput-${characterCount}" class="form-group">
+                    <label for="characterDescription-${characterCount}">Description</label>
+                    <textarea id="characterDescription-${characterCount}" name="characterDescription-${characterCount}" required placeholder="What do they look like? What's their personality?"></textarea>
                 </div>
                 
-                <div id="imageInputArea-${characterCount}" class="form-group" style="display: none;">
-                    <label>Character Image</label>
-                    <div class="file-upload-area" onclick="document.getElementById('characterImage-${characterCount}').click()">
+                <div id="imageInput-${characterCount}" class="form-group" style="display: none;">
+                    <div style="border: 2px dashed #4ECDC4; border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; background: #F0F8FF;" 
+                         onclick="document.getElementById('characterImage-${characterCount}').click()">
                         <div id="uploadText-${characterCount}">
-                            <p>📷 Click to upload character image</p>
-                            <p style="font-size: 0.9rem; color: #666;">PNG, JPG, JPEG, GIF up to 16MB</p>
+                            <p style="font-size: 2rem;">📷</p>
+                            <p style="color: #666;">Click to upload</p>
                         </div>
-                        <input type="file" id="characterImage-${characterCount}" name="characterImage-${characterCount}" accept="image/*" style="display: none;" onchange="handleImageUpload(${characterCount})">
+                        <input type="file" id="characterImage-${characterCount}" accept="image/*" style="display: none;" onchange="handleImageUpload(${characterCount})">
                     </div>
                 </div>
             `;
@@ -506,25 +959,21 @@
         function removeCharacter(id) {
             const characterDiv = document.getElementById(`character-${id}`);
             if (characterDiv) {
-                characterDiv.remove();
+                characterDiv.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => characterDiv.remove(), 300);
             }
         }
 
         function toggleInputType(characterId) {
-            const textArea = document.getElementById(`textInputArea-${characterId}`);
-            const imageArea = document.getElementById(`imageInputArea-${characterId}`);
-            const textRadio = document.getElementById(`textInput-${characterId}`);
-            const textareaElement = document.getElementById(`characterDescription-${characterId}`);
+            const textInput = document.getElementById(`textInput-${characterId}`);
+            const imageInput = document.getElementById(`imageInput-${characterId}`);
+            const isText = document.querySelector(`input[name="inputType-${characterId}"]:checked`).value === 'text';
             
-            if (textRadio.checked) {
-                textArea.style.display = 'block';
-                imageArea.style.display = 'none';
-                textareaElement.required = true;
-            } else {
-                textArea.style.display = 'none';
-                imageArea.style.display = 'block';
-                textareaElement.required = false;
-            }
+            textInput.style.display = isText ? 'block' : 'none';
+            imageInput.style.display = isText ? 'none' : 'block';
+            
+            const textarea = document.getElementById(`characterDescription-${characterId}`);
+            textarea.required = isText;
         }
 
         async function handleImageUpload(characterId) {
@@ -537,7 +986,7 @@
                 formData.append('image', file);
                 
                 try {
-                    uploadText.innerHTML = '<p>⏳ Uploading...</p>';
+                    uploadText.innerHTML = '<p style="font-size: 2rem;">⏳</p><p>Uploading...</p>';
                     const response = await fetch('/api/upload_character_image', {
                         method: 'POST',
                         body: formData
@@ -546,22 +995,21 @@
                     const result = await response.json();
                     
                     if (result.success) {
-                        uploadText.innerHTML = `<p>✅ ${file.name} uploaded successfully!</p>`;
-                        // Store filename for later use
+                        uploadText.innerHTML = '<p style="font-size: 2rem; color: #4ECDC4;">✅</p><p style="color: #4ECDC4;">Uploaded!</p>';
                         fileInput.setAttribute('data-filename', result.filename);
                     } else {
-                        uploadText.innerHTML = `<p>❌ Upload failed: ${result.error}</p>`;
+                        uploadText.innerHTML = '<p style="font-size: 2rem; color: #FF6B6B;">❌</p><p style="color: #FF6B6B;">Failed!</p>';
                     }
                 } catch (error) {
-                    uploadText.innerHTML = `<p>❌ Upload failed: ${error.message}</p>`;
+                    uploadText.innerHTML = '<p style="font-size: 2rem; color: #FF6B6B;">❌</p><p style="color: #FF6B6B;">Error!</p>';
                 }
             }
         }
 
+        // Form submission
         document.getElementById('bookForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             
-            // Collect form data
             const formData = new FormData(event.target);
             const data = {
                 bookTitle: formData.get('bookTitle'),
@@ -574,10 +1022,10 @@
                 characters: []
             };
             
-            // Collect character data
-            const characterItems = document.querySelectorAll('.character-item');
-            characterItems.forEach((item, index) => {
-                const id = item.id.split('-')[1];
+            // Collect characters
+            const characterCards = document.querySelectorAll('.character-card');
+            characterCards.forEach((card) => {
+                const id = card.id.split('-')[1];
                 const name = formData.get(`characterName-${id}`);
                 const type = formData.get(`characterType-${id}`);
                 const inputType = formData.get(`inputType-${id}`);
@@ -605,9 +1053,8 @@
                 }
             });
             
-            // Validate
             if (data.characters.length === 0) {
-                alert('Please add at least one character!');
+                alert('Please add at least one character! 🦸');
                 return;
             }
             
@@ -615,9 +1062,7 @@
             try {
                 const response = await fetch('/api/generate', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
                 
@@ -625,8 +1070,8 @@
                 
                 if (result.success) {
                     currentGenerationId = result.generation_id;
-                    showProgressSection();
-                    pollGenerationStatus();
+                    showProgress();
+                    pollStatus();
                 } else {
                     alert(`Error: ${result.error}`);
                 }
@@ -635,12 +1080,11 @@
             }
         });
 
-        function showProgressSection() {
-            document.getElementById('progressSection').style.display = 'block';
-            document.getElementById('bookForm').style.display = 'none';
+        function showProgress() {
+            document.getElementById('progressOverlay').style.display = 'flex';
         }
 
-        async function pollGenerationStatus() {
+        async function pollStatus() {
             if (!currentGenerationId) return;
             
             try {
@@ -650,45 +1094,42 @@
                 if (result.success) {
                     const status = result.status;
                     
-                    // Update progress
-                    const progressFill = document.getElementById('progressFill');
-                    const progressMessage = document.getElementById('progressMessage');
-                    
-                    if (status.progress >= 0) {
-                        progressFill.style.width = `${status.progress}%`;
-                    }
-                    progressMessage.textContent = status.message;
+                    document.getElementById('progressBar').style.width = `${status.progress}%`;
+                    document.getElementById('progressText').textContent = status.message;
                     
                     if (status.status === 'completed') {
-                        showDownloadSection();
+                        showSuccess();
                     } else if (status.status === 'error') {
                         alert(`Generation failed: ${status.message}`);
-                        resetForm();
+                        document.getElementById('progressOverlay').style.display = 'none';
                     } else {
-                        // Continue polling
-                        setTimeout(pollGenerationStatus, 2000);
+                        setTimeout(pollStatus, 2000);
                     }
                 }
             } catch (error) {
-                console.error('Error polling status:', error);
-                setTimeout(pollGenerationStatus, 5000);
+                console.error('Error polling:', error);
+                setTimeout(pollStatus, 5000);
             }
         }
 
-        function showDownloadSection() {
-            document.getElementById('downloadSection').style.display = 'block';
-            document.getElementById('progressSection').style.display = 'none';
-            
-            const downloadLink = document.getElementById('downloadLink');
-            downloadLink.href = `/api/download/${currentGenerationId}`;
+        function showSuccess() {
+            const progressModal = document.querySelector('.progress-modal');
+            progressModal.innerHTML = `
+                <div class="success-content">
+                    <div class="success-emoji">🎉</div>
+                    <h2 style="color: #333; margin: 20px 0;">Your Book is Ready!</h2>
+                    <p style="color: #666; margin-bottom: 30px;">Time to share the magic!</p>
+                    <a href="/api/download/${currentGenerationId}" class="btn btn-primary" style="font-size: 1.2rem; padding: 15px 40px;">
+                        📥 Download Your Book
+                    </a>
+                </div>
+            `;
         }
 
-        function resetForm() {
-            document.getElementById('bookForm').style.display = 'block';
-            document.getElementById('progressSection').style.display = 'none';
-            document.getElementById('downloadSection').style.display = 'none';
-            currentGenerationId = null;
-        }
+        // Add fadeOut animation
+        const style = document.createElement('style');
+        style.textContent = '@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }';
+        document.head.appendChild(style);
     </script>
 </body>
-</html> 
+</html>

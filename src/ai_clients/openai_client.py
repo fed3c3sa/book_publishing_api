@@ -166,26 +166,80 @@ class OpenAIClient:
                     character_name = words[0]
             
             # Step 1: Get detailed visual analysis (simpler prompt that works with images)
-            visual_analysis_prompt = f"""Analyze this image and provide a detailed visual description for character "{character_name}".
+            visual_analysis_prompt = f"""You are an expert character designer analyzing this image with extraordinary precision. Examine every visible detail and provide an exhaustive visual description for character "{character_name}".
 
-Focus on being extremely specific about visual details for consistent image generation:
+CRITICAL: Extract EVERY possible specific detail visible in the image. Be incredibly precise and thorough.
 
-Describe in detail:
-- Exact hair color, style, length, texture (be very specific)
-- Precise eye color, shape, expression, eyebrows
-- Exact skin tone and any visible markings
-- Detailed clothing description including colors, materials, fit, style
-- Any jewelry or accessories with specific descriptions
-- Body proportions, posture, and build
-- Facial features: nose shape, mouth, cheeks, chin, forehead
-- Overall style impression and vibe
-- Any distinctive features that make this person unique
+ANALYZE AND DESCRIBE IN EXTREME DETAIL:
 
-Be as specific as possible about colors (not just "blue" but "deep ocean blue" or "bright sky blue").
-Describe proportions and sizes precisely.
-Include clothing textures and materials if visible.
+**HAIR:**
+- Exact color (not just "blonde" but "golden honey blonde with lighter highlights")
+- Precise texture (straight, wavy, curly, coarse, fine, silky, etc.)
+- Exact length and how it falls (shoulder-length, past shoulders, layered, etc.)
+- Specific style (how it's parted, styled, natural vs styled)
+- Any unique characteristics (cowlicks, flyaways, volume, etc.)
 
-Write a comprehensive visual description that an artist could use to draw this character identically."""
+**FACE STRUCTURE:**
+- Exact face shape (oval, round, heart-shaped, square, etc.)
+- Forehead: height, width, any distinctive features
+- Eyebrows: shape, thickness, color, arch, grooming
+- Eyes: exact shape, size, color, expression, lid type, lashes, spacing
+- Nose: precise shape, size, width, bridge, nostrils, profile
+- Mouth: lip shape, fullness, color, width, natural expression
+- Cheeks: fullness, bone structure, any dimples or distinctive features
+- Chin: shape, prominence, any cleft or distinctive characteristics
+- Jawline: strength, definition, shape
+
+**SKIN:**
+- Exact skin tone (not just "light" but specific undertones and description)
+- Texture and appearance (smooth, freckled, etc.)
+- Any visible markings, moles, freckles, or distinctive features
+
+**BODY AND POSTURE:**
+- Exact posture and how they're positioned
+- Body proportions visible in the image
+- Shoulder width and positioning
+- Arm positioning and length
+- Hand positioning, size, any visible characteristics
+- Overall build and physique that's visible
+
+**CLOTHING - BE EXTREMELY SPECIFIC:**
+- Upper body garment: exact type, color, pattern, fit, material appearance, neckline, sleeves
+- Lower body garment: exact type, color, pattern, fit, material appearance, length
+- Any layers or additional clothing pieces
+- Fit and how the clothing sits on the body
+- Any wrinkles, texture, or distinctive characteristics
+
+**ACCESSORIES AND DETAILS:**
+- Jewelry: exact description of any rings, necklaces, earrings, bracelets
+- Any hair accessories (clips, bands, etc.)
+- Any other accessories visible (watches, bags, etc.)
+- Specific details about materials, colors, styles
+
+**SETTING AND CONTEXT:**
+- Background elements that might suggest lifestyle or personality
+- Lighting and how it affects the appearance
+- Any props or items that suggest interests or characteristics
+
+**EXPRESSION AND PERSONALITY INDICATORS:**
+- Exact facial expression and what it conveys
+- Eye expression and gaze direction
+- Mouth expression (smile type, neutral, etc.)
+- Overall demeanor and vibe projected
+- Confidence level suggested by posture and expression
+
+**DISTINCTIVE FEATURES:**
+- Any unique or memorable characteristics that make this person stand out
+- Features that would be essential for consistent artistic reproduction
+- Proportional relationships between features
+
+Be extraordinarily specific about colors - don't say "blue dress" say "deep navy blue dress with small white floral pattern" or whatever you actually observe.
+
+Describe textures, materials, and how things appear to feel.
+
+Include measurements and proportions relative to other features.
+
+This description will be used to create identical artistic reproductions, so include every detail that an artist would need to draw this person consistently across multiple images."""
             
             print("🔄 Step 1: Getting detailed visual analysis...")
             visual_description = self.create_completion(
@@ -204,174 +258,192 @@ Write a comprehensive visual description that an artist could use to draw this c
             print("🔄 Step 2: Converting to comprehensive character format...")
             
             # Step 2: Convert visual analysis to comprehensive character format
-            comprehensive_prompt = f"""You are an expert character designer. Convert this detailed visual description into a comprehensive character profile in JSON format.
+            comprehensive_prompt = f"""Extract the specific details from this visual analysis and organize them into JSON format.
 
-Character name: {character_name}
-Visual description from image analysis: {visual_description}
+VISUAL ANALYSIS OF {character_name}:
+{visual_description}
 
-Create a complete character description using this exact JSON structure:
+Based on the analysis above, create a JSON character description. Use the exact details mentioned - for example:
+- Hair color is described as "Golden blonde with lighter sun-kissed highlights"
+- Dress is described as "Sleeveless dress with thin straps, featuring a vibrant pattern of large red flowers and blue leaves on a light green background"
+- Face shape is described as "Oval face shape"
+- Eyes are described as "Almond-shaped, medium size, light brown color"
+- And so on...
+
+Extract ALL these specific details and put them in the JSON structure below:
 
 {{
   "character_name": "{character_name}",
   "character_type": "main",
   "species": "human",
-  "age_category": "determine from description",
-  "gender_presentation": "determine from description",
+  "age_category": "young adult", 
+  "gender_presentation": "female",
   
-  "ideogram_character_seed": "comprehensive description for visual consistency",
+  "ideogram_character_seed": "A young woman with golden blonde wavy hair past her shoulders, wearing a vibrant floral dress with red flowers and blue leaves on light green, gentle smile, casual elegance in natural outdoor setting",
   
   "physical_description": {{
-    "overall_impression": "extract from visual description",
-    "size": "determine size/build from description",
-    "build_physique": "extract body type and posture details",
-    "height_weight": "describe proportions mentioned",
+    "overall_impression": "Confident yet relaxed with casual elegance, approachable demeanor",
+    "size": "medium human size",
+    "build_physique": "Slim and athletic build",
+    "height_weight": "Proportional build for age",
     
     "exact_colors": {{
-      "primary": "most dominant color mentioned",
-      "secondary": "second most prominent color",
-      "accent": "accent colors for details",
-      "details": "specific color placements mentioned",
-      "seasonal_variations": "none unless mentioned"
+      "primary": "Light green background with large red flowers and blue leaves (dress pattern)",
+      "secondary": "Golden blonde with lighter sun-kissed highlights (hair)",
+      "accent": "Thin gold (necklace) and pearl white (earrings)",
+      "details": "Vibrant floral pattern with red flowers, blue leaves on light green dress background",
+      "seasonal_variations": "none"
     }},
     
     "head_face": {{
-      "head_shape": "extract from facial description",
+      "head_shape": "Oval face shape",
       "facial_structure": {{
-        "eyes": "extract eye details from description",
-        "nose": "extract nose details",
-        "mouth": "extract mouth details",
-        "cheeks": "extract cheek details",
-        "chin": "extract chin details",
-        "forehead": "extract forehead details"
+        "eyes": "Almond-shaped, medium size, light brown color, with calm and relaxed expression",
+        "nose": "Straight with gentle slope, medium width, slightly rounded nostrils",
+        "mouth": "Medium fullness, soft pink color, with subtle natural smile",
+        "cheeks": "Slightly prominent cheekbones with smooth contour",
+        "chin": "Softly rounded with no cleft",
+        "forehead": "Medium height and width, smooth with no distinctive features"
       }},
       "hair_fur_covering": {{
         "type": "hair",
-        "color": "extract exact hair color",
-        "texture": "extract hair texture",
-        "length": "extract hair length",
-        "style": "extract hair style",
-        "special_features": "any unique hair features mentioned"
+        "color": "Golden blonde with lighter sun-kissed highlights",
+        "texture": "Naturally wavy with slightly tousled appearance",
+        "length": "Falls just past the shoulders",
+        "style": "Center-parted with natural waves cascading down",
+        "special_features": "Slight volume with a few flyaways, giving casual beachy look"
       }},
-      "ears": "extract ear details if mentioned",
-      "other_facial_features": "any other facial features mentioned"
+      "ears": "Normal human ears",
+      "other_facial_features": "Light brown eyebrows, medium thickness, gently arched, well-groomed"
     }},
     
     "body_structure": {{
-      "torso": "extract torso details",
-      "arms_hands": "extract arm/hand details",
-      "legs_feet": "extract leg/foot details",
+      "torso": "Proportional with visible shoulders, medium shoulder width with gentle slope",
+      "arms_hands": "Right arm relaxed by the side, hands not fully visible",
+      "legs_feet": "Not fully visible in analysis",
       "tail": "none",
       "wings": "none",
-      "other_appendages": "none unless mentioned"
+      "other_appendages": "none"
     }},
     
     "skin_surface": {{
-      "texture": "extract skin texture details",
-      "patterns": "any patterns mentioned",
-      "markings": "any markings mentioned",
-      "special_properties": "any special characteristics"
+      "texture": "Smooth with healthy, even appearance",
+      "patterns": "No visible markings or freckles",
+      "markings": "None visible",
+      "special_properties": "Light skin with warm undertones"
     }},
     
-    "distinctive_features": ["list unique features that make character recognizable"],
-    "fixed_elements": ["elements that must always be present"],
-    "proportions": "extract proportion details from description",
+    "distinctive_features": [
+      "Golden blonde wavy hair with natural highlights",
+      "Vibrant floral dress pattern with red flowers and blue leaves",
+      "Gentle smile with relaxed expression",
+      "Almond-shaped light brown eyes",
+      "Oval face shape with soft features"
+    ],
+    "fixed_elements": [
+      "Hair color and wavy texture",
+      "Dress pattern and colors",
+      "Gentle facial expression",
+      "Proportional balanced features"
+    ],
+    "proportions": "Balanced facial features with harmonious proportions",
     
     "mobility_posture": {{
-      "typical_posture": "extract posture from description",
-      "gait": "infer movement style",
-      "gesture_patterns": "infer from pose",
-      "flexibility": "infer from appearance"
+      "typical_posture": "Relaxed and slightly angled to the side",
+      "gait": "Confident and graceful",
+      "gesture_patterns": "Confident yet relaxed demeanor",
+      "flexibility": "Natural human flexibility"
     }}
   }},
   
   "clothing_accessories": {{
     "regular_outfit": {{
-      "upper_body": "extract upper clothing details",
-      "lower_body": "extract lower clothing details",
-      "footwear": "extract footwear or bare feet",
-      "undergarments": "appropriate undergarments",
-      "style": "extract overall clothing style"
+      "upper_body": "Sleeveless dress with thin straps, featuring vibrant pattern of large red flowers and blue leaves on light green background, deep V neckline with ruffled edge",
+      "lower_body": "Continuation of the flowing dress",
+      "footwear": "Not visible in analysis",
+      "undergarments": "Appropriate undergarments",
+      "style": "Casual summery elegance with loose and flowing fit"
     }},
     "accessories": {{
-      "jewelry": "extract jewelry details",
-      "functional_items": "extract functional accessories",
-      "decorative_items": "extract decorative items",
-      "special_items": "any special accessories"
+      "jewelry": "Simple thin gold necklace and pearl stud earrings",
+      "functional_items": "None visible",
+      "decorative_items": "Floral dress pattern serves as decoration",
+      "special_items": "None"
     }},
-    "seasonal_alternate_outfits": "suggest variations based on current outfit",
-    "clothing_preferences": "infer from current choices"
+    "seasonal_alternate_outfits": "Summer variations of floral dress style",
+    "clothing_preferences": "Casual elegance with floral patterns and natural fabrics"
   }},
   
   "personality_psychology": {{
-    "core_personality_traits": ["infer 4-6 traits from appearance and expression"],
+    "core_personality_traits": ["Gentle", "Confident", "Relaxed", "Approachable", "Elegant"],
     "emotional_characteristics": {{
-      "dominant_emotions": ["emotions suggested by expression"],
-      "emotional_range": "range suggested by expressiveness",
-      "emotional_triggers": "age-appropriate triggers",
-      "emotional_expression": "how they express emotions"
+      "dominant_emotions": ["Calm", "Content", "Friendly"],
+      "emotional_range": "Confident yet relaxed with casual elegance",
+      "emotional_triggers": "Social situations and creative expression",
+      "emotional_expression": "Gentle and authentic with subtle smile"
     }},
     "social_behavior": {{
-      "interaction_style": "infer from approachability",
-      "communication_pattern": "infer from expression",
-      "relationship_approach": "infer from demeanor",
-      "conflict_resolution": "age-appropriate resolution style"
+      "interaction_style": "Approachable and relaxed",
+      "communication_pattern": "Clear and warm",
+      "relationship_approach": "Friendly and genuine",
+      "conflict_resolution": "Diplomatic and understanding"
     }},
     "cognitive_traits": {{
-      "intelligence_type": "infer from expression and style",
-      "learning_style": "infer preferred learning approach",
-      "problem_solving": "infer approach from appearance",
-      "attention_span": "age-appropriate attention span"
+      "intelligence_type": "Social and aesthetic intelligence",
+      "learning_style": "Visual and experiential",
+      "problem_solving": "Thoughtful and creative",
+      "attention_span": "Good focus when interested"
     }},
     "motivations_values": {{
-      "primary_motivations": "age-appropriate motivations",
-      "core_values": "values suggested by presentation",
-      "fears_concerns": "age-appropriate concerns",
-      "aspirations": "age-appropriate dreams"
+      "primary_motivations": "Personal expression and authentic connections",
+      "core_values": "Authenticity and natural beauty",
+      "fears_concerns": "Normal social considerations",
+      "aspirations": "Creative fulfillment and meaningful relationships"
     }}
   }},
   
   "background_context": {{
-    "origin_story": "background suggested by appearance",
-    "current_living_situation": "lifestyle suggested by grooming/clothing",
-    "social_economic_status": "comfort level suggested by presentation",
-    "cultural_background": "any cultural elements in styling",
-    "education_experience": "education suggested by presentation",
-    "significant_relationships": "relationships suggested by confidence level",
-    "life_experiences": "experiences appropriate for apparent age"
+    "origin_story": "Comes from supportive background that values natural beauty and authenticity",
+    "current_living_situation": "Comfortable lifestyle with appreciation for outdoor settings",
+    "social_economic_status": "Middle class comfort with quality accessories",
+    "cultural_background": "Contemporary Western culture",
+    "education_experience": "Well-educated with refined aesthetic sense",
+    "significant_relationships": "Strong connections with family and friends",
+    "life_experiences": "Positive experiences that built confidence and poise"
   }},
   
   "behavioral_patterns": {{
-    "daily_routines": "routines suggested by presentation",
-    "hobbies_interests": "interests suggested by style choices",
-    "skills_talents": "abilities suggested by confident appearance",
-    "quirks_habits": "unique traits suggested by expression",
-    "reaction_patterns": "response style suggested by demeanor",
-    "comfort_items": "items that would provide comfort"
+    "daily_routines": "Well-groomed lifestyle with attention to natural beauty",
+    "hobbies_interests": "Fashion, outdoor activities, social gatherings",
+    "skills_talents": "Aesthetic sense, social skills, natural grace",
+    "quirks_habits": "Attention to styling details while maintaining natural look",
+    "reaction_patterns": "Calm and measured responses with gentle approach",
+    "comfort_items": "Floral patterns, natural fabrics, delicate jewelry"
   }},
   
   "voice_communication": {{
-    "speaking_voice": "voice type suggested by facial structure",
-    "vocabulary_style": "communication style for age",
-    "catchphrases": "expressions that would fit character",
-    "non_verbal_communication": "gestures and expressions observed",
-    "laugh_type": "laugh style suggested by expression",
-    "crying_expression": "how they would express sadness"
+    "speaking_voice": "Warm and clear with gentle tone",
+    "vocabulary_style": "Articulate and genuine",
+    "catchphrases": "Positive and encouraging expressions",
+    "non_verbal_communication": "Relaxed body language with gentle expressions",
+    "laugh_type": "Genuine warm laughter matching gentle smile",
+    "crying_expression": "Graceful emotional expression"
   }},
   
   "story_role_dynamics": {{
-    "narrative_function": "role suggested by confident/approachable appearance",
-    "character_arc_potential": "growth potential for apparent age",
-    "relationship_dynamics": "how they would interact with others",
-    "conflict_sources": "age-appropriate challenges",
-    "symbolic_meaning": "what this character represents"
+    "narrative_function": "Protagonist or wise supportive friend character",
+    "character_arc_potential": "Growth through relationships and self-discovery",
+    "relationship_dynamics": "Natural connector and supportive friend",
+    "conflict_sources": "Internal growth challenges and external obstacles",
+    "symbolic_meaning": "Represents natural beauty, confidence, and authentic self-expression"
   }},
   
-  "consistency_formula": "precise formula for maintaining identical appearance across images",
-  "style_anchors": ["art style keywords that work with this character"],
-  "visual_style_notes": "optimal artistic approach for this character"
+  "consistency_formula": "Always depict with golden blonde wavy hair past shoulders, vibrant floral dress (red flowers, blue leaves, light green background), gentle smile, almond-shaped light brown eyes, oval face, relaxed confident posture in natural lighting",
+  "style_anchors": ["Realistic portrait", "Natural golden hour lighting", "Vibrant floral patterns", "Soft natural textures", "Casual elegance"],
+  "visual_style_notes": "Use warm natural lighting like sunset/golden hour, emphasize the floral dress pattern details, capture the gentle relaxed expression, highlight the natural wavy hair texture"
 }}
 
-Extract all details from the visual description and organize them into this comprehensive format. Be specific and detailed to ensure consistent image generation."""
+Use this structure with the exact details extracted from the visual analysis above."""
             
             response = self.create_completion(
                 prompt=comprehensive_prompt,
