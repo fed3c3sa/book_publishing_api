@@ -316,29 +316,10 @@ class IdeogramClient:
                 char_anchors = char.get("style_anchors", [])
                 style_anchors.extend(char_anchors)
                 
-                # Fallback to physical description if new fields not available
+                # Require proper character description fields
                 if not consistency_formula and not seed_description:
-                    phys_desc = char.get("physical_description", {})
-                    exact_colors = phys_desc.get("exact_colors", {})
-                    char_name = char.get("character_name", "character")
-                    species = char.get("species", "character")
-                    
-                    # Build description from exact colors
-                    color_desc = ""
-                    if exact_colors:
-                        primary = exact_colors.get("primary", "")
-                        secondary = exact_colors.get("secondary", "")
-                        details = exact_colors.get("details", "")
-                        color_desc = f"{primary} {secondary} {details}".strip()
-                    
-                    size = phys_desc.get("size", "")
-                    distinctive = phys_desc.get("distinctive_features", [])
-                    
-                    desc_parts = [char_name, species, size, color_desc]
-                    if distinctive:
-                        desc_parts.extend(distinctive[:2])  # Limit to 2 features
-                    
-                    char_descriptions.append(", ".join(filter(None, desc_parts)))
+                    char_name = char.get("character_name", "unknown")
+                    raise ValueError(f"Character '{char_name}' is missing required consistency_formula and ideogram_character_seed fields")
             
             # Add character consistency to prompt
             if character_consistency:

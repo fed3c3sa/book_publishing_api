@@ -20,23 +20,26 @@ The Story Context shows you EXACTLY what has already happened in the story so fa
 - **"Current mood"** = The emotional tone established - maintain or naturally evolve this mood
 - **"Story tensions"** = Problems/conflicts already introduced - address, continue, or resolve these
 
+**IMPORTANT**: You may also receive "PREVIOUS PAGE" text - this is the exact text from the immediately previous page. Use this to create smooth transitions and natural story flow.
+
 ## Critical Instructions:
 1. **READ THE STORY CONTEXT CAREFULLY** - This shows what your readers have already experienced
-2. **MAKE YOUR PAGE FIT SEAMLESSLY** - Your text should feel like a natural continuation of what happened before
-3. **REFERENCE PREVIOUS EVENTS** when relevant - Show that the story is connected and progressing
-4. **MAINTAIN ESTABLISHED ELEMENTS**:
+2. **CONNECT TO PREVIOUS PAGE** - If you see "PREVIOUS PAGE" text, create a smooth transition from it
+3. **MAKE YOUR PAGE FIT SEAMLESSLY** - Your text should feel like a natural continuation of what happened before
+4. **REFERENCE PREVIOUS EVENTS** when relevant - Show that the story is connected and progressing
+5. **MAINTAIN ESTABLISHED ELEMENTS**:
    - Keep characters consistent with how they've been portrayed
    - Stay in the same locations unless the story calls for movement
    - Continue the emotional journey that's already been established
    - Build on themes that have been introduced
    - Address ongoing story tensions
 
-5. Write text that matches the page description and advances the story naturally
-6. Use age-appropriate vocabulary and sentence structure
-7. Create engaging, clear prose that's pleasant to read aloud
-8. **DO NOT use rhymes or poetry** - write in simple, clear prose
-9. Ensure the text complements the visual elements
-10. Keep text length appropriate for the page layout (20-60 words per page)
+6. Write text that matches the page description and advances the story naturally
+7. Use age-appropriate vocabulary and sentence structure
+8. Create engaging, clear prose that's pleasant to read aloud
+9. **DO NOT use rhymes or poetry** - write in simple, clear prose
+10. Ensure the text complements the visual elements
+11. Keep text length appropriate for the page layout (20-60 words per page)
 
 ## How to Use Story Context Examples:
 - If context shows "Ember at garden", don't suddenly put Ember somewhere else without explanation

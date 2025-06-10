@@ -181,23 +181,6 @@ def main():
             char_type = char.get("character_type", "unknown")
             print_progress(f"   - {char_name} ({char_type})")
         
-        # Upgrade existing character files to new format if needed
-        print_progress("🔄 Checking and upgrading character formats...")
-        characters_dir = Path("output/characters")
-        if characters_dir.exists():
-            for char_file in characters_dir.glob("*.json"):
-                try:
-                    upgraded_char = character_processor.upgrade_character_file(char_file.name)
-                    # Update processed_characters with upgraded data
-                    for i, char in enumerate(processed_characters):
-                        if char.get("character_name", "").lower() == upgraded_char.get("character_name", "").lower():
-                            processed_characters[i] = upgraded_char
-                            break
-                except Exception as e:
-                    print_progress(f"   ⚠️  Warning: Could not upgrade {char_file.name}: {str(e)}")
-        
-        print_progress("✅ Character format upgrade completed")
-        
         # Create book plan
         print_step(4, "Creating Book Plan and Story Structure")
         print_progress("Generating story structure with AI...")

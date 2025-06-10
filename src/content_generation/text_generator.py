@@ -248,7 +248,12 @@ class TextGenerator:
         
         # Use story context for rich previous context instead of just previous page text
         if story_context.story_summary or story_context.character_states:
-            previous_context = story_context.get_context_for_generation()
+            context_summary = story_context.get_context_for_generation()
+            # Combine story context with previous page text for better transitions
+            if previous_page_text:
+                previous_context = f"STORY CONTEXT: {context_summary}\n\nPREVIOUS PAGE: {previous_page_text}"
+            else:
+                previous_context = context_summary
         else:
             previous_context = previous_page_text
         
@@ -297,6 +302,7 @@ class TextGenerator:
         
         generated_texts = {}
         story_context = StoryContext()  # Initialize story context for consistency
+        previous_page_text = ""  # Track previous page text for smooth transitions
         
         # Generate text for each page
         for page_data in pages:
@@ -312,11 +318,15 @@ class TextGenerator:
                     page_data=page_data,
                     book_plan=book_plan,
                     story_context=story_context,
+                    previous_page_text=previous_page_text,
                     language=language
                 )
                 
                 # Save the text data
                 self._save_page_text(text_data, book_title, page_number)
+                
+                # Update previous page text for next iteration
+                previous_page_text = text_data.get("page_text", "")
                 
                 generated_texts[page_number] = text_data
                 print(f"Generated text for page {page_number} with story context")
