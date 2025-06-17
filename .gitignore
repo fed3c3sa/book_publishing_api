@@ -8,3 +8,14 @@ __pycache__/*
 secrets.env
 output/*
 temp_uploads/*
+*venv*
+simplified_version/venv/*
+assets/prompts/*
+output/*
+output/books/*
+output/book_images/*
+output/book_images/thumbnails/*
+output/book_images/thumbnails/thumb_1024/*
+output/book_images/thumbnails/thumb_300/*
+output/book_images/thumbnails/thumb_600/*
+simplified_version/assets/prompts/*
