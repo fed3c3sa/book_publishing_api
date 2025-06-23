@@ -50,13 +50,14 @@ CORS(app)
 
 # Configure upload settings
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
-UPLOAD_FOLDER = 'temp_uploads'
+UPLOAD_FOLDER = Path(__file__).parent / 'temp_uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 
 # Ensure upload folder exists
-Path(UPLOAD_FOLDER).mkdir(exist_ok=True)
-Path('output/covers').mkdir(parents=True, exist_ok=True)
-Path('output/orders').mkdir(parents=True, exist_ok=True)
+UPLOAD_FOLDER.mkdir(exist_ok=True)
+app_dir = Path(__file__).parent
+(app_dir / 'output' / 'covers').mkdir(parents=True, exist_ok=True)
+(app_dir / 'output' / 'orders').mkdir(parents=True, exist_ok=True)
 
 # Email configuration
 ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', 'admin@yourbookcompany.com')
@@ -77,6 +78,11 @@ def index():
 def serve_assets(filename):
     """Serve static assets from the assets directory."""
     return send_from_directory('assets', filename)
+
+@app.route('/tos/<path:filename>')
+def serve_tos(filename):
+    """Serve Terms of Service files from the tos directory."""
+    return send_from_directory('tos', filename)
 
 @app.route('/api/generate', methods=['POST'])
 def generate_cover():
@@ -131,19 +137,50 @@ def generate_cover():
         )
         
         # Generate only the cover image
-        cover_image_path = image_generator.generate_book_cover(
-            book_plan=book_plan,
-            characters=processed_characters,
-            art_style=art_style
-        )
+        try:
+            cover_image_path = image_generator.generate_book_cover(
+                book_plan=book_plan,
+                characters=processed_characters,
+                art_style=art_style
+            )
+            print(f"Cover generated at: {cover_image_path}")
+        except Exception as e:
+            print(f"Error generating cover: {str(e)}")
+            return jsonify({
+                'success': False,
+                'error': f'Failed to generate cover: {str(e)}'
+            }), 500
         
         # Save the cover to our output directory
         cover_filename = f"cover_{order_id}.png"
-        final_cover_path = Path('output/covers') / cover_filename
+        final_cover_path = Path(__file__).parent / 'output' / 'covers' / cover_filename
         
         # Copy the generated cover to our output directory
         import shutil
-        shutil.copy2(cover_image_path, final_cover_path)
+        try:
+            if not Path(cover_image_path).exists():
+                print(f"Source cover file does not exist: {cover_image_path}")
+                return jsonify({
+                    'success': False,
+                    'error': 'Generated cover file not found'
+                }), 500
+            
+            shutil.copy2(cover_image_path, final_cover_path)
+            print(f"Cover copied to: {final_cover_path}")
+            
+            # Verify the copy was successful
+            if not final_cover_path.exists():
+                return jsonify({
+                    'success': False,
+                    'error': 'Failed to save cover file'
+                }), 500
+                
+        except Exception as e:
+            print(f"Error copying cover: {str(e)}")
+            return jsonify({
+                'success': False,
+                'error': f'Failed to save cover: {str(e)}'
+            }), 500
         
         # Store order information
         order_data = {
@@ -165,7 +202,7 @@ def generate_cover():
         }
         
         # Save order to JSON file
-        order_file_path = Path('output/orders') / f"order_{order_id}.json"
+        order_file_path = Path(__file__).parent / 'output' / 'orders' / f"order_{order_id}.json"
         with open(order_file_path, 'w', encoding='utf-8') as f:
             json.dump(order_data, f, indent=2, ensure_ascii=False)
         
@@ -188,15 +225,26 @@ def generate_cover():
 @app.route('/api/cover/<order_id>')
 def get_cover(order_id):
     """Serve the generated cover image."""
-    cover_path = Path('output/covers') / f"cover_{order_id}.png"
+    cover_path = Path(__file__).parent / 'output' / 'covers' / f"cover_{order_id}.png"
+    
+    print(f"Attempting to serve cover: {cover_path}")
+    print(f"Cover exists: {cover_path.exists()}")
     
     if not cover_path.exists():
+        print(f"Cover not found for order_id: {order_id}")
         return jsonify({
             'success': False,
-            'error': 'Cover not found'
+            'error': f'Cover not found for order {order_id}'
         }), 404
     
-    return send_file(cover_path, mimetype='image/png')
+    try:
+        return send_file(cover_path, mimetype='image/png')
+    except Exception as e:
+        print(f"Error serving cover: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': f'Error serving cover: {str(e)}'
+        }), 500
 
 @app.route('/api/payment', methods=['POST'])
 def process_payment():
@@ -213,7 +261,7 @@ def process_payment():
             }), 400
         
         # Load order data
-        order_file_path = Path('output/orders') / f"order_{order_id}.json"
+        order_file_path = Path(__file__).parent / 'output' / 'orders' / f"order_{order_id}.json"
         if not order_file_path.exists():
             return jsonify({
                 'success': False,
@@ -269,8 +317,8 @@ def upload_character_image():
         filename = secure_filename(file.filename)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         unique_filename = f"{timestamp}_{filename}"
-        file_path = Path(UPLOAD_FOLDER) / unique_filename
-        file.save(file_path)
+        file_path = UPLOAD_FOLDER / unique_filename
+        file.save(str(file_path))
         
         return jsonify({
             'success': True,

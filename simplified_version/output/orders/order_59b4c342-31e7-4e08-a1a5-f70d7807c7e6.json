@@ -1,0 +1,27 @@
+{
+  "order_id": "59b4c342-31e7-4e08-a1a5-f70d7807c7e6",
+  "customer_name": "a",
+  "customer_email": "mail.fede.cesarini@gmail.com",
+  "book_title": "a",
+  "story_idea": "a",
+  "num_pages": 3,
+  "age_group": "4-7",
+  "language": "Italian",
+  "art_style": "whimsical watercolor",
+  "characters": [
+    {
+      "name": "Patata",
+      "character_type": "main",
+      "type": "text",
+      "content": "Una patata dolce storta con 23 occhi",
+      "additional_description": ""
+    }
+  ],
+  "themes": [],
+  "cover_path": "/home/federico/Desktop/personal/book_publishing_api/simplified_version/output/covers/cover_59b4c342-31e7-4e08-a1a5-f70d7807c7e6.png",
+  "order_date": "2025-06-23T11:34:27.283158",
+  "status": "paid_awaiting_production",
+  "payment_status": "paid",
+  "payment_date": "2025-06-23T11:35:05.189530",
+  "payment_method": "credit_card"
+}

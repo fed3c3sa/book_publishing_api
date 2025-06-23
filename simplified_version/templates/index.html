@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StoryMaker - AI Children's Book Generator</title>
+    <title>StoryMaker - Generatore di Libri per Bambini con IA</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -541,6 +541,124 @@
             50% { transform: translateY(-20px); }
         }
 
+        /* Language toggle */
+        .language-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .lang-toggle {
+            padding: 8px 16px;
+            border: 2px solid #E0E0E0;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .lang-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .lang-toggle.active {
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Terms of Service Modal */
+        .tos-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tos-content {
+            background: white;
+            border-radius: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 40px;
+            position: relative;
+        }
+
+        .tos-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #F0F0F0;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .tos-close:hover {
+            background: #E0E0E0;
+            transform: scale(1.1);
+        }
+
+        .tos-text {
+            margin: 20px 0;
+            line-height: 1.6;
+            color: #666;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .tos-text::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .tos-text::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .tos-text::-webkit-scrollbar-thumb {
+            background: #999;
+            border-radius: 10px;
+        }
+
+        .tos-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .tos-checkbox input {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .wizard-card {
@@ -638,6 +756,12 @@
     </style>
 </head>
 <body>
+    <!-- Language Toggle -->
+    <div class="language-toggle">
+        <button class="lang-toggle active" data-lang="it" onclick="switchLanguage('it')">IT</button>
+        <button class="lang-toggle" data-lang="en" onclick="switchLanguage('en')">EN</button>
+    </div>
+
     <div class="floating-shapes">
         <div class="shape shape-1"></div>
         <div class="shape shape-2"></div>
@@ -649,7 +773,7 @@
         <div class="wizard-card">
             <!-- Preview Panel -->
             <div class="preview-panel">
-                <h2 class="preview-title">✨ See The Magic ✨</h2>
+                <h2 class="preview-title" data-translate="previewTitle">✨ Guarda la Magia ✨</h2>
                 <div class="preview-carousel">
                     <div class="preview-image">
                         <img src="/assets/cover.png" alt="Book Cover">
@@ -674,24 +798,24 @@
                 <div class="wizard-header">
                     <div class="logo">
                         <span class="logo-icon">📚</span>
-                        <span class="logo-text">StoryMaker</span>
+                        <span class="logo-text" data-translate="logoText">StoryMaker</span>
                     </div>
-                    <p class="tagline">Create magical stories in minutes!</p>
+                    <p class="tagline" data-translate="tagline">Crea storie magiche in pochi minuti!</p>
                 </div>
 
                 <!-- Progress Steps -->
                 <div class="progress-steps">
                     <div class="step active" onclick="goToStep(1)">
                         <div class="step-circle">1</div>
-                        <span class="step-label">Story</span>
+                        <span class="step-label" data-translate="step1Label">Storia</span>
                     </div>
                     <div class="step" onclick="goToStep(2)">
                         <div class="step-circle">2</div>
-                        <span class="step-label">Details</span>
+                        <span class="step-label" data-translate="step2Label">Dettagli</span>
                     </div>
                     <div class="step" onclick="goToStep(3)">
                         <div class="step-circle">3</div>
-                        <span class="step-label">Characters</span>
+                        <span class="step-label" data-translate="step3Label">Personaggi</span>
                     </div>
                 </div>
 
@@ -702,51 +826,51 @@
                             <!-- Customer Information -->
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="customerName">👤 Your Name</label>
-                                    <input type="text" id="customerName" name="customerName" required placeholder="Enter your name">
+                                    <label for="customerName" data-translate="yourName">👤 Il Tuo Nome</label>
+                                    <input type="text" id="customerName" name="customerName" required placeholder="Inserisci il tuo nome" data-translate="yourNamePlaceholder">
                                 </div>
                                 <div class="form-group">
-                                    <label for="customerEmail">📧 Email Address</label>
-                                    <input type="email" id="customerEmail" name="customerEmail" required placeholder="your@email.com">
+                                    <label for="customerEmail" data-translate="emailAddress">📧 Indirizzo Email</label>
+                                    <input type="email" id="customerEmail" name="customerEmail" required placeholder="tua@email.com" data-translate="emailPlaceholder">
                                 </div>
                             </div>
                             
                             <div class="form-group">
-                                <label for="bookTitle">📖 What's your book title?</label>
-                                <input type="text" id="bookTitle" name="bookTitle" required placeholder="The Amazing Adventure of...">
+                                <label for="bookTitle" data-translate="bookTitle">📖 Qual è il titolo del tuo libro?</label>
+                                <input type="text" id="bookTitle" name="bookTitle" required placeholder="L'Incredibile Avventura di..." data-translate="bookTitlePlaceholder">
                             </div>
                             
                             <div class="form-group">
-                                <label for="storyIdea">✨ Tell us your story idea!</label>
-                                <textarea id="storyIdea" name="storyIdea" required placeholder="Once upon a time..."></textarea>
+                                <label for="storyIdea" data-translate="storyIdea">✨ Raccontaci la tua idea per la storia!</label>
+                                <textarea id="storyIdea" name="storyIdea" required placeholder="C'era una volta..." data-translate="storyIdeaPlaceholder"></textarea>
                             </div>
                             
                             <div class="form-group">
-                                <label>🎯 Choose your themes:</label>
+                                <label data-translate="chooseThemes">🎯 Scegli i tuoi temi:</label>
                                 <div class="theme-grid">
                                     <div class="theme-tag">
                                         <input type="checkbox" id="friendship" name="themes" value="friendship">
-                                        <label for="friendship">👫 Friendship</label>
+                                        <label for="friendship" data-translate="friendship">👫 Amicizia</label>
                                     </div>
                                     <div class="theme-tag">
                                         <input type="checkbox" id="adventure" name="themes" value="adventure">
-                                        <label for="adventure">🚀 Adventure</label>
+                                        <label for="adventure" data-translate="adventure">🚀 Avventura</label>
                                     </div>
                                     <div class="theme-tag">
                                         <input type="checkbox" id="courage" name="themes" value="courage">
-                                        <label for="courage">💪 Courage</label>
+                                        <label for="courage" data-translate="courage">💪 Coraggio</label>
                                     </div>
                                     <div class="theme-tag">
                                         <input type="checkbox" id="kindness" name="themes" value="kindness">
-                                        <label for="kindness">💖 Kindness</label>
+                                        <label for="kindness" data-translate="kindness">💖 Gentilezza</label>
                                     </div>
                                     <div class="theme-tag">
                                         <input type="checkbox" id="family" name="themes" value="family">
-                                        <label for="family">👨‍👩‍👧 Family</label>
+                                        <label for="family" data-translate="family">👨‍👩‍👧 Famiglia</label>
                                     </div>
                                     <div class="theme-tag">
                                         <input type="checkbox" id="nature" name="themes" value="nature">
-                                        <label for="nature">🌳 Nature</label>
+                                        <label for="nature" data-translate="nature">🌳 Natura</label>
                                     </div>
                                 </div>
                             </div>
@@ -756,41 +880,41 @@
                         <div class="step-content" id="step2">
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="numPages">📄 Number of Pages</label>
+                                    <label for="numPages" data-translate="numPages">📄 Numero di Pagine</label>
                                     <select id="numPages" name="numPages">
-                                        <option value="3">3 Pages</option>
-                                        <option value="8">8 Pages</option>
-                                        <option value="10" selected>10 Pages</option>
-                                        <option value="12">12 Pages</option>
-                                        <option value="14">14 Pages</option>
-                                        <option value="16">16 Pages</option>
+                                        <option value="3">3 Pagine</option>
+                                        <option value="8">8 Pagine</option>
+                                        <option value="10" selected>10 Pagine</option>
+                                        <option value="12">12 Pagine</option>
+                                        <option value="14">14 Pagine</option>
+                                        <option value="16">16 Pagine</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="ageGroup">👶 Age Group</label>
+                                    <label for="ageGroup" data-translate="ageGroup">👶 Fascia d'Età</label>
                                     <select id="ageGroup" name="ageGroup">
-                                        <option value="3-5">3-5 years</option>
-                                        <option value="4-7" selected>4-7 years</option>
-                                        <option value="6-9">6-9 years</option>
-                                        <option value="9-12">9-12 years</option>
+                                        <option value="3-5">3-5 anni</option>
+                                        <option value="4-7" selected>4-7 anni</option>
+                                        <option value="6-9">6-9 anni</option>
+                                        <option value="9-12">9-12 anni</option>
                                     </select>
                                 </div>
                             </div>
                             
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="language">🌍 Language</label>
+                                    <label for="language" data-translate="language">🌍 Lingua</label>
                                     <select id="language" name="language">
-                                        <option value="English" selected>English</option>
-                                        <option value="Spanish">Spanish</option>
-                                        <option value="French">French</option>
-                                        <option value="German">German</option>
-                                        <option value="Italian">Italian</option>
+                                        <option value="Italian" selected>Italiano</option>
+                                        <option value="English">Inglese</option>
+                                        <option value="Spanish">Spagnolo</option>
+                                        <option value="French">Francese</option>
+                                        <option value="German">Tedesco</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="artStyle">🎨 Art Style</label>
-                                    <input type="text" id="artStyle" name="artStyle" value="whimsical watercolor" placeholder="watercolor, cartoon, digital...">
+                                    <label for="artStyle" data-translate="artStyle">🎨 Stile Artistico</label>
+                                    <input type="text" id="artStyle" name="artStyle" value="whimsical watercolor" placeholder="acquerello, cartone animato, digitale..." data-translate="artStylePlaceholder">
                                 </div>
                             </div>
                         </div>
@@ -800,23 +924,23 @@
                             <div id="charactersContainer">
                                 <!-- Characters will be added here -->
                             </div>
-                            <button type="button" class="btn btn-secondary" onclick="addCharacter()">
-                                <span>➕</span> Add Character
+                            <button type="button" class="btn btn-secondary" onclick="addCharacter()" data-translate="addCharacter">
+                                ➕ Aggiungi Personaggio
                             </button>
                         </div>
                     </div>
 
                     <!-- Navigation -->
                     <div class="nav-buttons">
-                        <button type="button" class="btn btn-outline" id="prevBtn" onclick="previousStep()" style="display: none;">
-                            ← Back
+                        <button type="button" class="btn btn-outline" id="prevBtn" onclick="previousStep()" style="display: none;" data-translate="back">
+                            ← Indietro
                         </button>
                         <div style="flex: 1;"></div>
-                        <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep()">
-                            Next →
+                        <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep()" data-translate="next">
+                            Avanti →
                         </button>
-                        <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;">
-                            ✨ Generate Book
+                        <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;" data-translate="generateBook">
+                            ✨ Genera Libro
                         </button>
                     </div>
                 </form>
@@ -828,24 +952,118 @@
     <div class="progress-overlay" id="progressOverlay">
         <div class="progress-modal">
             <div class="progress-emoji">📚</div>
-            <h2 style="color: #333; margin-bottom: 10px;">Creating Your Story!</h2>
-            <p style="color: #666; margin-bottom: 20px;">Our magical AI is working...</p>
+            <h2 style="color: #333; margin-bottom: 10px;" data-translate="creatingStory">Creiamo la Tua Storia!</h2>
+            <p style="color: #666; margin-bottom: 20px;" data-translate="magicalAI">La nostra IA magica sta lavorando...</p>
             <div style="width: 100%; height: 20px; background: #F0F0F0; border-radius: 10px; overflow: hidden;">
                 <div id="progressBar" style="height: 100%; background: linear-gradient(90deg, #FF6B6B, #4ECDC4, #FFE66D); width: 0%; transition: width 0.5s ease;"></div>
             </div>
-            <p id="progressText" style="color: #999; margin-top: 10px; font-size: 0.9rem;">Starting...</p>
+            <p id="progressText" style="color: #999; margin-top: 10px; font-size: 0.9rem;" data-translate="starting">Inizio...</p>
         </div>
     </div>
 
+    <!-- Terms of Service Modal -->
+    <div class="tos-modal" id="tosModal">
+        <div class="tos-content">
+            <button class="tos-close" onclick="closeTOS()">×</button>
+            <h2 style="color: #333; margin-bottom: 20px;" data-translate="termsOfService">Termini di Servizio</h2>
+            <div class="tos-text" id="tosText">
+                <!-- TOS content will be loaded here -->
+            </div>
+            <div class="tos-checkbox">
+                <input type="checkbox" id="tosAccept">
+                <label for="tosAccept" data-translate="iAcceptTerms">Accetto i Termini di Servizio</label>
+            </div>
+            <button class="btn btn-primary" onclick="acceptTOS()" style="width: 100%; margin-top: 20px;" data-translate="next">Avanti →</button>
+        </div>
+    </div>
+
+    <script src="/assets/translations.js"></script>
     <script>
         let currentStep = 1;
         let characterCount = 0;
         let currentGenerationId = null;
+        let tosAccepted = false;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             addCharacter();
+            updateTranslations(); // Apply initial translations
+            loadTOS(); // Load Terms of Service
         });
+
+        // Load Terms of Service based on current language
+        async function loadTOS() {
+            const tosFile = currentLanguage === 'it' ? 'tos-italian.txt' : 'tos-english.txt';
+            try {
+                const response = await fetch(`/tos/${tosFile}`);
+                const text = await response.text();
+                document.getElementById('tosText').innerText = text;
+            } catch (error) {
+                console.error('Error loading TOS:', error);
+            }
+        }
+
+        // Show TOS modal
+        function showTOS() {
+            document.getElementById('tosModal').style.display = 'flex';
+        }
+
+        // Close TOS modal
+        function closeTOS() {
+            document.getElementById('tosModal').style.display = 'none';
+        }
+
+        // Accept TOS
+        function acceptTOS() {
+            if (document.getElementById('tosAccept').checked) {
+                tosAccepted = true;
+                closeTOS();
+                document.getElementById('bookForm').dispatchEvent(new Event('submit'));
+            } else {
+                alert(t('acceptTerms'));
+            }
+        }
+
+        // Override switchLanguage to reload TOS and update page options
+        const originalSwitchLanguage = window.switchLanguage;
+        window.switchLanguage = function(lang) {
+            originalSwitchLanguage(lang);
+            loadTOS(); // Reload TOS in new language
+            updatePageOptions(); // Update select options based on language
+        }
+
+        // Update select options based on language
+        function updatePageOptions() {
+            // Update number of pages options
+            const numPagesSelect = document.getElementById('numPages');
+            if (numPagesSelect) {
+                numPagesSelect.options[0].text = currentLanguage === 'it' ? '3 Pagine' : '3 Pages';
+                numPagesSelect.options[1].text = currentLanguage === 'it' ? '8 Pagine' : '8 Pages';
+                numPagesSelect.options[2].text = currentLanguage === 'it' ? '10 Pagine' : '10 Pages';
+                numPagesSelect.options[3].text = currentLanguage === 'it' ? '12 Pagine' : '12 Pages';
+                numPagesSelect.options[4].text = currentLanguage === 'it' ? '14 Pagine' : '14 Pages';
+                numPagesSelect.options[5].text = currentLanguage === 'it' ? '16 Pagine' : '16 Pages';
+            }
+
+            // Update age group options
+            const ageGroupSelect = document.getElementById('ageGroup');
+            if (ageGroupSelect) {
+                ageGroupSelect.options[0].text = currentLanguage === 'it' ? '3-5 anni' : '3-5 years';
+                ageGroupSelect.options[1].text = currentLanguage === 'it' ? '4-7 anni' : '4-7 years';
+                ageGroupSelect.options[2].text = currentLanguage === 'it' ? '6-9 anni' : '6-9 years';
+                ageGroupSelect.options[3].text = currentLanguage === 'it' ? '9-12 anni' : '9-12 years';
+            }
+
+            // Update language options
+            const languageSelect = document.getElementById('language');
+            if (languageSelect) {
+                languageSelect.options[0].text = currentLanguage === 'it' ? 'Italiano' : 'Italian';
+                languageSelect.options[1].text = currentLanguage === 'it' ? 'Inglese' : 'English';
+                languageSelect.options[2].text = currentLanguage === 'it' ? 'Spagnolo' : 'Spanish';
+                languageSelect.options[3].text = currentLanguage === 'it' ? 'Francese' : 'French';
+                languageSelect.options[4].text = currentLanguage === 'it' ? 'Tedesco' : 'German';
+            }
+        }
 
         function goToStep(step) {
             if (step < currentStep || validateCurrentStep()) {
@@ -903,14 +1121,14 @@
                 const idea = document.getElementById('storyIdea').value.trim();
                 
                 if (!customerName || !customerEmail || !title || !idea) {
-                    alert('Please fill in all required fields! 📝');
+                    alert(t('fillRequired'));
                     return false;
                 }
                 
                 // Basic email validation
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(customerEmail)) {
-                    alert('Please enter a valid email address! 📧');
+                    alert(t('validEmail'));
                     return false;
                 }
             }
@@ -927,41 +1145,41 @@
             
             characterDiv.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h3 style="color: #333; font-size: 1.2rem;">Character ${characterCount}</h3>
-                    ${characterCount > 1 ? `<button type="button" class="btn btn-outline" style="padding: 8px 16px; font-size: 0.9rem;" onclick="removeCharacter(${characterCount})">Remove</button>` : ''}
+                    <h3 style="color: #333; font-size: 1.2rem;">${t('character')} ${characterCount}</h3>
+                    ${characterCount > 1 ? `<button type="button" class="btn btn-outline" style="padding: 8px 16px; font-size: 0.9rem;" onclick="removeCharacter(${characterCount})">${t('remove')}</button>` : ''}
                 </div>
                 
                 <div class="form-group">
-                    <label for="characterName-${characterCount}">Character Name</label>
-                    <input type="text" id="characterName-${characterCount}" name="characterName-${characterCount}" required placeholder="Give them a name!">
+                    <label for="characterName-${characterCount}">${t('characterName')}</label>
+                    <input type="text" id="characterName-${characterCount}" name="characterName-${characterCount}" required placeholder="${t('characterNamePlaceholder')}">
                 </div>
                 
                 <div class="form-group">
-                    <label for="characterType-${characterCount}">Character Type</label>
+                    <label for="characterType-${characterCount}">${t('characterType')}</label>
                     <select id="characterType-${characterCount}" name="characterType-${characterCount}">
-                        <option value="main" ${characterCount === 1 ? 'selected' : ''}>⭐ Main Character</option>
-                        <option value="secondary" ${characterCount > 1 ? 'selected' : ''}>👥 Supporting Character</option>
-                        <option value="background">🎭 Background Character</option>
+                        <option value="main" ${characterCount === 1 ? 'selected' : ''}>${t('mainCharacter')}</option>
+                        <option value="secondary" ${characterCount > 1 ? 'selected' : ''}>${t('supportingCharacter')}</option>
+                        <option value="background">${t('backgroundCharacter')}</option>
                     </select>
                 </div>
                 
                 <div class="form-group">
-                    <label>Input Method</label>
+                    <label>${t('inputMethod')}</label>
                     <div style="display: flex; gap: 20px;">
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
                             <input type="radio" name="inputType-${characterCount}" value="text" checked onchange="toggleInputType(${characterCount})">
-                            <span>📝 Describe</span>
+                            <span>${t('describe')}</span>
                         </label>
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
                             <input type="radio" name="inputType-${characterCount}" value="image" onchange="toggleInputType(${characterCount})">
-                            <span>📷 Upload</span>
+                            <span>${t('upload')}</span>
                         </label>
                     </div>
                 </div>
                 
                 <div id="textInput-${characterCount}" class="form-group">
-                    <label for="characterDescription-${characterCount}">Description</label>
-                    <textarea id="characterDescription-${characterCount}" name="characterDescription-${characterCount}" required placeholder="What do they look like? What's their personality?"></textarea>
+                    <label for="characterDescription-${characterCount}">${t('description')}</label>
+                    <textarea id="characterDescription-${characterCount}" name="characterDescription-${characterCount}" required placeholder="${t('descriptionPlaceholder')}"></textarea>
                 </div>
                 
                 <div id="imageInput-${characterCount}" class="form-group" style="display: none;">
@@ -969,7 +1187,7 @@
                          onclick="document.getElementById('characterImage-${characterCount}').click()">
                         <div id="uploadText-${characterCount}">
                             <p style="font-size: 2rem;">📷</p>
-                            <p style="color: #666;">Click to upload</p>
+                            <p style="color: #666;">${t('clickToUpload')}</p>
                         </div>
                         <input type="file" id="characterImage-${characterCount}" accept="image/*" style="display: none;" onchange="handleImageUpload(${characterCount})">
                     </div>
@@ -1009,7 +1227,7 @@
                 formData.append('image', file);
                 
                 try {
-                    uploadText.innerHTML = '<p style="font-size: 2rem;">⏳</p><p>Uploading...</p>';
+                    uploadText.innerHTML = `<p style="font-size: 2rem;">⏳</p><p>${t('uploading')}</p>`;
                     const response = await fetch('/api/upload_character_image', {
                         method: 'POST',
                         body: formData
@@ -1018,13 +1236,13 @@
                     const result = await response.json();
                     
                     if (result.success) {
-                        uploadText.innerHTML = '<p style="font-size: 2rem; color: #4ECDC4;">✅</p><p style="color: #4ECDC4;">Uploaded!</p>';
+                        uploadText.innerHTML = `<p style="font-size: 2rem; color: #4ECDC4;">✅</p><p style="color: #4ECDC4;">${t('uploaded')}</p>`;
                         fileInput.setAttribute('data-filename', result.filename);
                     } else {
-                        uploadText.innerHTML = '<p style="font-size: 2rem; color: #FF6B6B;">❌</p><p style="color: #FF6B6B;">Failed!</p>';
+                        uploadText.innerHTML = `<p style="font-size: 2rem; color: #FF6B6B;">❌</p><p style="color: #FF6B6B;">${t('failed')}</p>`;
                     }
                 } catch (error) {
-                    uploadText.innerHTML = '<p style="font-size: 2rem; color: #FF6B6B;">❌</p><p style="color: #FF6B6B;">Error!</p>';
+                    uploadText.innerHTML = `<p style="font-size: 2rem; color: #FF6B6B;">❌</p><p style="color: #FF6B6B;">${t('error')}</p>`;
                 }
             }
         }
@@ -1032,6 +1250,12 @@
         // Form submission
         document.getElementById('bookForm').addEventListener('submit', async function(event) {
             event.preventDefault();
+            
+            // Check if TOS accepted
+            if (!tosAccepted) {
+                showTOS();
+                return;
+            }
             
             const formData = new FormData(event.target);
             const data = {
@@ -1079,7 +1303,7 @@
             });
             
             if (data.characters.length === 0) {
-                alert('Please add at least one character! 🦸');
+                alert(t('addAtLeastOneCharacter'));
                 return;
             }
             
@@ -1115,7 +1339,7 @@
             const interval = setInterval(() => {
                 progress += 10;
                 document.getElementById('progressBar').style.width = `${progress}%`;
-                document.getElementById('progressText').textContent = progress < 100 ? 'Creating your book cover...' : 'Almost ready!';
+                document.getElementById('progressText').textContent = progress < 100 ? t('creatingCover') : t('almostReady');
                 if (progress >= 100) {
                     clearInterval(interval);
                 }
@@ -1127,30 +1351,30 @@
             progressModal.innerHTML = `
                 <div class="success-content">
                     <div class="success-emoji">🎨</div>
-                    <h2 style="color: #333; margin: 20px 0;">Your Book Cover is Ready!</h2>
+                    <h2 style="color: #333; margin: 20px 0;">${t('coverReady')}</h2>
                     
                     <div style="text-align: center; margin: 30px 0;">
                         <img src="${coverUrl}" alt="Your Book Cover" style="max-width: 300px; width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); margin-bottom: 20px;">
                     </div>
                     
                     <div style="background: #F8F9FA; border-radius: 20px; padding: 30px; margin-top: 30px; text-align: center;">
-                        <h3 style="color: #333; margin-bottom: 15px;">Get Your Complete Book!</h3>
+                        <h3 style="color: #333; margin-bottom: 15px;">${t('getCompleteBook')}</h3>
                         <div style="font-size: 2.5rem; font-weight: 700; color: #4ECDC4; margin: 20px 0;">$19.99</div>
                         
                         <ul style="list-style: none; padding: 0; text-align: left; margin: 20px 0;">
-                            <li style="margin: 10px 0; color: #666;">✅ Professional review by expert writers</li>
-                            <li style="margin: 10px 0; color: #666;">✅ High-quality illustrations for all pages</li>
-                            <li style="margin: 10px 0; color: #666;">✅ Age-appropriate language and content</li>
-                            <li style="margin: 10px 0; color: #666;">✅ Delivered via email within 12 hours</li>
-                            <li style="margin: 10px 0; color: #666;">✅ PDF format ready for printing</li>
+                            <li style="margin: 10px 0; color: #666;">${t('professionalReview')}</li>
+                            <li style="margin: 10px 0; color: #666;">${t('highQualityIllustrations')}</li>
+                            <li style="margin: 10px 0; color: #666;">${t('ageAppropriate')}</li>
+                            <li style="margin: 10px 0; color: #666;">${t('deliveredEmail')}</li>
+                            <li style="margin: 10px 0; color: #666;">${t('pdfFormat')}</li>
                         </ul>
                         
                         <button onclick="processPayment('${orderId}')" class="btn btn-primary" style="font-size: 1.2rem; padding: 15px 40px; margin-top: 20px;">
-                            💳 Pay Now - Get Full Book
+                            ${t('payNow')}
                         </button>
                         
                         <p style="color: #666; margin-top: 15px; font-size: 0.9rem;">
-                            Our expert writers will review and enhance your story before delivery
+                            ${t('expertReview')}
                         </p>
                     </div>
                 </div>
@@ -1185,24 +1409,24 @@
             progressModal.innerHTML = `
                 <div class="success-content">
                     <div class="success-emoji">🎉</div>
-                    <h2 style="color: #333; margin: 20px 0;">Payment Successful!</h2>
+                    <h2 style="color: #333; margin: 20px 0;">${t('paymentSuccessful')}</h2>
                     <p style="color: #666; margin-bottom: 30px; font-size: 1.1rem;">
-                        Thank you for your order! Our expert writers are now working on your book.
+                        ${t('thankYouOrder')}
                     </p>
                     <div style="background: #E8F5E8; border-radius: 15px; padding: 20px; margin: 20px 0;">
-                        <h3 style="color: #2E7D32; margin-bottom: 10px;">What happens next:</h3>
+                        <h3 style="color: #2E7D32; margin-bottom: 10px;">${t('whatHappensNext')}</h3>
                         <ul style="text-align: left; color: #2E7D32; list-style: none; padding: 0;">
-                            <li style="margin: 8px 0;">✅ Payment confirmed</li>
-                            <li style="margin: 8px 0;">🎨 Expert review and enhancement</li>
-                            <li style="margin: 8px 0;">📚 Professional illustration creation</li>
-                            <li style="margin: 8px 0;">📧 Delivery within 12 hours</li>
+                            <li style="margin: 8px 0;">${t('paymentConfirmed')}</li>
+                            <li style="margin: 8px 0;">${t('expertReviewEnhancement')}</li>
+                            <li style="margin: 8px 0;">${t('professionalIllustration')}</li>
+                            <li style="margin: 8px 0;">${t('deliveryWithin12')}</li>
                         </ul>
                     </div>
                     <p style="color: #666; font-size: 0.9rem;">
-                        You'll receive an email confirmation shortly, and your completed book will be delivered to your inbox within 12 hours.
+                        ${t('emailConfirmation')}
                     </p>
                     <button onclick="location.reload()" class="btn btn-secondary" style="margin-top: 20px;">
-                        Create Another Book
+                        ${t('createAnotherBook')}
                     </button>
                 </div>
             `;
