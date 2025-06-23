@@ -1359,7 +1359,7 @@
                     
                     <div style="background: #F8F9FA; border-radius: 20px; padding: 30px; margin-top: 30px; text-align: center;">
                         <h3 style="color: #333; margin-bottom: 15px;">${t('getCompleteBook')}</h3>
-                        <div style="font-size: 2.5rem; font-weight: 700; color: #4ECDC4; margin: 20px 0;">$19.99</div>
+                        <div id="price-display" style="font-size: 2.5rem; font-weight: 700; color: #4ECDC4; margin: 20px 0;">€19.99</div>
                         
                         <ul style="list-style: none; padding: 0; text-align: left; margin: 20px 0;">
                             <li style="margin: 10px 0; color: #666;">${t('professionalReview')}</li>
@@ -1369,38 +1369,64 @@
                             <li style="margin: 10px 0; color: #666;">${t('pdfFormat')}</li>
                         </ul>
                         
-                        <button onclick="processPayment('${orderId}')" class="btn btn-primary" style="font-size: 1.2rem; padding: 15px 40px; margin-top: 20px;">
+                        <button id="payment-btn" onclick="processPayment('${orderId}')" class="btn btn-primary" style="font-size: 1.2rem; padding: 15px 40px; margin-top: 20px;">
                             ${t('payNow')}
                         </button>
                         
                         <p style="color: #666; margin-top: 15px; font-size: 0.9rem;">
                             ${t('expertReview')}
                         </p>
+                        
+                        <div style="margin-top: 20px; padding: 15px; background: #E8F5E8; border-radius: 10px;">
+                            <p style="color: #2E7D32; font-size: 0.9rem; margin: 0;">
+                                <strong>🔒 ${currentLanguage === 'it' ? 'Pagamento Sicuro' : 'Secure Payment'}</strong><br>
+                                ${currentLanguage === 'it' ? 'Elaborato da Stripe • Crittografia SSL • Dati protetti' : 'Powered by Stripe • SSL Encryption • Protected Data'}
+                            </p>
+                        </div>
                     </div>
                 </div>
             `;
         }
 
         async function processPayment(orderId) {
+            const paymentBtn = document.getElementById('payment-btn');
+            const originalText = paymentBtn.innerHTML;
+            
             try {
-                const response = await fetch('/api/payment', {
+                // Update button to show loading state
+                paymentBtn.innerHTML = `<span style="display: inline-block; width: 20px; height: 20px; border: 2px solid #ffffff; border-radius: 50%; border-top-color: transparent; animation: spin 1s ease-in-out infinite;"></span> ${currentLanguage === 'it' ? 'Preparazione...' : 'Preparing...'}`;
+                paymentBtn.disabled = true;
+
+                // Create checkout session
+                const response = await fetch('/api/create-checkout-session', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        order_id: orderId,
-                        payment_method: 'credit_card'
+                        order_id: orderId
                     })
                 });
                 
                 const result = await response.json();
                 
                 if (result.success) {
-                    showPaymentSuccess();
+                    // Update price display
+                    document.getElementById('price-display').textContent = result.amount;
+                    
+                    // Update button for redirect
+                    paymentBtn.innerHTML = `${currentLanguage === 'it' ? 'Reindirizzamento...' : 'Redirecting...'}`;
+                    
+                    // Redirect to Stripe Checkout or mock payment page
+                    window.location.href = result.checkout_url;
                 } else {
-                    alert(`Payment failed: ${result.error}`);
+                    throw new Error(result.error);
                 }
             } catch (error) {
-                alert(`Payment error: ${error.message}`);
+                // Reset button on error
+                paymentBtn.innerHTML = originalText;
+                paymentBtn.disabled = false;
+                
+                alert(`${currentLanguage === 'it' ? 'Errore nel pagamento' : 'Payment error'}: ${error.message}`);
+                console.error('Payment error:', error);
             }
         }
 

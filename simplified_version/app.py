@@ -19,11 +19,13 @@ from email import encoders
 from typing import Dict, Any, Optional
 from datetime import datetime
 import dotenv
+import time
 
-from flask import Flask, request, jsonify, send_file, render_template, send_from_directory
+from flask import Flask, request, jsonify, send_file, render_template, send_from_directory, redirect
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import base64
+import stripe
 
 # Add src directory to Python path
 parent_dir = str(Path(__file__).parent.parent)
@@ -42,6 +44,9 @@ except ImportError as e:
     print("Make sure you're running this from the book_publishing_api directory")
     print("Or copy the src directory to the simplified_version folder")
     sys.exit(1)
+
+# Import Stripe configuration
+from config.stripe_config import stripe_config
 
 dotenv.load_dotenv("secrets.env")
 
@@ -246,13 +251,12 @@ def get_cover(order_id):
             'error': f'Error serving cover: {str(e)}'
         }), 500
 
-@app.route('/api/payment', methods=['POST'])
-def process_payment():
-    """Handle payment processing (simplified - just marks as paid)."""
+@app.route('/api/create-checkout-session', methods=['POST'])
+def create_checkout_session():
+    """Create a Stripe Checkout Session for payment."""
     try:
         data = request.get_json()
         order_id = data.get('order_id')
-        payment_method = data.get('payment_method', 'credit_card')
         
         if not order_id:
             return jsonify({
@@ -271,33 +275,156 @@ def process_payment():
         with open(order_file_path, 'r', encoding='utf-8') as f:
             order_data = json.load(f)
         
-        # Update payment status
-        order_data['payment_status'] = 'paid'
-        order_data['payment_date'] = datetime.now().isoformat()
-        order_data['payment_method'] = payment_method
-        order_data['status'] = 'paid_awaiting_production'
+        # Add full cover URL for Stripe
+        order_data['cover_url'] = f"{request.host_url}api/cover/{order_id}"
+        
+        # Create Stripe Checkout Session
+        session_data = stripe_config.create_checkout_session(order_data)
+        
+        # Update order with session info
+        order_data['stripe_session_id'] = session_data['id']
+        order_data['payment_status'] = 'checkout_created'
+        order_data['checkout_created_at'] = datetime.now().isoformat()
         
         # Save updated order
         with open(order_file_path, 'w', encoding='utf-8') as f:
             json.dump(order_data, f, indent=2, ensure_ascii=False)
         
-        # Send confirmation email to customer
-        send_customer_confirmation(order_data)
-        
-        # Send production notification to admin
-        send_production_notification(order_data)
-        
         return jsonify({
             'success': True,
-            'message': 'Payment processed successfully! You will receive your complete book via email within 12 hours.',
-            'order_id': order_id
+            'checkout_url': session_data['url'],
+            'session_id': session_data['id'],
+            'amount': stripe_config.format_amount(stripe_config.book_price_cents)
         })
         
     except Exception as e:
+        print(f"Error creating checkout session: {str(e)}")
         return jsonify({
             'success': False,
-            'error': str(e)
+            'error': f'Failed to create checkout session: {str(e)}'
         }), 500
+
+@app.route('/api/mock-payment/<order_id>')
+def mock_payment_page(order_id):
+    """Mock payment page for local development."""
+    if not stripe_config.mock_payment:
+        return jsonify({'error': 'Mock payments not enabled'}), 404
+    
+    return f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Mock Payment - Local Development</title>
+        <style>
+            body {{ font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }}
+            .payment-form {{ background: #f9f9f9; padding: 30px; border-radius: 10px; text-align: center; }}
+            button {{ background: #28a745; color: white; padding: 15px 30px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }}
+            button:hover {{ background: #218838; }}
+            .warning {{ background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px; margin-bottom: 20px; }}
+        </style>
+    </head>
+    <body>
+        <div class="warning">
+            <strong>⚠️ DEVELOPMENT MODE</strong><br>
+            This is a mock payment page for local development only.
+        </div>
+        <div class="payment-form">
+            <h2>Complete Your Payment</h2>
+            <p>Order ID: {order_id}</p>
+            <p>Amount: {stripe_config.format_amount(stripe_config.book_price_cents)}</p>
+            <button onclick="processPayment()">Complete Mock Payment</button>
+        </div>
+        
+        <script>
+            function processPayment() {{
+                // Simulate payment processing
+                document.body.innerHTML = '<div style="text-align: center; margin-top: 100px;"><h2>Processing Payment...</h2><p>Please wait...</p></div>';
+                
+                setTimeout(() => {{
+                    fetch('/api/webhook/stripe', {{
+                        method: 'POST',
+                        headers: {{ 'Content-Type': 'application/json' }},
+                        body: JSON.stringify({{
+                            type: 'checkout.session.completed',
+                            data: {{ object: {{ id: 'cs_mock_{order_id}', metadata: {{ order_id: '{order_id}' }} }} }}
+                        }})
+                    }}).then(() => {{
+                        window.location.href = '/success?session_id=cs_mock_{order_id}&order_id={order_id}';
+                    }});
+                }}, {stripe_config.mock_payment_delay * 1000});
+            }}
+        </script>
+    </body>
+    </html>
+    """
+
+@app.route('/api/webhook/stripe', methods=['POST'])
+def stripe_webhook():
+    """Handle Stripe webhooks for payment confirmation."""
+    try:
+        payload = request.get_data()
+        sig_header = request.headers.get('Stripe-Signature', '')
+        
+        # Verify webhook signature
+        event = stripe_config.verify_webhook_signature(payload, sig_header)
+        
+        # Handle the event
+        if event['type'] == 'checkout.session.completed':
+            session_data = event['data']['object']
+            order_id = session_data['metadata']['order_id']
+            
+            # Update order status
+            order_file_path = Path(__file__).parent / 'output' / 'orders' / f"order_{order_id}.json"
+            if order_file_path.exists():
+                with open(order_file_path, 'r', encoding='utf-8') as f:
+                    order_data = json.load(f)
+                
+                # Update payment status
+                order_data['payment_status'] = 'paid'
+                order_data['payment_date'] = datetime.now().isoformat()
+                order_data['stripe_session_completed'] = session_data['id']
+                order_data['status'] = 'paid_awaiting_production'
+                
+                # Save updated order
+                with open(order_file_path, 'w', encoding='utf-8') as f:
+                    json.dump(order_data, f, indent=2, ensure_ascii=False)
+                
+                # Send confirmation emails
+                send_customer_confirmation(order_data)
+                send_production_notification(order_data)
+                
+                print(f"Payment completed for order {order_id}")
+        
+        return jsonify({'status': 'success'})
+        
+    except Exception as e:
+        print(f"Webhook error: {str(e)}")
+        return jsonify({'error': str(e)}), 400
+
+@app.route('/success')
+def payment_success():
+    """Handle successful payment redirect."""
+    session_id = request.args.get('session_id')
+    order_id = request.args.get('order_id')
+    
+    if not session_id or not order_id:
+        return redirect('/?error=missing_params')
+    
+    try:
+        # Verify the session
+        session_data = stripe_config.retrieve_session(session_id)
+        
+        if session_data['payment_status'] == 'paid':
+            return render_template('success.html', 
+                                 order_id=order_id, 
+                                 session_id=session_id,
+                                 amount=stripe_config.format_amount(session_data['amount_total']))
+        else:
+            return redirect('/?error=payment_not_completed')
+            
+    except Exception as e:
+        print(f"Error verifying payment: {str(e)}")
+        return redirect('/?error=verification_failed')
 
 @app.route('/api/upload_character_image', methods=['POST'])
 def upload_character_image():

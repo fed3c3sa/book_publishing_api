@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento Completato - StoryMaker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Fredoka', 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 25%, #FFE66D 50%, #95E1D3 75%, #C7CEEA 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .success-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            padding: 60px;
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+            animation: bounceIn 0.8s ease;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .success-icon {
+            font-size: 5rem;
+            margin-bottom: 30px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-30px); }
+            60% { transform: translateY(-15px); }
+        }
+
+        .success-title {
+            color: #333;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .success-message {
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .order-details {
+            background: #F8F9FA;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .order-details h3 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #E9ECEF;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .detail-value {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .next-steps {
+            background: #E8F5E8;
+            border-radius: 20px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .next-steps h3 {
+            color: #2E7D32;
+            margin-bottom: 15px;
+        }
+
+        .next-steps ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        .next-steps li {
+            color: #2E7D32;
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .next-steps li:before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Fredoka', sans-serif;
+            text-decoration: none;
+            margin: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            color: white;
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95E1D3, #C7CEEA);
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(149, 225, 211, 0.3);
+        }
+
+        /* Language toggle */
+        .language-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .lang-toggle {
+            padding: 8px 16px;
+            border: 2px solid #E0E0E0;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .lang-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .lang-toggle.active {
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            color: white;
+            border-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Toggle -->
+    <div class="language-toggle">
+        <button class="lang-toggle active" data-lang="it" onclick="switchLanguage('it')">IT</button>
+        <button class="lang-toggle" data-lang="en" onclick="switchLanguage('en')">EN</button>
+    </div>
+
+    <div class="success-container">
+        <div class="success-icon">🎉</div>
+        <h1 class="success-title" data-translate="paymentSuccessful">Pagamento Riuscito!</h1>
+        <p class="success-message" data-translate="thankYouOrder">
+            Grazie per il tuo ordine! I nostri scrittori esperti stanno ora lavorando al tuo libro personalizzato.
+        </p>
+
+        <div class="order-details">
+            <h3 data-translate="orderDetails">Dettagli dell'Ordine</h3>
+            <div class="detail-row">
+                <span class="detail-label" data-translate="orderIdLabel">ID Ordine:</span>
+                <span class="detail-value">{{ order_id }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label" data-translate="amountPaidLabel">Importo Pagato:</span>
+                <span class="detail-value">{{ amount }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label" data-translate="paymentMethodLabel">Metodo di Pagamento:</span>
+                <span class="detail-value" data-translate="creditCard">Carta di Credito</span>
+            </div>
+        </div>
+
+        <div class="next-steps">
+            <h3 data-translate="whatHappensNext">Cosa succede dopo:</h3>
+            <ul>
+                <li data-translate="paymentConfirmed">Pagamento confermato</li>
+                <li data-translate="expertReviewEnhancement">Revisione ed miglioramento da esperti</li>
+                <li data-translate="professionalIllustration">Creazione di illustrazioni professionali</li>
+                <li data-translate="deliveryWithin12">Consegna entro 12 ore</li>
+            </ul>
+        </div>
+
+        <p class="success-message" data-translate="emailConfirmation">
+            Riceverai presto una conferma via email, e il tuo libro completo sarà consegnato nella tua casella di posta entro 12 ore.
+        </p>
+
+        <div style="margin-top: 40px;">
+            <a href="/" class="btn btn-primary" data-translate="createAnotherBook">Crea un Altro Libro</a>
+            <a href="mailto:support@storymaker.com" class="btn btn-secondary" data-translate="contactSupport">Contatta il Supporto</a>
+        </div>
+    </div>
+
+    <script src="/assets/translations.js"></script>
+    <script>
+        // Update translations for additional keys
+        translations.it.orderDetails = 'Dettagli dell\'Ordine';
+        translations.it.orderIdLabel = 'ID Ordine:';
+        translations.it.amountPaidLabel = 'Importo Pagato:';
+        translations.it.paymentMethodLabel = 'Metodo di Pagamento:';
+        translations.it.creditCard = 'Carta di Credito';
+        translations.it.contactSupport = 'Contatta il Supporto';
+
+        translations.en.orderDetails = 'Order Details';
+        translations.en.orderIdLabel = 'Order ID:';
+        translations.en.amountPaidLabel = 'Amount Paid:';
+        translations.en.paymentMethodLabel = 'Payment Method:';
+        translations.en.creditCard = 'Credit Card';
+        translations.en.contactSupport = 'Contact Support';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTranslations();
+        });
+    </script>
+</body>
+</html> 
