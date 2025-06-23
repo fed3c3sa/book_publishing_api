@@ -1,0 +1,132 @@
+TERMS OF SERVICE
+
+Last Updated: [Date]
+
+1. INTRODUCTION AND ACCEPTANCE
+
+These Terms of Service ("Terms") constitute a legally binding agreement between you ("User", "you") and [Your Company Name] (VAT: [Your VAT Number], REA: [Your REA Number], Address: [Your Address]) ("we", "us", "our") governing your use of our AI-powered personalized book creation service (the "Service").
+
+By using our website, uploading content, placing an order, or clicking "I agree" at checkout, you accept and agree to be bound by these Terms. If you do not agree to these Terms, you must not use our Service.
+
+2. SERVICE DESCRIPTION
+
+Our Service allows you to create custom AI-generated books by:
+- Uploading personal photographs and images
+- Providing your name and email address
+- Submitting ideas and text content
+- Receiving a professionally formatted digital book (PDF format) containing your content enhanced with AI-generated elements
+
+The final product consists of a personalized book with the number of pages and format as specified during the ordering process. The Service includes AI-assisted layout, design, and content enhancement based on your uploaded materials.
+
+3. PRICING AND PAYMENT
+
+3.1 All prices are displayed in Euros (€) and include VAT where applicable.
+3.2 Payment must be completed before we begin processing your order.
+3.3 Payments are processed securely through Stripe. By placing an order, you authorize the payment of the listed price.
+3.4 Upon successful payment, you will receive an email confirmation and invoice/receipt.
+3.5 No additional fees apply unless explicitly stated during the ordering process.
+
+4. ORDER PROCESS
+
+4.1 To place an order:
+   a) Select the desired service package
+   b) Upload your images and content
+   c) Provide required information (name, email, ideas)
+   d) Review your order
+   e) Accept these Terms
+   f) Complete payment through our secure checkout
+
+4.2 The contract is formed when you receive our order confirmation email after successful payment.
+4.3 We reserve the right to refuse orders that violate these Terms or applicable laws.
+
+5. DELIVERY
+
+5.1 Your custom book will be delivered via email to the address you provide within 12 hours of order confirmation.
+5.2 Delivery time is calculated from the moment we send the order confirmation email.
+5.3 The book will be delivered in PDF format. You must have appropriate software to view PDF files.
+5.4 We are not responsible for delivery failures due to incorrect email addresses or technical issues on the recipient's end.
+
+6. USER CONTENT AND INTELLECTUAL PROPERTY
+
+6.1 You retain all ownership rights to the content you upload.
+6.2 By uploading content, you grant us a limited, non-exclusive, non-transferable license to use, reproduce, and modify your content solely for the purpose of creating and delivering your book.
+6.3 You represent and warrant that:
+   - You own or have the necessary rights to use all uploaded content
+   - Your content does not infringe any third-party intellectual property rights
+   - Your content does not violate any applicable laws
+
+6.4 You indemnify us against any claims arising from your breach of these warranties.
+6.5 We will not use your content for any purpose other than fulfilling your order.
+
+7. AI-GENERATED CONTENT AND LIABILITY
+
+7.1 Parts of your book may include AI-generated enhancements, layouts, or design elements.
+7.2 The Service is provided "as is". While we strive for high quality, we cannot guarantee that AI-generated content will meet all subjective expectations.
+7.3 The book is created for your personal use. Any commercial distribution or resale requires separate authorization.
+7.4 We are not liable for any AI-generated content that may not meet your specific aesthetic or creative expectations beyond what is described in the Service.
+
+8. RIGHT OF WITHDRAWAL
+
+8.1 According to Article 59 of the Consumer Code, the right of withdrawal does not apply to custom digital content.
+8.2 By confirming your order and requesting immediate performance of the Service, you acknowledge that:
+   - You request us to begin creating your custom book immediately
+   - You waive your 14-day withdrawal right once the Service is fully performed
+   - You understand that no refund will be available once your book is delivered
+
+9. REFUNDS AND CANCELLATIONS
+
+9.1 Due to the custom nature of our Service, all sales are final once we begin working on your order.
+9.2 Cancellations must be requested immediately after placing the order and before we begin processing.
+9.3 Refunds will only be issued if:
+   - The delivered product is technically defective
+   - The delivered product substantially differs from what was described
+   - We fail to deliver within the promised timeframe due to our fault
+
+9.4 To request a refund for valid reasons, contact us at [support email] within 48 hours of delivery.
+
+10. WARRANTIES AND DISCLAIMERS
+
+10.1 We warrant that we will provide the Service with reasonable skill and care.
+10.2 We do not warrant that:
+   - The Service will meet all your subjective expectations
+   - AI-generated content will be error-free or perfect
+   - The Service will be uninterrupted or always available
+
+10.3 Our liability is limited to the amount you paid for the Service.
+10.4 We are not liable for:
+   - Indirect or consequential damages
+   - Loss arising from your misuse of the delivered book
+   - Technical issues beyond our reasonable control
+
+10.5 Nothing in these Terms excludes liability for gross negligence or intentional wrongdoing.
+
+11. PRIVACY AND DATA PROTECTION
+
+11.1 We process personal data in accordance with GDPR and our Privacy Policy.
+11.2 By using our Service, you consent to the collection and processing of:
+   - Your name and email address
+   - Uploaded images and content
+   - Transaction information
+
+11.3 Your uploaded content will be permanently deleted from our servers within 24 hours after delivery.
+11.4 Please refer to our Privacy Policy for detailed information about data handling.
+
+12. GENERAL PROVISIONS
+
+12.1 These Terms are governed by Italian law.
+12.2 Any disputes shall be resolved by the competent courts according to Italian consumer protection laws.
+12.3 For online dispute resolution, you may use the EU ODR platform at https://ec.europa.eu/consumers/odr/
+12.4 If any provision of these Terms is found invalid, the remaining provisions shall continue in effect.
+
+13. CONTACT INFORMATION
+
+[Your Company Name]
+Address: [Your Full Address]
+Email: [Your Email]
+VAT Number: [Your VAT Number]
+REA Number: [Your REA Number]
+Phone: [Your Phone Number - if available]
+
+14. MODIFICATIONS
+
+We reserve the right to modify these Terms at any time. Updated Terms will be posted on our website with the revision date. Continued use of our Service after changes constitutes acceptance of the modified Terms.
