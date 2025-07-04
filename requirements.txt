@@ -1,31 +1,37 @@
-# Core dependencies
-requests>=2.31.0
-openai>=1.0.0
-python-dotenv>=1.0.0
-Pillow>=10.0.0
-reportlab>=4.0.0
-weasyprint>=60.0
-
-# Web framework for frontend
+# Core Flask dependencies
 Flask>=2.3.0
 Flask-CORS>=4.0.0
 
-# Data handling
+# AI and API clients
+requests>=2.31.0
+openai>=1.0.0
+
+# Environment and configuration
+python-dotenv>=1.0.0
 pydantic>=2.0.0
 pydantic-settings>=2.0.0
 
-# PDF and HTML generation
+# Image processing and generation
+Pillow>=10.0.0
+opencv-python>=4.8.0
+
+# PDF generation
+reportlab>=4.0.0
+weasyprint>=60.0
+
+# Template and content processing
 jinja2>=3.1.0
 markdown>=3.5.0
 
-# Image processing
-opencv-python>=4.8.0
+# Payment processing
+stripe>=7.0.0
 
 # Utilities
 tqdm>=4.66.0
 colorama>=0.4.6
+werkzeug>=2.3.0
 
-# Development and testing
+# Development (optional - can be removed in production)
 pytest>=7.4.0
 black>=23.0.0
 flake8>=6.0.0

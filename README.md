@@ -1,217 +1,205 @@
-# Children's Book Generator 🎨📚
+# Book Publishing API - Production Version
 
-An AI-powered tool for creating beautiful, personalized children's books with custom characters, engaging stories, and professional illustrations.
+A Flask-based web application that generates personalized children's book covers using AI and handles payment processing for complete book orders.
 
-## Features ✨
+## Features
 
-- **Character Creation**: Extract detailed character descriptions from text or images using GPT-4o
-- **Story Planning**: Generate age-appropriate story structures with page-by-page breakdowns
-- **Image Generation**: Create consistent, beautiful illustrations using Ideogram AI
-- **Text Generation**: Craft engaging, age-appropriate text content for each page
-- **PDF Assembly**: Combine images and text into professional PDF books with full-page backgrounds
-- **HTML Output**: Generate interactive HTML versions of your books
-- **Modular Architecture**: Well-organized, maintainable code structure
+- ✨ AI-powered book cover generation
+- 🎨 Character processing (text descriptions or image uploads)
+- 💳 Stripe payment integration
+- 📧 Email notifications
+- 🌍 Multi-language support (Italian/English)
+- 📱 Responsive web interface
+- 🔒 Secure file handling
 
-## Quick Start 🚀
+## Project Structure
 
-### 1. Setup
+```
+book_publishing_api/
+├── app/                          # Main application package
+│   ├── routes/                   # API route blueprints
+│   │   ├── asset_routes.py      # Static assets and templates
+│   │   ├── book_routes.py       # Book cover generation
+│   │   ├── payment_routes.py    # Stripe payment processing
+│   │   └── upload_routes.py     # File upload handling
+│   ├── services/                # Business logic modules
+│   │   ├── book_generation_service.py  # Cover generation service
+│   │   ├── email_service.py            # Email notifications
+│   │   ├── ai_clients/                 # AI client integrations
+│   │   ├── book_planning/              # Story planning logic
+│   │   ├── character_processing/       # Character handling
+│   │   ├── content_generation/         # Image/text generation
+│   │   └── utils/                      # Configuration utilities
+│   └── models/                   # Data models
+├── config/                       # Configuration files
+│   └── stripe_config.py         # Stripe payment configuration
+├── templates/                    # Frontend HTML templates
+│   ├── index.html               # Main application interface
+│   └── success.html             # Payment success page
+├── static/                       # Static assets
+│   └── assets/                  # Frontend assets (CSS, JS, images)
+├── output/                       # Generated files
+│   ├── covers/                  # Generated book covers
+│   └── orders/                  # Order data
+├── temp_uploads/                # Temporary file uploads
+├── tos/                         # Terms of Service files
+├── app.py                       # Main application entry point
+└── requirements.txt             # Python dependencies
+```
+
+## Quick Start
+
+### 1. Environment Setup
+
+Create a `secrets.env` file with your configuration:
+
+```env
+# Environment
+ENVIRONMENT=local  # local, staging, production
+
+# OpenAI API
+OPENAI_API_KEY=your_openai_api_key
+
+# Ideogram API (for image generation)
+IDEOGRAM_API_KEY=your_ideogram_api_key
+
+# Email Configuration (optional)
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASSWORD=your_app_password
+ADMIN_EMAIL=admin@yourcompany.com
+
+# Stripe Configuration
+STRIPE_TEST_SECRET_KEY=sk_test_...
+STRIPE_TEST_PUBLISHABLE_KEY=pk_test_...
+STRIPE_TEST_WEBHOOK_SECRET=whsec_...
+
+# Production Stripe (for production only)
+STRIPE_LIVE_SECRET_KEY=sk_live_...
+STRIPE_LIVE_PUBLISHABLE_KEY=pk_live_...
+STRIPE_LIVE_WEBHOOK_SECRET=whsec_...
+
+# Application
+SECRET_KEY=your_secret_key_here
+PORT=5001
+```
+
+### 2. Installation
 
 ```bash
-# Clone or download the project
-cd children_book_generator
+# Clone the repository
+git clone <repository-url>
+cd book_publishing_api
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
-
-# Configure API keys
-cp secrets.env.template secrets.env
-# Edit secrets.env with your actual API keys
 ```
 
-### 2. Configure Your Book
-
-Edit the configuration section in `main.py`:
-
-```python
-# Book Configuration
-BOOK_TITLE = "Your Book Title"
-STORY_IDEA = "Your story concept..."
-NUM_PAGES = 8
-AGE_GROUP = "3-6"
-LANGUAGE = "English"
-
-# Character Configuration
-CHARACTERS = [
-    {
-        "type": "text",  # or "image"
-        "name": "Character Name",
-        "character_type": "main",  # "main", "secondary", "background"
-        "content": "Character description...",
-    }
-]
-```
-
-### 3. Generate Your Book
+### 3. Run the Application
 
 ```bash
-python main.py
+# Development mode
+python app.py
+
+# Production mode (with gunicorn)
+pip install gunicorn
+gunicorn -w 4 -b 0.0.0.0:5001 app:app
 ```
 
-The script will:
-1. Process your character descriptions
-2. Create a detailed story plan
-3. Generate illustrations for each page
-4. Create text content for each page
-5. Assemble everything into PDF and HTML formats
+The application will be available at `http://localhost:5001`
 
-## Requirements 📋
+## API Endpoints
 
-### API Keys Required
+### Book Generation
+- `POST /api/generate` - Generate book cover and create order
+- `GET /api/cover/<order_id>` - Retrieve generated cover image
 
-- **OpenAI API Key**: For GPT-4o text generation and character analysis
-- **Ideogram API Key**: For image generation
+### Payment Processing
+- `POST /api/create-checkout-session` - Create Stripe checkout session
+- `POST /api/webhook/stripe` - Stripe webhook handler
+- `GET /api/mock-payment/<order_id>` - Mock payment (development only)
 
-### Python Dependencies
+### File Upload
+- `POST /api/upload_character_image` - Upload character images
 
-- `openai>=1.0.0` - OpenAI API client
-- `requests>=2.31.0` - HTTP requests for Ideogram API
-- `reportlab>=4.0.0` - PDF generation
-- `Pillow>=10.0.0` - Image processing
-- `python-dotenv>=1.0.0` - Environment variable management
-- `pydantic>=2.0.0` - Data validation
+### Static Assets
+- `GET /` - Main application interface
+- `GET /assets/<filename>` - Static assets
+- `GET /tos/<filename>` - Terms of Service files
+- `GET /success` - Payment success page
 
-## Project Structure 📁
+## Configuration
 
-```
-children_book_generator/
-├── main.py                 # Main script - configure and run here
-├── requirements.txt        # Python dependencies
-├── secrets.env.template    # API keys template
-├── src/                    # Source code modules
-│   ├── ai_clients/         # OpenAI and Ideogram API clients
-│   ├── character_processing/ # Character description extraction
-│   ├── book_planning/      # Story structure and planning
-│   ├── content_generation/ # Image and text generation
-│   ├── pdf_generation/     # PDF and HTML assembly
-│   └── utils/              # Configuration and utilities
-├── prompts/                # AI prompt templates
-├── output/                 # Generated content (created automatically)
-│   ├── characters/         # Character description files
-│   ├── plans/              # Book plan files
-│   ├── images/             # Generated illustrations
-│   ├── texts/              # Generated text content
-│   └── books/              # Final PDF and HTML books
-├── examples/               # Example configurations
-└── docs/                   # Additional documentation
-```
+### Stripe Integration
 
-## Configuration Guide 🔧
+The application supports both test and live Stripe modes:
 
-### Character Types
+- **Local Development**: Uses mock payments by default
+- **Staging**: Uses Stripe test keys
+- **Production**: Uses Stripe live keys
 
-- **Main**: Primary characters that appear throughout the story
-- **Secondary**: Important supporting characters
-- **Background**: Minor characters or crowd elements
+Configure webhook endpoints in your Stripe dashboard:
+- Test: `https://your-domain.com/api/webhook/stripe`
+- Live: `https://your-domain.com/api/webhook/stripe`
 
-### Age Groups
+### Email Notifications
 
-- **3-5**: Very simple language, basic concepts
-- **3-6**: Simple sentences, repetitive patterns
-- **6-8**: Slightly more complex vocabulary
-- **6-9**: Longer sentences, more descriptive
-- **9-12**: Rich vocabulary, character development
+Email notifications are sent for:
+- New order created (to admin)
+- Payment confirmed (to customer)
+- Production needed (to admin)
 
-### Art Styles
+Configure SMTP settings in `secrets.env`.
 
-Examples of art style descriptions:
-- `"children's book illustration, watercolor style, bright and colorful"`
-- `"cartoon style, friendly characters, vibrant colors"`
-- `"digital art, soft pastels, dreamy atmosphere"`
-- `"hand-drawn style, pencil and crayon, playful"`
+## Development
 
-## Advanced Usage 💡
+### Adding New Routes
 
-### Using Image-Based Characters
+1. Create a new route file in `app/routes/`
+2. Define a Blueprint with your routes
+3. Register the blueprint in `app.py`
 
-```python
-CHARACTERS = [
-    {
-        "type": "image",
-        "name": "Luna",
-        "character_type": "main",
-        "content": ["/path/to/character_image1.jpg", "/path/to/character_image2.png"],
-        "additional_description": "Luna is brave and curious"
-    }
-]
-```
+### Adding New Services
 
-### Custom Themes
+1. Create service files in `app/services/`
+2. Import and use in your routes
+3. Follow the existing patterns for error handling
 
-```python
-THEMES = ["friendship", "courage", "environmental awareness", "problem-solving"]
-```
+### Frontend Customization
 
-### Multiple Languages
+The frontend is a single-page application in `templates/index.html` with:
+- Multi-language support via `static/assets/translations.js`
+- Responsive design
+- Payment integration
 
-The system supports multiple languages. Simply change:
+## Deployment
 
-```python
-LANGUAGE = "Spanish"  # or "French", "German", etc.
-```
+### Environment Variables
 
-## Output Files 📄
+Set `ENVIRONMENT=production` and configure all production keys.
 
-### Generated Files
+### Security Considerations
 
-- **PDF Book**: Professional book with full-page background images and text overlays
-- **HTML Book**: Interactive web version with responsive design
-- **Character Files**: JSON files with detailed character descriptions
-- **Story Plan**: Complete page-by-page story structure
-- **Individual Images**: High-quality illustrations for each page
-- **Text Files**: Generated text content for each page
+- Use strong `SECRET_KEY` in production
+- Configure proper CORS settings
+- Use HTTPS in production
+- Validate file uploads properly
+- Secure webhook endpoints
 
-### File Organization
+### Monitoring
 
-All outputs are organized in the `output/` directory by book title and content type for easy management and reuse.
+- Monitor `/api/webhook/stripe` for payment events
+- Check `output/orders/` for order data
+- Monitor email delivery status
 
-## Troubleshooting 🔧
+## License
 
-### Common Issues
+[Your License Here]
 
-1. **API Key Errors**
-   - Ensure your API keys are correctly set in `secrets.env`
-   - Check that your OpenAI account has GPT-4o access
-   - Verify your Ideogram API key is active
+## Support
 
-2. **Image Generation Fails**
-   - Check your internet connection
-   - Ensure Ideogram API has sufficient credits
-   - Try simplifying character descriptions
-
-3. **PDF Generation Issues**
-   - Ensure all required fonts are available
-   - Check that image files exist and are accessible
-   - Verify sufficient disk space
-
-### Getting Help
-
-- Check the `docs/` directory for detailed documentation
-- Review example configurations in `examples/`
-- Ensure all dependencies are properly installed
-
-## License 📜
-
-This project is provided as-is for educational and creative purposes. Please ensure you comply with the terms of service for OpenAI and Ideogram APIs.
-
-## Contributing 🤝
-
-This is a modular system designed for easy extension. You can:
-- Add new AI service integrations
-- Create custom prompt templates
-- Implement additional output formats
-- Enhance the PDF layout system
-
----
-
-**Happy Book Creating! 🎉📚**
+For support, email [your-support-email] or create an issue in the repository.
 

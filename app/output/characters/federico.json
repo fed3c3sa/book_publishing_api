@@ -1,0 +1,161 @@
+{
+  "character_name": "federico",
+  "character_type": "main",
+  "species": "human",
+  "age_category": "young adult",
+  "gender_presentation": "male",
+  "ideogram_character_seed": "Federico is a young adult male with a sharp, analytical mind, working in a futuristic tech environment. He has a sleek, modern appearance with a professional demeanor, embodying innovation and intelligence.",
+  "physical_description": {
+    "overall_impression": "Federico exudes a sense of calm intelligence and modern sophistication.",
+    "size": "average human size",
+    "build_physique": "lean and slightly athletic, with a confident posture",
+    "height_weight": "tall and slender, slightly above average height",
+    "exact_colors": {
+      "primary": "charcoal gray",
+      "secondary": "crisp white",
+      "accent": "electric blue",
+      "details": "silver accents on clothing",
+      "seasonal_variations": "none"
+    },
+    "head_face": {
+      "head_shape": "oval with a strong jawline",
+      "facial_structure": {
+        "eyes": "almond-shaped, deep brown with a focused gaze",
+        "nose": "straight and narrow",
+        "mouth": "medium width with a neutral expression",
+        "cheeks": "slightly sunken with high cheekbones",
+        "chin": "prominent with a slight cleft",
+        "forehead": "high and smooth"
+      },
+      "hair_fur_covering": {
+        "type": "hair",
+        "color": "dark brown",
+        "texture": "smooth and straight",
+        "length": "short, neatly styled",
+        "style": "side-parted, professional",
+        "special_features": "none"
+      },
+      "ears": "medium-sized, close to the head",
+      "other_facial_features": "none"
+    },
+    "body_structure": {
+      "torso": "broad shoulders, narrow waist",
+      "arms_hands": "long arms with slender fingers",
+      "legs_feet": "long legs, average foot size",
+      "tail": "none",
+      "wings": "none",
+      "other_appendages": "none"
+    },
+    "skin_surface": {
+      "texture": "smooth",
+      "patterns": "none",
+      "markings": "none",
+      "special_properties": "none"
+    },
+    "distinctive_features": [
+      "sharp, focused gaze",
+      "neatly styled hair"
+    ],
+    "fixed_elements": [
+      "professional attire",
+      "calm demeanor"
+    ],
+    "proportions": "balanced head-to-body ratio, long limbs",
+    "mobility_posture": {
+      "typical_posture": "upright and confident",
+      "gait": "smooth and purposeful",
+      "gesture_patterns": "minimal, precise hand movements",
+      "flexibility": "moderate"
+    }
+  },
+  "clothing_accessories": {
+    "regular_outfit": {
+      "upper_body": "tailored charcoal gray blazer over a crisp white shirt",
+      "lower_body": "matching charcoal gray trousers",
+      "footwear": "sleek black leather shoes",
+      "undergarments": "standard",
+      "style": "professional and modern"
+    },
+    "accessories": {
+      "jewelry": "none",
+      "functional_items": "smartwatch on left wrist",
+      "decorative_items": "none",
+      "special_items": "none"
+    },
+    "seasonal_alternate_outfits": "lightweight blazer for warmer weather",
+    "clothing_preferences": "prefers sleek, modern styles in neutral colors"
+  },
+  "personality_psychology": {
+    "core_personality_traits": [
+      "intelligent",
+      "focused",
+      "innovative"
+    ],
+    "emotional_characteristics": {
+      "dominant_emotions": [
+        "calm",
+        "curious"
+      ],
+      "emotional_range": "calm to intensely focused",
+      "emotional_triggers": "complex problems, new technology",
+      "emotional_expression": "subtle, often through eyes and slight smiles"
+    },
+    "social_behavior": {
+      "interaction_style": "reserved but engaging",
+      "communication_pattern": "clear and concise",
+      "relationship_approach": "trusts few, values deep connections",
+      "conflict_resolution": "analytical and diplomatic"
+    },
+    "cognitive_traits": {
+      "intelligence_type": "analytical and innovative",
+      "learning_style": "visual and experiential",
+      "problem_solving": "methodical and creative",
+      "attention_span": "highly focused"
+    },
+    "motivations_values": {
+      "primary_motivations": "advancing technology",
+      "core_values": "innovation, integrity",
+      "fears_concerns": "stagnation, failure",
+      "aspirations": "to lead technological advancements"
+    }
+  },
+  "background_context": {
+    "origin_story": "grew up in a tech-savvy family",
+    "current_living_situation": "lives in a modern city apartment",
+    "social_economic_status": "upper-middle class",
+    "cultural_background": "embraces modern, global culture",
+    "education_experience": "educated in top technology institutes",
+    "significant_relationships": "mentors in the tech industry",
+    "life_experiences": "developed early interest in technology"
+  },
+  "behavioral_patterns": {
+    "daily_routines": "starts day with tech news, ends with coding",
+    "hobbies_interests": "coding, reading sci-fi",
+    "skills_talents": "problem-solving, coding",
+    "quirks_habits": "taps fingers when thinking",
+    "reaction_patterns": "remains calm under pressure",
+    "comfort_items": "favorite coding laptop"
+  },
+  "voice_communication": {
+    "speaking_voice": "calm, medium pitch",
+    "vocabulary_style": "technical, precise",
+    "catchphrases": "none",
+    "non_verbal_communication": "nods and slight smiles",
+    "laugh_type": "soft chuckle",
+    "crying_expression": "rarely shows tears, more internalized"
+  },
+  "story_role_dynamics": {
+    "narrative_function": "protagonist",
+    "character_arc_potential": "grows from reserved to a leader",
+    "relationship_dynamics": "mentors others, learns from peers",
+    "conflict_sources": "technological challenges",
+    "symbolic_meaning": "represents innovation and progress"
+  },
+  "consistency_formula": "Federico is a young adult male with a lean build, sharp features, and a calm, intelligent demeanor. He wears a charcoal gray blazer and trousers, with a crisp white shirt, embodying modern professionalism.",
+  "style_anchors": [
+    "modern",
+    "sleek",
+    "professional"
+  ],
+  "visual_style_notes": "clean lines, modern lighting, focus on technological elements"
+}
