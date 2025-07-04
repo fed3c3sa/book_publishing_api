@@ -28,16 +28,26 @@ class StripeConfig:
             self.publishable_key = os.getenv('STRIPE_TEST_PUBLISHABLE_KEY', 'pk_test_...')
             self.webhook_secret = os.getenv('STRIPE_TEST_WEBHOOK_SECRET', 'whsec_...')
         
-        # Configure Stripe
-        if not self.is_local:
+        # Configure Stripe - use real keys if available, otherwise mock
+        # Check if we have real Stripe keys configured
+        has_real_keys = (
+            self.api_key and self.api_key != 'sk_test_...' and 
+            self.publishable_key and self.publishable_key != 'pk_test_...'
+        )
+        
+        if has_real_keys:
             stripe.api_key = self.api_key
+            self.mock_payment = False
+            print(f"✅ Using real Stripe API keys ({'LIVE' if self.is_production else 'TEST'} mode)")
+        else:
+            self.mock_payment = True
+            print("⚠️  Using mock payments - no valid Stripe keys found")
         
         # Product configuration
         self.book_price_cents = 1999  # $19.99
         self.currency = 'eur'  # Changed to EUR for Italian market
         
-        # Mock payment settings for local development
-        self.mock_payment = self.is_local
+        # Mock payment settings
         self.mock_payment_delay = 2  # seconds to simulate payment processing
         
     def get_publishable_key(self) -> str:
@@ -122,6 +132,10 @@ class StripeConfig:
                 'type': 'checkout.session.completed',
                 'data': {'object': {'id': 'mock_session'}}
             }
+        
+        # Verify we have a webhook secret
+        if not self.webhook_secret or self.webhook_secret == 'whsec_...':
+            raise Exception("No valid webhook secret configured for Stripe verification")
         
         try:
             event = stripe.Webhook.construct_event(
