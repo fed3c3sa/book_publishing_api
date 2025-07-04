@@ -67,6 +67,7 @@ IDEOGRAM_API_KEY=your_ideogram_api_key
 EMAIL_USER=your_email@gmail.com
 EMAIL_PASSWORD=your_app_password
 ADMIN_EMAIL=admin@yourcompany.com
+PRODUCTION_EMAIL=production@yourcompany.com  # Email for complete order info with attachments
 
 # Stripe Configuration
 STRIPE_TEST_SECRET_KEY=sk_test_...
@@ -151,8 +152,15 @@ Email notifications are sent for:
 - New order created (to admin)
 - Payment confirmed (to customer)
 - Production needed (to admin)
+- **Complete order information with attachments (to production email after payment)**
 
-Configure SMTP settings in `secrets.env`.
+The complete order information email includes:
+- All user form data as JSON attachment
+- Generated book cover image
+- Character description files (if available)
+- Comprehensive order details for book production
+
+Configure SMTP settings in `secrets.env`. Set `PRODUCTION_EMAIL` for complete order info, defaults to `ADMIN_EMAIL` if not specified.
 
 ## Development
 

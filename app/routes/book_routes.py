@@ -10,9 +10,8 @@ from datetime import datetime
 from flask import Blueprint, request, jsonify, send_file
 from werkzeug.utils import secure_filename
 
-# Import services (will be created next)
+# Import services
 from app.services.book_generation_service import BookGenerationService
-from app.services.email_service import EmailService
 
 book_bp = Blueprint('book', __name__, url_prefix='/api')
 
@@ -63,9 +62,7 @@ def generate_cover():
                 customer_name=customer_name
             )
             
-            # Send notification email to admin
-            email_service = EmailService()
-            email_service.send_admin_notification(result['order_data'])
+            # Note: Email notifications are sent AFTER payment completion, not here
             
             return jsonify({
                 'success': True,

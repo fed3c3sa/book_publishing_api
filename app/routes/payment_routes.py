@@ -156,10 +156,84 @@ def stripe_webhook():
                 email_service.send_customer_confirmation(order_data)
                 email_service.send_production_notification(order_data)
                 
+                # Send complete order information with all attachments to production email
+                email_service.send_complete_order_information(order_data)
+                
                 print(f"Payment completed for order {order_id}")
         
         return jsonify({'status': 'success'})
         
     except Exception as e:
         print(f"Webhook error: {str(e)}")
-        return jsonify({'error': str(e)}), 400 
+        return jsonify({'error': str(e)}), 400
+
+@payment_bp.route('/manual-webhook/<session_id>', methods=['POST'])
+def manual_webhook_trigger(session_id):
+    """
+    Manual webhook trigger for development when Stripe can't reach localhost.
+    This simulates what Stripe would send when payment completes.
+    """
+    try:
+        # Retrieve session from Stripe to verify it was paid
+        session_data = stripe_config.retrieve_session(session_id)
+        
+        if session_data.get('payment_status') != 'paid':
+            return jsonify({
+                'success': False,
+                'error': 'Session is not marked as paid'
+            }), 400
+        
+        # Extract order_id from session metadata or URL
+        order_id = session_data.get('metadata', {}).get('order_id')
+        
+        if not order_id:
+            # Try to extract from success_url or other means
+            return jsonify({
+                'success': False,
+                'error': 'Could not determine order_id from session'
+            }), 400
+        
+        # Update order status manually
+        order_file_path = Path('output/orders') / f"order_{order_id}.json"
+        if not order_file_path.exists():
+            return jsonify({
+                'success': False,
+                'error': f'Order file not found for order {order_id}'
+            }), 404
+        
+        with open(order_file_path, 'r', encoding='utf-8') as f:
+            order_data = json.load(f)
+        
+        # Update payment status
+        order_data['payment_status'] = 'paid'
+        order_data['payment_date'] = datetime.now().isoformat()
+        order_data['stripe_session_completed'] = session_id
+        order_data['status'] = 'paid_awaiting_production'
+        order_data['manual_webhook_triggered'] = True  # Mark as manually triggered
+        
+        # Save updated order
+        with open(order_file_path, 'w', encoding='utf-8') as f:
+            json.dump(order_data, f, indent=2, ensure_ascii=False)
+        
+        # Send confirmation emails
+        email_service = EmailService()
+        email_service.send_customer_confirmation(order_data)
+        email_service.send_production_notification(order_data)
+        
+        # Send complete order information with all attachments to production email
+        email_service.send_complete_order_information(order_data)
+        
+        print(f"Manual webhook triggered for order {order_id} - emails sent")
+        
+        return jsonify({
+            'success': True,
+            'message': f'Emails sent for order {order_id}',
+            'order_id': order_id
+        })
+        
+    except Exception as e:
+        print(f"Manual webhook error: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': f'Manual webhook failed: {str(e)}'
+        }), 500 
