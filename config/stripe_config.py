@@ -44,7 +44,7 @@ class StripeConfig:
             print("⚠️  Using mock payments - no valid Stripe keys found")
         
         # Product configuration
-        self.book_price_cents = 1999  # $19.99
+        self.book_price_cents = 599  # $5.99
         self.currency = 'eur'  # Changed to EUR for Italian market
         
         # Mock payment settings
