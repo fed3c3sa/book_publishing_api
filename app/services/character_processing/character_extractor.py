@@ -203,6 +203,8 @@ class CharacterProcessor:
                     if isinstance(content, str):
                         content = [content]
                     
+                    print(f"🔄 Processing {len(content)} image(s) for character '{name}'")
+                    
                     character_data = self.extract_character_from_image(
                         image_paths=content,
                         character_name=name,

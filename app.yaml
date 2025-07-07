@@ -1,7 +1,7 @@
 runtime: python312
 
 # Service name (deploy to a new service, not default)
-service: book-publishing-api
+service: book-publishing-api-2
 
 # App Engine Standard environment
 env: standard
@@ -38,6 +38,9 @@ env_variables:
   # STRIPE_TEST_SECRET_KEY: set_via_gcloud_command
   # STRIPE_TEST_PUBLISHABLE_KEY: set_via_gcloud_command
   # STRIPE_TEST_WEBHOOK_SECRET: set_via_gcloud_command
+  
+  # Frontend URL for Stripe redirects (production)
+  FRONTEND_URL: https://book-publishing-api-2-dot-book-creator-464913.nw.r.appspot.com
 
 # Handler configuration
 handlers:
@@ -52,6 +55,9 @@ handlers:
 # All other requests go to the Flask app
 - url: /.*
   script: auto
+
+# Instance class for more memory
+instance_class: F4
 
 # Resource limits
 resources:

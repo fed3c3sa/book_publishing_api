@@ -12,6 +12,7 @@ from pathlib import Path
 from ..ai_clients.openai_client import OpenAIClient
 from ..ai_clients.ideogram_client import IdeogramClient
 from ..utils.config import load_prompt, get_output_path, IMAGES_DIR
+from ..storage_service import CloudStorageService
 
 
 class ImageGenerator:
@@ -20,7 +21,8 @@ class ImageGenerator:
     def __init__(
         self,
         openai_client: Optional[OpenAIClient] = None,
-        ideogram_client: Optional[IdeogramClient] = None
+        ideogram_client: Optional[IdeogramClient] = None,
+        storage_service: Optional[CloudStorageService] = None
     ):
         """
         Initialize the image generator.
@@ -28,9 +30,11 @@ class ImageGenerator:
         Args:
             openai_client: OpenAI client instance. If None, creates a new one.
             ideogram_client: Ideogram client instance. If None, creates a new one.
+            storage_service: Cloud storage service. If None, creates a new one.
         """
+        self.storage_service = storage_service or CloudStorageService()
         self.openai_client = openai_client or OpenAIClient()
-        self.ideogram_client = ideogram_client or IdeogramClient()
+        self.ideogram_client = ideogram_client or IdeogramClient(storage_service=self.storage_service)
         self.image_prompt_template = load_prompt("image_generation")
         
         # Track reference image for consistency
@@ -146,7 +150,7 @@ class ImageGenerator:
         art_style: str = "children's book cover, professional, engaging"
     ) -> str:
         """
-        Generate a cover image for the book.
+        Generate a cover image for the book and upload to Cloud Storage.
         
         Args:
             book_plan: Complete book plan data
@@ -154,25 +158,29 @@ class ImageGenerator:
             art_style: Desired art style for the cover
             
         Returns:
-            Path to the generated cover image file
+            Cloud Storage URL of the generated cover image
         """
         book_title = book_plan.get("book_title", "Untitled Book")
         themes = book_plan.get("themes", [])
         theme_str = ", ".join(themes) if themes else "adventure and friendship"
         
-        # Create output directory for this book
-        book_images_dir = self._get_book_images_dir(book_title)
+        # Clean book title for filename
+        clean_title = "".join(c for c in book_title if c.isalnum() or c in (' ', '-', '_')).rstrip()
+        clean_title = clean_title.replace(' ', '_').lower()
         
-        # Generate cover using Ideogram
-        cover_path = self.ideogram_client.generate_book_cover(
+        # Define cloud storage path
+        cloud_file_path = f"images/{clean_title}/cover.png"
+        
+        # Generate cover using Ideogram and upload directly to Cloud Storage
+        cover_cloud_url = self.ideogram_client.generate_book_cover_to_cloud(
             title=book_title,
             characters=characters,
             theme=theme_str,
-            output_dir=book_images_dir,
+            cloud_file_path=cloud_file_path,
             reference_image_path=self.reference_image_path
         )
         
-        return cover_path
+        return cover_cloud_url
     
     def generate_all_page_images(
         self,

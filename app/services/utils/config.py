@@ -13,6 +13,8 @@ from dotenv import load_dotenv
 PROJECT_ROOT = Path(__file__).parent.parent.parent.absolute()
 
 # Output directories
+# Note: These paths are only used for local development
+# In production (App Engine), all files are stored in Google Cloud Storage
 OUTPUT_DIR = PROJECT_ROOT / "output"
 CHARACTERS_DIR = OUTPUT_DIR / "characters"
 PLANS_DIR = OUTPUT_DIR / "plans"

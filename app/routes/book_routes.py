@@ -7,11 +7,12 @@ import uuid
 import json
 from pathlib import Path
 from datetime import datetime
-from flask import Blueprint, request, jsonify, send_file
+from flask import Blueprint, request, jsonify, send_file, redirect
 from werkzeug.utils import secure_filename
 
 # Import services
 from app.services.book_generation_service import BookGenerationService
+from app.services.storage_service import CloudStorageService
 
 book_bp = Blueprint('book', __name__, url_prefix='/api')
 
@@ -85,21 +86,26 @@ def generate_cover():
 
 @book_bp.route('/cover/<order_id>')
 def get_cover(order_id):
-    """Serve the generated cover image."""
-    cover_path = Path('output/covers') / f"cover_{order_id}.png"
-    
-    print(f"Attempting to serve cover: {cover_path}")
-    print(f"Cover exists: {cover_path.exists()}")
-    
-    if not cover_path.exists():
-        print(f"Cover not found for order_id: {order_id}")
-        return jsonify({
-            'success': False,
-            'error': f'Cover not found for order {order_id}'
-        }), 404
-    
+    """Serve the generated cover image from Cloud Storage."""
     try:
-        return send_file(cover_path, mimetype='image/png')
+        storage_service = CloudStorageService()
+        cloud_file_path = f"covers/cover_{order_id}.png"
+        
+        print(f"Attempting to serve cover from Cloud Storage: {cloud_file_path}")
+        
+        # Check if file exists in Cloud Storage
+        if not storage_service.file_exists(cloud_file_path):
+            print(f"Cover not found in Cloud Storage for order_id: {order_id}")
+            return jsonify({
+                'success': False,
+                'error': f'Cover not found for order {order_id}'
+            }), 404
+        
+        # Get public URL and redirect to it
+        public_url = storage_service.get_public_url(cloud_file_path)
+        print(f"Redirecting to public URL: {public_url}")
+        return redirect(public_url)
+        
     except Exception as e:
         print(f"Error serving cover: {str(e)}")
         return jsonify({

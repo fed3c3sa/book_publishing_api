@@ -84,25 +84,22 @@ class BookGenerationService:
                 themes=themes
             )
             
-            # Generate cover image
-            cover_image_path = self.image_generator.generate_book_cover(
+            # Generate cover image directly to Cloud Storage
+            cloud_cover_url = self.image_generator.generate_book_cover(
                 book_plan=book_plan,
                 characters=processed_characters,
                 art_style=art_style
             )
-            print(f"Cover generated at: {cover_image_path}")
+            print(f"Cover generated and uploaded to Cloud Storage: {cloud_cover_url}")
             
-            # Read the generated cover file and upload to Cloud Storage
-            if not Path(cover_image_path).exists():
-                raise FileNotFoundError(f"Generated cover file does not exist: {cover_image_path}")
+            # Copy the generated cover to the covers directory with the order ID
+            # Get the image data from the original location
+            original_cloud_path = cloud_cover_url.replace(f"gs://{self.storage_service.bucket_name}/", "")
+            image_data = self.storage_service.download_file_to_memory(original_cloud_path)
             
-            # Read the image file
-            with open(cover_image_path, 'rb') as f:
-                image_data = f.read()
-            
-            # Upload to Cloud Storage
-            cloud_cover_url = self.storage_service.save_cover_image(order_id, image_data)
-            print(f"Cover uploaded to Cloud Storage: {cloud_cover_url}")
+            # Save with order ID naming convention
+            order_cover_url = self.storage_service.save_cover_image(order_id, image_data)
+            print(f"Cover saved with order ID: {order_cover_url}")
             
             # Get public URL for the cover
             public_cover_url = self.storage_service.get_public_url(f"covers/cover_{order_id}.png")
@@ -120,7 +117,7 @@ class BookGenerationService:
                 'art_style': art_style,
                 'characters': characters_data,
                 'themes': themes,
-                'cover_path': cloud_cover_url,
+                'cover_path': order_cover_url,
                 'cover_public_url': public_cover_url,
                 'order_date': datetime.now().isoformat(),
                 'status': 'cover_generated',
@@ -133,7 +130,7 @@ class BookGenerationService:
             
             return {
                 'cover_path': public_cover_url,
-                'cover_cloud_path': cloud_cover_url,
+                'cover_cloud_path': order_cover_url,
                 'order_data': order_data
             }
             

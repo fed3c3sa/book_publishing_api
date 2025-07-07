@@ -13,6 +13,7 @@ import openai
 from openai import OpenAI
 
 from ..utils.config import load_config
+from ..storage_service import CloudStorageService
 
 
 class OpenAIClient:
@@ -40,6 +41,9 @@ class OpenAIClient:
             organization=org_id
         )
         
+        # Initialize Cloud Storage service for handling cloud images
+        self.storage_service = CloudStorageService()
+        
         # Default model configuration
         self.model = "gpt-4o"
         self.max_tokens = 8000
@@ -48,15 +52,30 @@ class OpenAIClient:
     def encode_image(self, image_path: Union[str, Path]) -> str:
         """
         Encode an image to base64 for API submission.
+        Supports both local file paths and cloud storage paths.
         
         Args:
-            image_path: Path to the image file
+            image_path: Path to the image file (local or cloud storage)
             
         Returns:
             Base64 encoded image string
         """
-        with open(image_path, "rb") as image_file:
-            return base64.b64encode(image_file.read()).decode('utf-8')
+        image_path_str = str(image_path)
+        
+        # Check if it's a cloud storage path
+        if image_path_str.startswith('uploads/') or image_path_str.startswith('gs://'):
+            try:
+                print(f"📥 Downloading image from cloud storage: {image_path_str}")
+                # Download image from cloud storage to memory
+                image_data = self.storage_service.download_file_to_memory(image_path_str)
+                print(f"✅ Downloaded {len(image_data)} bytes from cloud storage")
+                return base64.b64encode(image_data).decode('utf-8')
+            except Exception as e:
+                raise Exception(f"Failed to download and encode cloud storage image '{image_path_str}': {str(e)}")
+        else:
+            # Local file path
+            with open(image_path, "rb") as image_file:
+                return base64.b64encode(image_file.read()).decode('utf-8')
     
     def create_completion(
         self,
@@ -92,16 +111,39 @@ class OpenAIClient:
         # Add images if provided
         if images:
             for image_path in images:
-                # Determine image format
-                image_path = Path(image_path)
-                if image_path.suffix.lower() in ['.jpg', '.jpeg']:
-                    media_type = "image/jpeg"
-                elif image_path.suffix.lower() == '.png':
-                    media_type = "image/png"
-                elif image_path.suffix.lower() == '.webp':
-                    media_type = "image/webp"
+                image_path_str = str(image_path)
+                
+                # For cloud storage paths, extract extension from the original path
+                if image_path_str.startswith('uploads/') or image_path_str.startswith('gs://'):
+                    # Extract the original filename from the cloud path
+                    # Example: uploads/20250707_112746_image.jpeg -> image.jpeg
+                    cloud_filename = image_path_str.split('/')[-1]  # Get last part after /
+                    if '_' in cloud_filename:
+                        # Remove timestamp prefix: 20250707_112746_image.jpeg -> image.jpeg
+                        original_filename = '_'.join(cloud_filename.split('_')[2:])
+                    else:
+                        original_filename = cloud_filename
+                    file_extension = Path(original_filename).suffix.lower()
                 else:
-                    raise ValueError(f"Unsupported image format: {image_path.suffix}")
+                    # Local file path
+                    file_extension = Path(image_path).suffix.lower()
+                
+                print(f"🔍 Processing image: {image_path_str} (extension: {file_extension})")
+                
+                # Map file extensions to MIME types
+                if file_extension in ['.jpg', '.jpeg']:
+                    media_type = "image/jpeg"
+                elif file_extension == '.png':
+                    media_type = "image/png"
+                elif file_extension == '.webp':
+                    media_type = "image/webp"
+                elif file_extension == '.gif':
+                    # Convert GIF to JPEG for OpenAI API (GPT-4V doesn't support GIF)
+                    media_type = "image/jpeg"
+                    print(f"⚠️  Converting GIF to JPEG for API compatibility")
+                else:
+                    print(f"❌ Unsupported image format: {file_extension} for file: {image_path_str}")
+                    raise ValueError(f"Unsupported image format: {file_extension}. Supported formats: jpg, jpeg, png, webp, gif")
                 
                 # Encode image
                 base64_image = self.encode_image(image_path)

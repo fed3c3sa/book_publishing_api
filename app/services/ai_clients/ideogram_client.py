@@ -13,23 +13,26 @@ from pathlib import Path
 from typing import List
 
 from ..utils.config import load_config
+from ..storage_service import CloudStorageService
 
 
 class IdeogramClient:
     """Client for interacting with Ideogram API."""
     
-    def __init__(self, config: Optional[Dict[str, str]] = None):
+    def __init__(self, config: Optional[Dict[str, str]] = None, storage_service: Optional[CloudStorageService] = None):
         """
         Initialize the Ideogram client.
         
         Args:
             config: Configuration dictionary. If None, loads from environment.
+            storage_service: Cloud storage service for direct uploads. If None, creates a new one.
         """
         if config is None:
             config = load_config()
         
         self.api_key = config["ideogram_api_key"]
         self.base_url = "https://api.ideogram.ai/v1/ideogram-v3/generate"
+        self.storage_service = storage_service or CloudStorageService()
     
     def generate_image(
         self,
@@ -177,6 +180,166 @@ class IdeogramClient:
                 f.write(img_resp.content)
             
             return str(output_path)
+            
+        except requests.exceptions.HTTPError as e:
+            # Include response content for better debugging
+            error_msg = f"HTTP Error: {e}"
+            try:
+                if hasattr(e.response, 'text'):
+                    error_msg += f"\nResponse: {e.response.text}"
+            except:
+                pass
+            raise Exception(error_msg)
+        except requests.exceptions.RequestException as e:
+            raise Exception(f"Request Error: {e}")
+        except Exception as e:
+            raise Exception(f"Unexpected Error: {str(e)}")
+    
+    def generate_image_to_cloud(
+        self,
+        prompt: str,
+        cloud_file_path: str,
+        style_reference_image_path: Optional[Union[str, Path]] = None,
+        aspect_ratio: str = "1x1",
+        style_type: str = "GENERAL",
+        magic_prompt: str = "AUTO",
+        num_images: int = 1,
+        resolution: Optional[str] = None,
+        rendering_speed: str = "DEFAULT",
+        negative_prompt: Optional[str] = None,
+        seed: Optional[int] = None
+    ) -> str:
+        """
+        Generate an image using Ideogram API and upload directly to Cloud Storage.
+        
+        Args:
+            prompt: Text prompt for image generation
+            cloud_file_path: Path in Cloud Storage where the image will be saved
+            style_reference_image_path: Optional reference image for style consistency
+            aspect_ratio: Aspect ratio for the image (1x1, 16x9, etc.)
+            style_type: Style type (AUTO, GENERAL, REALISTIC, DESIGN)
+            magic_prompt: Magic prompt option (AUTO, ON, OFF)
+            num_images: Number of images to generate (1-8)
+            resolution: Resolution if not using aspect_ratio
+            rendering_speed: Rendering speed (TURBO, DEFAULT, QUALITY)
+            negative_prompt: Description of what to exclude from image
+            seed: Random seed for reproducible generation
+            
+        Returns:
+            Cloud Storage URL of the generated image
+        """
+        # Prepare form data - all parameters go in data, not JSON
+        data = {
+            "prompt": prompt,
+            "magic_prompt": magic_prompt,
+            "num_images": num_images,  # Send as integer, not string
+            "rendering_speed": rendering_speed
+        }
+        
+        # Add aspect ratio or resolution
+        if resolution:
+            data["resolution"] = resolution
+        else:
+            data["aspect_ratio"] = aspect_ratio
+            
+        # Add optional parameters if provided
+        if negative_prompt:
+            data["negative_prompt"] = negative_prompt
+        if seed is not None:
+            data["seed"] = seed  # Send as integer, not string
+        
+        # Prepare files for multipart upload
+        files = {}
+        
+        # Add style reference image if provided
+        if style_reference_image_path and os.path.exists(style_reference_image_path):
+            try:
+                with open(style_reference_image_path, 'rb') as img_file:
+                    # Read the image content
+                    image_content = img_file.read()
+                    
+                    # Check file size (max 10MB)
+                    if len(image_content) > 10 * 1024 * 1024:
+                        print(f"Warning: Style reference image exceeds 10MB limit, skipping")
+                    else:
+                        # Get the file extension to determine MIME type
+                        ext = os.path.splitext(style_reference_image_path)[1].lower()
+                        mime_types = {
+                            '.jpg': 'image/jpeg',
+                            '.jpeg': 'image/jpeg',
+                            '.png': 'image/png',
+                            '.webp': 'image/webp'
+                        }
+                        mime_type = mime_types.get(ext, 'image/jpeg')
+                        
+                        # Add to files with proper filename and MIME type
+                        files['style_reference_images'] = (
+                            os.path.basename(style_reference_image_path),
+                            image_content,
+                            mime_type
+                        )
+                        print(f"Using style reference image: {style_reference_image_path}")
+            except Exception as e:
+                print(f"Warning: Could not read style reference image: {e}")
+        
+        # Only add style_type if no style reference images are used
+        # API allows only one of: style_type, style_codes, OR style_reference_images
+        if not files:
+            data["style_type"] = style_type
+        
+        # Make the API request - use JSON format when no files, multipart when files present
+        try:
+            if files:
+                # Use multipart/form-data when style reference images are provided
+                response = requests.post(
+                    self.base_url,
+                    headers={"Api-Key": self.api_key},
+                    data=data,
+                    files=files,
+                    timeout=120,  # Increased timeout for image generation
+                )
+            else:
+                # Use JSON format when no files to upload
+                response = requests.post(
+                    self.base_url,
+                    headers={
+                        "Api-Key": self.api_key,
+                        "Content-Type": "application/json"
+                    },
+                    json=data,
+                    timeout=120,  # Increased timeout for image generation
+                )
+            response.raise_for_status()
+            response_data = response.json()
+            
+            # Parse and download the first image
+            first_image = (
+                response_data.get("data", [{}])[0] if isinstance(response_data.get("data"), list) else {}
+            )
+            image_url = first_image.get("url")
+            if not image_url:
+                raise Exception(f"No image URL returned. Response: {response_data}")
+            
+            # Download the image with retry logic
+            for attempt in range(3):
+                try:
+                    img_resp = requests.get(image_url, timeout=60)
+                    img_resp.raise_for_status()
+                    break
+                except requests.exceptions.RequestException:
+                    if attempt < 2:  # Don't sleep on the last attempt
+                        time.sleep(2)
+                    else:
+                        raise Exception("Failed to download image after retries.")
+            
+            # Upload image directly to Cloud Storage
+            cloud_url = self.storage_service.upload_file_from_memory(
+                file_data=img_resp.content,
+                cloud_file_path=cloud_file_path,
+                content_type='image/png'
+            )
+            
+            return cloud_url
             
         except requests.exceptions.HTTPError as e:
             # Include response content for better debugging
@@ -346,6 +509,84 @@ class IdeogramClient:
         return self.generate_image(
             prompt=cover_prompt,
             output_path=output_path,
+            style_reference_image_path=reference_image_path,
+            aspect_ratio="3x4",  # Portrait format for book cover
+            style_type="DESIGN"
+        )
+    
+    def generate_book_cover_to_cloud(
+        self,
+        title: str,
+        characters: List[Dict[str, Any]],
+        theme: str,
+        cloud_file_path: str,
+        reference_image_path: Optional[Path] = None
+    ) -> str:
+        """
+        Generate a cover image for the book and upload directly to Cloud Storage.
+        
+        Args:
+            title: Book title
+            characters: List of main characters
+            theme: Book theme/genre
+            cloud_file_path: Path in Cloud Storage where the cover will be saved
+            reference_image_path: Optional reference image for style consistency
+            
+        Returns:
+            Cloud Storage URL of the generated cover image
+        """
+        # Create cover prompt
+        main_characters = [char for char in characters if char.get("character_type") == "main"]
+        
+        cover_prompt = f"Children's book cover illustration for '{title}', "
+        
+        # Add character descriptions using new structure
+        if main_characters:
+            char_descriptions = []
+            character_consistency = []
+            style_anchors = []
+            
+            for char in main_characters:
+                # Use consistency formula for main description
+                consistency_formula = char.get("consistency_formula", "")
+                if consistency_formula:
+                    character_consistency.append(consistency_formula)
+                
+                # Get ideogram seed for additional details
+                seed_description = char.get("ideogram_character_seed", "")
+                if seed_description:
+                    char_descriptions.append(seed_description)
+                
+                # Collect style anchors
+                char_anchors = char.get("style_anchors", [])
+                style_anchors.extend(char_anchors)
+                
+                # Require proper character description fields
+                if not consistency_formula and not seed_description:
+                    char_name = char.get("character_name", "unknown")
+                    raise ValueError(f"Character '{char_name}' is missing required consistency_formula and ideogram_character_seed fields")
+            
+            # Add character consistency to prompt
+            if character_consistency:
+                cover_prompt += f"Characters: {', '.join(character_consistency)}, "
+            elif char_descriptions:
+                cover_prompt += f"featuring {', '.join(char_descriptions)}, "
+            
+            # Add style anchors
+            if style_anchors:
+                unique_anchors = list(set(style_anchors))  # Remove duplicates
+                cover_prompt += f"art style: {', '.join(unique_anchors)}, "
+        
+        cover_prompt += (
+            f"theme: {theme}, bright and colorful children's book illustration style, "
+            f"engaging and friendly, high quality, professional book cover design, "
+            f"title space at top, appealing to children"
+        )
+        
+        # Generate the cover and upload to Cloud Storage
+        return self.generate_image_to_cloud(
+            prompt=cover_prompt,
+            cloud_file_path=cloud_file_path,
             style_reference_image_path=reference_image_path,
             aspect_ratio="3x4",  # Portrait format for book cover
             style_type="DESIGN"

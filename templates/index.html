@@ -1238,6 +1238,7 @@
                     if (result.success) {
                         uploadText.innerHTML = `<p style="font-size: 2rem; color: #4ECDC4;">✅</p><p style="color: #4ECDC4;">${t('uploaded')}</p>`;
                         fileInput.setAttribute('data-filename', result.filename);
+                        fileInput.setAttribute('data-cloud-path', result.cloud_path);
                     } else {
                         uploadText.innerHTML = `<p style="font-size: 2rem; color: #FF6B6B;">❌</p><p style="color: #FF6B6B;">${t('failed')}</p>`;
                     }
@@ -1291,9 +1292,9 @@
                         character.additional_description = '';
                     } else {
                         const imageInput = document.getElementById(`characterImage-${id}`);
-                        const filename = imageInput.getAttribute('data-filename');
-                        if (filename) {
-                            character.content = `temp_uploads/${filename}`;
+                        const cloudPath = imageInput.getAttribute('data-cloud-path');
+                        if (cloudPath) {
+                            character.content = cloudPath;
                             character.additional_description = '';
                         }
                     }

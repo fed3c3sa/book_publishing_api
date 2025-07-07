@@ -41,8 +41,6 @@ def create_app():
     
     if not is_app_engine:
         required_dirs = [
-            'output/covers',
-            'output/orders', 
             'temp_uploads',
             'static/assets',
             'templates',
