@@ -1,3 +1,5 @@
+// translations.js
+
 const translations = {
     it: {
         // Header
@@ -7,20 +9,44 @@ const translations = {
         // Preview panel
         previewTitle: '✨ Guarda la Magia ✨',
         
-        // Progress steps
+        // Progress steps (new)
+        yourInfo: 'Tue Info',
+        bookTitle: 'Titolo',
+        storyIdea: 'Storia',
+        themes: 'Temi',
+        details: 'Dettagli',
+        characters: 'Personaggi',
+        
+        // Original step labels (kept for compatibility)
         step1Label: 'Storia',
         step2Label: 'Dettagli',
         step3Label: 'Personaggi',
         
-        // Step 1: Story
+        // Step 1: Your Info (new)
+        letsMeet: 'Conosciamoci! 👋',
+        tellUsAboutYou: 'Prima di iniziare, dicci chi sei',
+        
+        // Step 1: Story (original + new)
         yourName: '👤 Il Tuo Nome',
         yourNamePlaceholder: 'Inserisci il tuo nome',
         emailAddress: '📧 Indirizzo Email',
         emailPlaceholder: 'tua@email.com',
+        
+        // Step 2: Book Title (new)
+        nameYourBook: 'Dai un nome al tuo libro 📖',
+        chooseMagicalTitle: 'Scegli un titolo magico per la tua storia',
         bookTitle: '📖 Qual è il titolo del tuo libro?',
         bookTitlePlaceholder: "L'Incredibile Avventura di...",
+        
+        // Step 3: Story Idea (new)
+        tellYourStory: 'Racconta la tua storia ✨',
+        shareIdea: 'Condividi la tua idea - non serve essere perfetti!',
         storyIdea: '✨ Raccontaci la tua idea per la storia!',
         storyIdeaPlaceholder: "C'era una volta...",
+        
+        // Step 4: Themes (new)
+        pickThemes: 'Scegli i temi 🎯',
+        selectThemes: 'Quali valori vuoi trasmettere?',
         chooseThemes: '🎯 Scegli i tuoi temi:',
         
         // Themes
@@ -31,7 +57,9 @@ const translations = {
         family: '👨‍👩‍👧 Famiglia',
         nature: '🌳 Natura',
         
-        // Step 2: Details
+        // Step 5: Details (new + original)
+        bookDetails: 'Dettagli del libro 📝',
+        customizeBook: 'Personalizza il tuo libro',
         numPages: '📄 Numero di Pagine',
         pages: 'Pagine',
         ageGroup: '👶 Fascia d\'Età',
@@ -40,7 +68,14 @@ const translations = {
         artStyle: '🎨 Stile Artistico',
         artStylePlaceholder: 'acquerello, cartone animato, digitale...',
         
-        // Step 3: Characters
+        // Step 6: Characters (new + original)
+        createCharacters: 'Crea i personaggi 🦸',
+        bringToLife: 'Dai vita ai protagonisti della tua storia',
+        createMainCharacter: 'Crea il protagonista 🦸',
+        mainCharacterDesc: 'Il personaggio principale della tua storia',
+        addMoreCharacters: 'Aggiungi altri personaggi 👥',
+        moreCharactersDesc: 'Personaggi di supporto per arricchire la storia (opzionale)',
+        moreCharacters: 'Altri',
         character: 'Personaggio',
         remove: 'Rimuovi',
         characterName: 'Nome del Personaggio',
@@ -70,7 +105,15 @@ const translations = {
         fillRequired: 'Per favore compila tutti i campi richiesti! 📝',
         validEmail: 'Per favore inserisci un indirizzo email valido! 📧',
         addAtLeastOneCharacter: 'Per favore aggiungi almeno un personaggio! 🦸',
+        mainCharacterRequired: 'Per favore inserisci il nome del protagonista! 🦸',
+        mainCharacterDescriptionRequired: 'Per favore descrivi il protagonista! 📝',
         acceptTerms: 'Per favore accetta i Termini di Servizio per continuare! 📜',
+        
+        // Preview features
+        professionalQuality: 'Qualità professionale',
+        uniqueIllustrations: 'Illustrazioni uniche',
+        personalizedStory: 'Storia personalizzata',
+        ageAppropriate: 'Adatto all\'età',
         
         // Progress modal
         creatingStory: 'Creiamo la Tua Storia!',
@@ -104,7 +147,15 @@ const translations = {
         // Terms of Service
         termsOfService: 'Termini di Servizio',
         iAcceptTerms: 'Accetto i Termini di Servizio',
-        viewTerms: 'Visualizza Termini'
+        viewTerms: 'Visualizza Termini',
+        
+        // Success page specific
+        orderDetails: 'Dettagli dell\'Ordine',
+        orderIdLabel: 'ID Ordine:',
+        amountPaidLabel: 'Importo Pagato:',
+        paymentMethodLabel: 'Metodo di Pagamento:',
+        creditCard: 'Carta di Credito',
+        contactSupport: 'Contatta il Supporto'
     },
     en: {
         // Header
@@ -114,20 +165,44 @@ const translations = {
         // Preview panel
         previewTitle: '✨ See The Magic ✨',
         
-        // Progress steps
+        // Progress steps (new)
+        yourInfo: 'Your Info',
+        bookTitle: 'Title',
+        storyIdea: 'Story',
+        themes: 'Themes',
+        details: 'Details',
+        characters: 'Characters',
+        
+        // Original step labels (kept for compatibility)
         step1Label: 'Story',
         step2Label: 'Details',
         step3Label: 'Characters',
         
-        // Step 1: Story
+        // Step 1: Your Info (new)
+        letsMeet: 'Let\'s Meet! 👋',
+        tellUsAboutYou: 'Before we start, tell us who you are',
+        
+        // Step 1: Story (original + new)
         yourName: '👤 Your Name',
         yourNamePlaceholder: 'Enter your name',
         emailAddress: '📧 Email Address',
         emailPlaceholder: 'your@email.com',
+        
+        // Step 2: Book Title (new)
+        nameYourBook: 'Name your book 📖',
+        chooseMagicalTitle: 'Choose a magical title for your story',
         bookTitle: '📖 What\'s your book title?',
         bookTitlePlaceholder: 'The Amazing Adventure of...',
+        
+        // Step 3: Story Idea (new)
+        tellYourStory: 'Tell your story ✨',
+        shareIdea: 'Share your idea - it doesn\'t need to be perfect!',
         storyIdea: '✨ Tell us your story idea!',
         storyIdeaPlaceholder: 'Once upon a time...',
+        
+        // Step 4: Themes (new)
+        pickThemes: 'Pick themes 🎯',
+        selectThemes: 'What values do you want to convey?',
         chooseThemes: '🎯 Choose your themes:',
         
         // Themes
@@ -138,7 +213,9 @@ const translations = {
         family: '👨‍👩‍👧 Family',
         nature: '🌳 Nature',
         
-        // Step 2: Details
+        // Step 5: Details (new + original)
+        bookDetails: 'Book Details 📝',
+        customizeBook: 'Customize your book',
         numPages: '📄 Number of Pages',
         pages: 'Pages',
         ageGroup: '👶 Age Group',
@@ -147,7 +224,14 @@ const translations = {
         artStyle: '🎨 Art Style',
         artStylePlaceholder: 'watercolor, cartoon, digital...',
         
-        // Step 3: Characters
+        // Step 6: Characters (new + original)
+        createCharacters: 'Create characters 🦸',
+        bringToLife: 'Bring the protagonists of your story to life',
+        createMainCharacter: 'Create the main character 🦸',
+        mainCharacterDesc: 'The main character of your story',
+        addMoreCharacters: 'Add more characters 👥',
+        moreCharactersDesc: 'Supporting characters to enrich the story (optional)',
+        moreCharacters: 'More',
         character: 'Character',
         remove: 'Remove',
         characterName: 'Character Name',
@@ -177,7 +261,15 @@ const translations = {
         fillRequired: 'Please fill in all required fields! 📝',
         validEmail: 'Please enter a valid email address! 📧',
         addAtLeastOneCharacter: 'Please add at least one character! 🦸',
+        mainCharacterRequired: 'Please enter the main character\'s name! 🦸',
+        mainCharacterDescriptionRequired: 'Please describe the main character! 📝',
         acceptTerms: 'Please accept the Terms of Service to continue! 📜',
+        
+        // Preview features
+        professionalQuality: 'Professional quality',
+        uniqueIllustrations: 'Unique illustrations',
+        personalizedStory: 'Personalized story',
+        ageAppropriate: 'Age appropriate',
         
         // Progress modal
         creatingStory: 'Creating Your Story!',
@@ -211,7 +303,15 @@ const translations = {
         // Terms of Service
         termsOfService: 'Terms of Service',
         iAcceptTerms: 'I accept the Terms of Service',
-        viewTerms: 'View Terms'
+        viewTerms: 'View Terms',
+        
+        // Success page specific
+        orderDetails: 'Order Details',
+        orderIdLabel: 'Order ID:',
+        amountPaidLabel: 'Amount Paid:',
+        paymentMethodLabel: 'Payment Method:',
+        creditCard: 'Credit Card',
+        contactSupport: 'Contact Support'
     }
 };
 
@@ -245,6 +345,17 @@ function updateTranslations() {
     if (languageSelect) {
         languageSelect.value = currentLanguage === 'it' ? 'Italian' : 'English';
     }
+    
+    // Update page title
+    if (document.title.includes('StoryMaker')) {
+        document.title = currentLanguage === 'it' ? 
+            'StoryMaker - Generatore di Libri per Bambini con IA' : 
+            'StoryMaker - AI Children\'s Book Generator';
+    } else if (document.title.includes('Pagamento')) {
+        document.title = currentLanguage === 'it' ? 
+            'Pagamento Completato - StoryMaker' : 
+            'Payment Complete - StoryMaker';
+    }
 }
 
 // Function to switch language
@@ -261,10 +372,3 @@ function switchLanguage(lang) {
         }
     });
 }
-
-// Initialize language on page load
-document.addEventListener('DOMContentLoaded', function() {
-    // Check for saved language preference
-    const savedLang = localStorage.getItem('preferredLanguage') || 'it';
-    switchLanguage(savedLang);
-}); 

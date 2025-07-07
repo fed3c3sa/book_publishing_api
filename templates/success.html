@@ -2,7 +2,9 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>Pagamento Completato - StoryMaker</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,61 +14,147 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        html {
+            overscroll-behavior: none;
+            width: 100%;
+            height: 100%;
         }
 
         body {
             font-family: 'Fredoka', 'Nunito', sans-serif;
-            background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 25%, #FFE66D 50%, #95E1D3 75%, #C7CEEA 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
+            background: #F5F7FA;
             min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* App Container */
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: linear-gradient(180deg, #FFFFFF 0%, #F5F7FA 100%);
+        }
+
+        /* Header */
+        .app-header {
+            background: #FFFFFF;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 16px 20px;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Language Toggle */
+        .language-toggle {
+            display: flex;
+            background: #F0F3F7;
+            border-radius: 25px;
+            padding: 4px;
+        }
+
+        .lang-toggle {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Fredoka', sans-serif;
+            color: #64748B;
+        }
+
+        .lang-toggle.active {
+            background: white;
+            color: #1E293B;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 40px 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
         }
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .success-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 40px;
-            padding: 60px;
+        /* Success Card */
+        .success-card {
+            background: white;
+            border-radius: 24px;
+            padding: 48px;
             text-align: center;
             max-width: 600px;
-            width: 90%;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
-            animation: bounceIn 0.8s ease;
+            width: 100%;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            animation: scaleIn 0.5s ease;
         }
 
-        @keyframes bounceIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); opacity: 1; }
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         .success-icon {
             font-size: 5rem;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
             animation: bounce 2s infinite;
         }
 
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-30px); }
-            60% { transform: translateY(-15px); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
         }
 
         .success-title {
-            color: #333;
+            color: #1E293B;
             font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -74,23 +162,26 @@
         }
 
         .success-message {
-            color: #666;
-            font-size: 1.2rem;
+            color: #64748B;
+            font-size: 1.125rem;
             margin-bottom: 40px;
             line-height: 1.6;
         }
 
+        /* Order Details */
         .order-details {
-            background: #F8F9FA;
+            background: #F8FAFC;
             border-radius: 20px;
-            padding: 30px;
-            margin: 30px 0;
+            padding: 32px;
+            margin: 32px 0;
             text-align: left;
         }
 
         .order-details h3 {
-            color: #333;
-            margin-bottom: 20px;
+            color: #1E293B;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 24px;
             text-align: center;
         }
 
@@ -98,8 +189,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #E9ECEF;
+            padding: 12px 0;
+            border-bottom: 1px solid #E2E8F0;
         }
 
         .detail-row:last-child {
@@ -107,185 +198,313 @@
         }
 
         .detail-label {
-            color: #666;
+            color: #64748B;
             font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .detail-value {
-            color: #333;
-            font-weight: 500;
+            color: #1E293B;
+            font-weight: 600;
+            font-size: 1rem;
         }
 
+        /* Next Steps */
         .next-steps {
-            background: #E8F5E8;
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
             border-radius: 20px;
-            padding: 25px;
-            margin: 30px 0;
+            padding: 32px;
+            margin: 32px 0;
         }
 
         .next-steps h3 {
-            color: #2E7D32;
-            margin-bottom: 15px;
+            color: #166534;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .next-steps ul {
             list-style: none;
             padding: 0;
-            text-align: left;
         }
 
         .next-steps li {
-            color: #2E7D32;
-            margin: 10px 0;
-            padding-left: 25px;
+            color: #15803D;
+            margin: 16px 0;
+            padding-left: 32px;
             position: relative;
+            font-size: 0.9375rem;
+            line-height: 1.6;
         }
 
         .next-steps li:before {
             content: "✅";
             position: absolute;
             left: 0;
+            font-size: 1.25rem;
         }
 
+        /* Buttons */
         .btn {
             display: inline-block;
-            padding: 15px 35px;
+            padding: 16px 32px;
             border: none;
-            border-radius: 30px;
-            font-size: 1.1rem;
+            border-radius: 16px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: 'Fredoka', sans-serif;
             text-decoration: none;
-            margin: 10px;
+            margin: 8px;
+            min-height: 56px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .btn-primary {
             background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
             color: white;
-            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.3);
+            box-shadow: 0 4px 16px rgba(255, 107, 107, 0.25);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.4);
+            box-shadow: 0 6px 24px rgba(255, 107, 107, 0.35);
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, #95E1D3, #C7CEEA);
-            color: #333;
+            background: #F1F5F9;
+            color: #475569;
         }
 
         .btn-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(149, 225, 211, 0.3);
+            background: #E2E8F0;
         }
 
-        /* Language toggle */
-        .language-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
+        /* Action Buttons Container */
+        .action-buttons {
+            margin-top: 40px;
             display: flex;
-            gap: 10px;
-            z-index: 100;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
         }
 
-        .lang-toggle {
-            padding: 8px 16px;
-            border: 2px solid #E0E0E0;
-            background: white;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            font-family: 'Fredoka', sans-serif;
+        /* Confetti Animation */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #FF6B6B;
+            position: absolute;
+            animation: confetti-fall 3s linear;
         }
 
-        .lang-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
         }
 
-        .lang-toggle.active {
-            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
-            color: white;
-            border-color: transparent;
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            body {
+                font-size: 16px;
+            }
+            
+            .app-header {
+                padding: 12px 16px;
+            }
+            
+            .logo-icon {
+                font-size: 1.75rem;
+            }
+            
+            .logo-text {
+                font-size: 1.25rem;
+            }
+            
+            .main-content {
+                padding: 24px 16px;
+            }
+            
+            .success-card {
+                padding: 32px 24px;
+                border-radius: 20px;
+            }
+            
+            .success-icon {
+                font-size: 4rem;
+            }
+            
+            .success-title {
+                font-size: 2rem;
+            }
+            
+            .success-message {
+                font-size: 1rem;
+            }
+            
+            .order-details,
+            .next-steps {
+                padding: 24px;
+                margin: 24px 0;
+            }
+            
+            .btn {
+                padding: 14px 24px;
+                font-size: 0.9375rem;
+                min-height: 48px;
+                width: 100%;
+                margin: 6px 0;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* Safe area adjustments for iPhone */
+        @supports (padding: max(0px)) {
+            .app-header {
+                padding-top: max(16px, env(safe-area-inset-top));
+            }
+        }
+
+        /* Hide scrollbar on mobile for cleaner look */
+        @media (max-width: 768px) {
+            *::-webkit-scrollbar {
+                display: none;
+            }
+            
+            * {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Language Toggle -->
-    <div class="language-toggle">
-        <button class="lang-toggle active" data-lang="it" onclick="switchLanguage('it')">IT</button>
-        <button class="lang-toggle" data-lang="en" onclick="switchLanguage('en')">EN</button>
-    </div>
-
-    <div class="success-container">
-        <div class="success-icon">🎉</div>
-        <h1 class="success-title" data-translate="paymentSuccessful">Pagamento Riuscito!</h1>
-        <p class="success-message" data-translate="thankYouOrder">
-            Grazie per il tuo ordine! I nostri scrittori esperti stanno ora lavorando al tuo libro personalizzato.
-        </p>
-
-        <div class="order-details">
-            <h3 data-translate="orderDetails">Dettagli dell'Ordine</h3>
-            <div class="detail-row">
-                <span class="detail-label" data-translate="orderIdLabel">ID Ordine:</span>
-                <span class="detail-value">{{ order_id }}</span>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <a href="/" class="logo">
+                    <span class="logo-icon">📚</span>
+                    <span class="logo-text" data-translate="logoText">StoryMaker</span>
+                </a>
+                
+                <div class="language-toggle">
+                    <button class="lang-toggle active" data-lang="it" onclick="switchLanguage('it')">IT</button>
+                    <button class="lang-toggle" data-lang="en" onclick="switchLanguage('en')">EN</button>
+                </div>
             </div>
-            <div class="detail-row">
-                <span class="detail-label" data-translate="amountPaidLabel">Importo Pagato:</span>
-                <span class="detail-value">{{ amount }}</span>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="success-card">
+                <div class="success-icon">🎉</div>
+                <h1 class="success-title" data-translate="paymentSuccessful">Pagamento Riuscito!</h1>
+                <p class="success-message" data-translate="thankYouOrder">
+                    Grazie per il tuo ordine! I nostri scrittori esperti stanno ora lavorando al tuo libro personalizzato.
+                </p>
+
+                <div class="order-details">
+                    <h3 data-translate="orderDetails">Dettagli dell'Ordine</h3>
+                    <div class="detail-row">
+                        <span class="detail-label" data-translate="orderIdLabel">ID Ordine</span>
+                        <span class="detail-value">{{ order_id }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label" data-translate="amountPaidLabel">Importo Pagato</span>
+                        <span class="detail-value">{{ amount }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label" data-translate="paymentMethodLabel">Metodo di Pagamento</span>
+                        <span class="detail-value" data-translate="creditCard">Carta di Credito</span>
+                    </div>
+                </div>
+
+                <div class="next-steps">
+                    <h3 data-translate="whatHappensNext">
+                        <span>🚀</span>
+                        Cosa succede dopo
+                    </h3>
+                    <ul>
+                        <li data-translate="paymentConfirmed">Pagamento confermato - riceverai subito un'email di conferma</li>
+                        <li data-translate="expertReviewEnhancement">I nostri esperti rivedranno e miglioreranno la tua storia</li>
+                        <li data-translate="professionalIllustration">Gli illustratori creeranno immagini professionali personalizzate</li>
+                        <li data-translate="deliveryWithin12">Il tuo libro completo sarà consegnato entro 12 ore via email</li>
+                    </ul>
+                </div>
+
+                <p class="success-message" style="margin-top: 32px;" data-translate="emailConfirmation">
+                    Riceverai presto una conferma via email, e il tuo libro completo sarà consegnato nella tua casella di posta entro 12 ore.
+                </p>
+
+                <div class="action-buttons">
+                    <a href="/" class="btn btn-primary" data-translate="createAnotherBook">
+                        <span>✨</span>
+                        Crea un Altro Libro
+                    </a>
+                    <a href="mailto:support@storymaker.com" class="btn btn-secondary" data-translate="contactSupport">
+                        <span>💬</span>
+                        Contatta il Supporto
+                    </a>
+                </div>
             </div>
-            <div class="detail-row">
-                <span class="detail-label" data-translate="paymentMethodLabel">Metodo di Pagamento:</span>
-                <span class="detail-value" data-translate="creditCard">Carta di Credito</span>
-            </div>
-        </div>
-
-        <div class="next-steps">
-            <h3 data-translate="whatHappensNext">Cosa succede dopo:</h3>
-            <ul>
-                <li data-translate="paymentConfirmed">Pagamento confermato</li>
-                <li data-translate="expertReviewEnhancement">Revisione ed miglioramento da esperti</li>
-                <li data-translate="professionalIllustration">Creazione di illustrazioni professionali</li>
-                <li data-translate="deliveryWithin12">Consegna entro 12 ore</li>
-            </ul>
-        </div>
-
-        <p class="success-message" data-translate="emailConfirmation">
-            Riceverai presto una conferma via email, e il tuo libro completo sarà consegnato nella tua casella di posta entro 12 ore.
-        </p>
-
-        <div style="margin-top: 40px;">
-            <a href="/" class="btn btn-primary" data-translate="createAnotherBook">Crea un Altro Libro</a>
-            <a href="mailto:support@storymaker.com" class="btn btn-secondary" data-translate="contactSupport">Contatta il Supporto</a>
-        </div>
+        </main>
     </div>
 
     <script src="/assets/translations.js"></script>
     <script>
         // Update translations for additional keys
         translations.it.orderDetails = 'Dettagli dell\'Ordine';
-        translations.it.orderIdLabel = 'ID Ordine:';
-        translations.it.amountPaidLabel = 'Importo Pagato:';
-        translations.it.paymentMethodLabel = 'Metodo di Pagamento:';
+        translations.it.orderIdLabel = 'ID Ordine';
+        translations.it.amountPaidLabel = 'Importo Pagato';
+        translations.it.paymentMethodLabel = 'Metodo di Pagamento';
         translations.it.creditCard = 'Carta di Credito';
         translations.it.contactSupport = 'Contatta il Supporto';
 
         translations.en.orderDetails = 'Order Details';
-        translations.en.orderIdLabel = 'Order ID:';
-        translations.en.amountPaidLabel = 'Amount Paid:';
-        translations.en.paymentMethodLabel = 'Payment Method:';
+        translations.en.orderIdLabel = 'Order ID';
+        translations.en.amountPaidLabel = 'Amount Paid';
+        translations.en.paymentMethodLabel = 'Payment Method';
         translations.en.creditCard = 'Credit Card';
         translations.en.contactSupport = 'Contact Support';
 
+        // Create confetti effect
+        function createConfetti() {
+            const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#95E1D3', '#C7CEEA'];
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 3 + 's';
+                    document.body.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 50);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             updateTranslations();
+            createConfetti();
         });
     </script>
 </body>
-</html> 
+</html>

@@ -2,7 +2,11 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="StoryMaker">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>StoryMaker - Generatore di Libri per Bambini con IA</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,213 +16,64 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+        
+        html {
+            overscroll-behavior: none;
+            width: 100%;
+            height: 100%;
         }
 
         body {
             font-family: 'Fredoka', 'Nunito', sans-serif;
-            background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 25%, #FFE66D 50%, #95E1D3 75%, #C7CEEA 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
-            height: 100vh;
-            overflow: hidden;
+            background: #F5F7FA;
+            min-height: 100vh;
+            overflow-x: hidden;
             position: relative;
+            -webkit-overflow-scrolling: touch;
         }
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Floating shapes */
-        .floating-shapes {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .shape {
-            position: absolute;
-            border-radius: 50%;
-            animation: float 20s infinite ease-in-out;
-        }
-
-        .shape-1 {
-            width: 120px;
-            height: 120px;
-            background: rgba(255, 107, 107, 0.3);
-            top: 10%;
-            left: 5%;
-            animation-delay: 0s;
-        }
-
-        .shape-2 {
-            width: 80px;
-            height: 80px;
-            background: rgba(78, 205, 196, 0.3);
-            top: 60%;
-            right: 10%;
-            animation-delay: 5s;
-        }
-
-        .shape-3 {
-            width: 150px;
-            height: 150px;
-            background: rgba(255, 230, 109, 0.3);
-            bottom: 10%;
-            left: 50%;
-            animation-delay: 10s;
-        }
-
-        .shape-4 {
-            width: 60px;
-            height: 60px;
-            background: rgba(149, 225, 211, 0.3);
-            top: 30%;
-            right: 30%;
-            animation-delay: 15s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -30px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
-        }
-
-        /* Main container */
-        .main-container {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Wizard card */
-        .wizard-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 40px;
-            width: 95%;
-            max-width: 1400px;
-            height: 90vh;
-            max-height: 800px;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
-            display: flex;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Left panel - Preview */
-        .preview-panel {
-            width: 40%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 50px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .preview-title {
-            color: white;
-            font-size: 2.4rem;
-            font-weight: 700;
-            margin-bottom: 40px;
-            text-align: center;
-            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .preview-carousel {
-            position: relative;
-            width: 100%;
-            height: 380px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .preview-image {
-            position: absolute;
-            width: 240px;
-            height: 320px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transition: all 0.5s ease;
-            cursor: pointer;
-            overflow: hidden;
-        }
-
-        .preview-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .preview-image:nth-child(1) { 
-            transform: translateX(-80px) translateY(20px) scale(0.85) rotate(-15deg) rotateY(25deg); 
-            z-index: 1; 
-            opacity: 0.7; 
-        }
-        .preview-image:nth-child(2) { 
-            transform: translateX(-40px) translateY(10px) scale(0.9) rotate(-8deg) rotateY(15deg); 
-            z-index: 2; 
-            opacity: 0.8; 
-        }
-        .preview-image:nth-child(3) { 
-            transform: translateX(0) translateY(0) scale(1) rotate(0deg); 
-            z-index: 3; 
-        }
-        .preview-image:nth-child(4) { 
-            transform: translateX(40px) translateY(10px) scale(0.9) rotate(8deg) rotateY(-15deg); 
-            z-index: 2; 
-            opacity: 0.8; 
-        }
-        .preview-image:nth-child(5) { 
-            transform: translateX(80px) translateY(20px) scale(0.85) rotate(15deg) rotateY(-25deg); 
-            z-index: 1; 
-            opacity: 0.7; 
-        }
-
-        .preview-image:hover {
-            transform: translateY(-20px) scale(1.1) rotate(0deg);
-            z-index: 10;
-            opacity: 1;
-        }
-
-        /* Right panel - Form wizard */
-        .form-panel {
-            flex: 1;
-            padding: 50px;
+        /* App Container */
+        .app-container {
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             position: relative;
+            background: linear-gradient(180deg, #FFFFFF 0%, #F5F7FA 100%);
         }
 
         /* Header */
-        .wizard-header {
-            text-align: center;
-            margin-bottom: 40px;
+        .app-header {
+            background: #FFFFFF;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            padding: 16px 20px;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .logo {
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 10px;
         }
 
         .logo-icon {
-            font-size: 3rem;
+            font-size: 2rem;
         }
 
         .logo-text {
-            font-size: 2.4rem;
+            font-size: 1.5rem;
             font-weight: 700;
             background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
             -webkit-background-clip: text;
@@ -226,158 +81,232 @@
             background-clip: text;
         }
 
-        .tagline {
-            color: #666;
-            font-size: 1.2rem;
-            font-weight: 500;
+        /* Language Toggle */
+        .language-toggle {
+            display: flex;
+            background: #F0F3F7;
+            border-radius: 25px;
+            padding: 4px;
         }
 
-        /* Progress steps */
+        .lang-toggle {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Fredoka', sans-serif;
+            color: #64748B;
+        }
+
+        .lang-toggle.active {
+            background: white;
+            color: #1E293B;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: white;
+            padding: 20px 20px 30px;
+            position: sticky;
+            top: 72px;
+            z-index: 150;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-bar {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .progress-track {
+            height: 6px;
+            background: #E2E8F0;
+            border-radius: 3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF6B6B, #4ECDC4);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
         .progress-steps {
             display: flex;
-            justify-content: center;
-            gap: 50px;
-            margin-bottom: 40px;
+            justify-content: space-between;
+            margin-top: 20px;
+            position: relative;
         }
 
-        .step {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
         }
 
-        .step-circle {
-            width: 48px;
-            height: 48px;
+        .step-dot {
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
-            background: #E0E0E0;
+            background: #E2E8F0;
+            margin: 0 auto 8px;
+            position: relative;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 0.75rem;
             font-weight: 600;
-            font-size: 1.3rem;
-            transition: all 0.3s ease;
+            color: #94A3B8;
         }
 
-        .step.active .step-circle {
+        .progress-step.active .step-dot {
             background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
             color: white;
-            transform: scale(1.1);
+            transform: scale(1.2);
         }
 
-        .step.completed .step-circle {
-            background: #4ECDC4;
+        .progress-step.completed .step-dot {
+            background: #10B981;
             color: white;
+        }
+
+        .progress-step.completed .step-dot::after {
+            content: '✓';
+            position: absolute;
+            font-size: 0.875rem;
         }
 
         .step-label {
-            font-size: 1.1rem;
-            color: #999;
+            display: none;
+        }
+
+        .progress-step.active .step-label {
+            color: #1E293B;
             font-weight: 600;
-            transition: all 0.3s ease;
         }
 
-        .step.active .step-label {
-            color: #333;
-        }
-
-        /* Form content */
-        .form-content {
+        /* Main Content */
+        .main-content {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            min-height: 0;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
         }
 
+        /* Form Card */
+        .form-card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            margin-bottom: 100px;
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (max-width: 768px) {
+            .form-card {
+                padding: 24px 20px;
+                border-radius: 20px;
+            }
+        }
+
+        /* Step Content */
         .step-content {
             display: none;
-            animation: fadeIn 0.5s ease;
-            flex: 1;
-            overflow-y: auto;
-            padding-right: 10px;
-            min-height: 0;
-            max-height: calc(100vh - 540px);
-            padding-bottom: 20px;
+            animation: slideIn 0.4s ease;
         }
 
         .step-content.active {
             display: block;
         }
 
-        .step-content::-webkit-scrollbar {
-            width: 8px;
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
-        .step-content::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
+        .step-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 8px;
         }
 
-        .step-content::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
-            border-radius: 10px;
+        .step-subtitle {
+            font-size: 1rem;
+            color: #64748B;
+            margin-bottom: 32px;
+            line-height: 1.5;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        /* Form elements */
+        /* Form Elements */
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 24px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 10px;
-            color: #333;
+            margin-bottom: 8px;
+            color: #334155;
             font-weight: 600;
-            font-size: 1.2rem;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
+        .form-input {
             width: 100%;
-            padding: 15px 22px;
-            border: 2px solid #E0E0E0;
-            border-radius: 20px;
-            font-size: 1.1rem;
+            padding: 16px 20px;
+            border: 2px solid #E2E8F0;
+            border-radius: 16px;
+            font-size: 1rem;
             font-family: 'Fredoka', sans-serif;
             transition: all 0.3s ease;
-            background: #F8F8F8;
+            background: #FFFFFF;
         }
 
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
+        .form-input:focus {
             outline: none;
             border-color: #4ECDC4;
-            background: white;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(78, 205, 196, 0.2);
+            background: #FFFFFF;
+            box-shadow: 0 0 0 4px rgba(78, 205, 196, 0.1);
         }
 
-        .form-group textarea {
+        textarea.form-input {
             resize: vertical;
-            min-height: 100px;
+            min-height: 120px;
+            line-height: 1.5;
         }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        /* Theme tags */
+        /* Theme Selection */
         .theme-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        @media (min-width: 480px) {
+            .theme-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
         .theme-tag {
@@ -390,191 +319,379 @@
         }
 
         .theme-tag label {
-            display: block;
-            padding: 12px 18px;
-            background: #F0F0F0;
-            border-radius: 25px;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px;
+            background: #F8FAFC;
+            border: 2px solid #E2E8F0;
+            border-radius: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 1rem;
-            font-weight: 500;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #64748B;
         }
 
         .theme-tag input:checked + label {
             background: linear-gradient(135deg, #FF6B6B, #FFE66D);
             color: white;
+            border-color: transparent;
             transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.25);
         }
 
-        /* Character card */
+        /* Character Cards */
         .character-card {
-            background: linear-gradient(135deg, #F8F8F8, #E8E8E8);
-            border-radius: 25px;
-            padding: 25px;
-            margin-bottom: 20px;
-            position: relative;
-            border: 2px solid transparent;
+            background: #F8FAFC;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 16px;
+            border: 2px solid #E2E8F0;
             transition: all 0.3s ease;
         }
 
         .character-card:hover {
+            border-color: #CBD5E1;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .character-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .character-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1E293B;
+        }
+
+        /* Toggle Input */
+        .toggle-group {
+            display: flex;
+            background: #F1F5F9;
+            border-radius: 12px;
+            padding: 4px;
+            margin-top: 12px;
+        }
+
+        .toggle-option {
+            flex: 1;
+            position: relative;
+        }
+
+        .toggle-option input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .toggle-option label {
+            display: block;
+            padding: 8px 16px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #64748B;
+        }
+
+        .toggle-option input:checked + label {
+            background: white;
+            color: #1E293B;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed #CBD5E1;
+            border-radius: 16px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #F8FAFC;
+        }
+
+        .upload-area:hover {
             border-color: #4ECDC4;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(78, 205, 196, 0.2);
+            background: #F0FDFA;
         }
 
         /* Buttons */
         .btn {
-            padding: 15px 35px;
+            padding: 16px 32px;
             border: none;
-            border-radius: 30px;
-            font-size: 1.1rem;
+            border-radius: 16px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: 'Fredoka', sans-serif;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            gap: 8px;
+            min-height: 56px;
         }
 
         .btn-primary {
             background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
             color: white;
-            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.3);
+            box-shadow: 0 4px 16px rgba(255, 107, 107, 0.25);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.4);
+            box-shadow: 0 6px 24px rgba(255, 107, 107, 0.35);
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, #95E1D3, #C7CEEA);
-            color: #333;
+            background: #F1F5F9;
+            color: #475569;
         }
 
         .btn-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(149, 225, 211, 0.3);
+            background: #E2E8F0;
         }
 
         .btn-outline {
             background: transparent;
-            border: 2px solid #4ECDC4;
-            color: #4ECDC4;
+            border: 2px solid #E2E8F0;
+            color: #64748B;
         }
 
         .btn-outline:hover {
-            background: #4ECDC4;
-            color: white;
+            border-color: #CBD5E1;
+            background: #F8FAFC;
         }
 
-        /* Navigation buttons */
-        .nav-buttons {
+        /* Navigation Footer */
+        .nav-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #E2E8F0;
+            padding: 16px 20px;
+            z-index: 150;
+        }
+
+        .nav-content {
+            max-width: 600px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
-            margin-top: 15px;
-            padding: 15px 0;
-            border-top: 2px solid #F0F0F0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            bottom: 0;
-            z-index: 10;
+            gap: 12px;
         }
 
-        /* Progress modal */
+        .nav-footer .btn {
+            flex: 1;
+        }
+
+        /* Preview Carousel */
+        .preview-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .preview-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .preview-carousel {
+            position: relative;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-image {
+            position: absolute;
+            width: 120px;
+            height: 160px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .preview-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-image:nth-child(1) { 
+            transform: translateX(-60px) translateY(10px) scale(0.85) rotate(-10deg); 
+            z-index: 1; 
+            opacity: 0.8; 
+        }
+        .preview-image:nth-child(2) { 
+            transform: translateX(0) translateY(0) scale(1) rotate(0deg); 
+            z-index: 3; 
+        }
+        .preview-image:nth-child(3) { 
+            transform: translateX(60px) translateY(10px) scale(0.85) rotate(10deg); 
+            z-index: 1; 
+            opacity: 0.8; 
+        }
+        .preview-image:nth-child(4),
+        .preview-image:nth-child(5) { 
+            display: none;
+        }
+        
+        /* Background Preview Images */
+        .background-preview {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .floating-book {
+            position: absolute;
+            width: 120px;
+            height: 150px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            opacity: 0.3;
+            transition: all 0.6s ease;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floating-book img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .floating-book:nth-child(1) {
+            top: 15%;
+            left: 5%;
+            animation-delay: 0s;
+            transform: rotate(-15deg);
+        }
+        
+        .floating-book:nth-child(2) {
+            top: 25%;
+            right: 8%;
+            animation-delay: 1s;
+            transform: rotate(12deg);
+        }
+        
+        .floating-book:nth-child(3) {
+            top: 60%;
+            left: 2%;
+            animation-delay: 2s;
+            transform: rotate(-8deg);
+        }
+        
+        .floating-book:nth-child(4) {
+            bottom: 20%;
+            right: 5%;
+            animation-delay: 3s;
+            transform: rotate(10deg);
+        }
+        
+        .floating-book:nth-child(5) {
+            top: 45%;
+            left: 50%;
+            animation-delay: 4s;
+            transform: rotate(-12deg) translateX(-50%);
+            opacity: 0.2;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(var(--rotation, 0deg));
+            }
+            50% {
+                transform: translateY(-10px) rotate(var(--rotation, 0deg));
+            }
+        }
+        
+        .floating-book:nth-child(1) { --rotation: -15deg; }
+        .floating-book:nth-child(2) { --rotation: 12deg; }
+        .floating-book:nth-child(3) { --rotation: -8deg; }
+        .floating-book:nth-child(4) { --rotation: 10deg; }
+        .floating-book:nth-child(5) { --rotation: -12deg; }
+        
+        /* Hide on mobile for better performance */
+        @media (max-width: 768px) {
+            .background-preview {
+                display: none;
+            }
+        }
+
+        /* Progress Modal */
         .progress-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            backdrop-filter: blur(8px);
         }
 
         .progress-modal {
             background: white;
-            border-radius: 30px;
-            padding: 60px;
+            border-radius: 24px;
+            padding: 48px;
             text-align: center;
-            max-width: 500px;
-            animation: bounceIn 0.5s ease;
+            max-width: 480px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: scaleIn 0.3s ease;
         }
 
-        @keyframes bounceIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); opacity: 1; }
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         .progress-emoji {
-            font-size: 5rem;
+            font-size: 4rem;
             animation: spin 2s linear infinite;
-            margin-bottom: 25px;
+            margin-bottom: 24px;
         }
 
         @keyframes spin {
             100% { transform: rotate(360deg); }
         }
 
-        /* Success screen */
-        .success-content {
-            text-align: center;
-            padding: 40px;
-        }
-
-        .success-emoji {
-            font-size: 5rem;
-            animation: bounce 1s ease infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        /* Language toggle */
-        .language-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-            z-index: 100;
-        }
-
-        .lang-toggle {
-            padding: 8px 16px;
-            border: 2px solid #E0E0E0;
-            background: white;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            font-family: 'Fredoka', sans-serif;
-        }
-
-        .lang-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .lang-toggle.active {
-            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
-            color: white;
-            border-color: transparent;
-        }
-
-        /* Terms of Service Modal */
+        /* Terms Modal */
         .tos-modal {
             display: none;
             position: fixed;
@@ -582,75 +699,63 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             z-index: 2000;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(8px);
         }
 
         .tos-content {
             background: white;
-            border-radius: 30px;
+            border-radius: 24px;
             max-width: 600px;
             width: 90%;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
-            padding: 40px;
+            padding: 32px;
             position: relative;
         }
 
         .tos-close {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 30px;
-            height: 30px;
+            top: 16px;
+            right: 16px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: #F0F0F0;
+            background: #F1F5F9;
             border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             transition: all 0.3s ease;
+            color: #64748B;
         }
 
         .tos-close:hover {
-            background: #E0E0E0;
+            background: #E2E8F0;
             transform: scale(1.1);
         }
 
         .tos-text {
-            margin: 20px 0;
+            margin: 24px 0;
             line-height: 1.6;
-            color: #666;
+            color: #475569;
             max-height: 400px;
             overflow-y: auto;
             padding-right: 10px;
         }
 
-        .tos-text::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .tos-text::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-
-        .tos-text::-webkit-scrollbar-thumb {
-            background: #999;
-            border-radius: 10px;
-        }
-
         .tos-checkbox {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin: 20px 0;
-            font-size: 1rem;
-            color: #333;
+            gap: 12px;
+            margin: 24px 0;
+            font-size: 0.875rem;
+            color: #334155;
         }
 
         .tos-checkbox input {
@@ -659,291 +764,346 @@
             cursor: pointer;
         }
 
-        /* Responsive */
+        /* Mobile Optimizations */
         @media (max-width: 768px) {
-            .wizard-card {
-                flex-direction: column;
-                height: 95vh;
-                max-height: none;
-                width: 98%;
+            body {
+                font-size: 16px;
             }
             
-            .preview-panel {
-                width: 100%;
-                height: 220px;
-                padding: 25px;
-            }
-            
-            .preview-title {
-                font-size: 1.5rem;
-                margin-bottom: 15px;
-            }
-            
-            .preview-carousel {
-                height: 140px;
-            }
-            
-            .preview-image {
-                width: 90px;
-                height: 120px;
-            }
-            
-            .preview-image:nth-child(1) { transform: translateX(-50px) translateY(15px) scale(0.8) rotate(-12deg); }
-            .preview-image:nth-child(2) { transform: translateX(-25px) translateY(8px) scale(0.9) rotate(-6deg); }
-            .preview-image:nth-child(3) { transform: translateX(0) translateY(0) scale(1) rotate(0deg); }
-            .preview-image:nth-child(4) { transform: translateX(25px) translateY(8px) scale(0.9) rotate(6deg); }
-            .preview-image:nth-child(5) { transform: translateX(50px) translateY(15px) scale(0.8) rotate(12deg); }
-            
-            .form-panel {
-                padding: 25px;
+            .app-header {
+                padding: 12px 16px;
             }
             
             .logo-icon {
-                font-size: 2.5rem;
+                font-size: 1.75rem;
             }
             
             .logo-text {
-                font-size: 2rem;
+                font-size: 1.25rem;
             }
             
-            .tagline {
-                font-size: 1rem;
+            .progress-container {
+                padding: 16px 16px 24px;
+                top: 60px;
             }
             
-            .progress-steps {
-                gap: 25px;
+            .main-content {
+                padding: 16px;
             }
             
-            .step-circle {
-                width: 40px;
-                height: 40px;
-                font-size: 1.1rem;
+            .form-card {
+                margin-bottom: 80px;
             }
             
-            .step-label {
-                display: none;
+            .step-title {
+                font-size: 1.5rem;
             }
             
-            .theme-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .step-subtitle {
+                font-size: 0.875rem;
             }
             
-            .form-group label {
-                font-size: 1.1rem;
-            }
-            
-            .form-group input,
-            .form-group textarea,
-            .form-group select {
-                font-size: 1rem;
-                padding: 12px 18px;
+            .nav-footer {
+                padding: 12px 16px;
             }
             
             .btn {
-                font-size: 1rem;
-                padding: 12px 28px;
+                padding: 14px 24px;
+                font-size: 0.9375rem;
+                min-height: 48px;
             }
             
-            .step-content {
-                max-height: calc(100vh - 480px);
+            .progress-modal {
+                padding: 32px 24px;
+            }
+        }
+
+        /* Safe area adjustments for iPhone */
+        @supports (padding: max(0px)) {
+            .app-header {
+                padding-top: max(16px, env(safe-area-inset-top));
             }
             
-            .nav-buttons {
-                margin-top: 15px;
-                padding: 15px 0;
+            .nav-footer {
+                padding-bottom: max(16px, env(safe-area-inset-bottom));
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Hide scrollbar on mobile for cleaner look */
+        @media (max-width: 768px) {
+            *::-webkit-scrollbar {
+                display: none;
+            }
+            
+            * {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Language Toggle -->
-    <div class="language-toggle">
-        <button class="lang-toggle active" data-lang="it" onclick="switchLanguage('it')">IT</button>
-        <button class="lang-toggle" data-lang="en" onclick="switchLanguage('en')">EN</button>
-    </div>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">📚</span>
+                    <span class="logo-text" data-translate="logoText">StoryMaker</span>
+                </div>
+                
+                <div class="language-toggle">
+                    <button class="lang-toggle active" data-lang="it" onclick="switchLanguage('it')">IT</button>
+                    <button class="lang-toggle" data-lang="en" onclick="switchLanguage('en')">EN</button>
+                </div>
+            </div>
+        </header>
 
-    <div class="floating-shapes">
-        <div class="shape shape-1"></div>
-        <div class="shape shape-2"></div>
-        <div class="shape shape-3"></div>
-        <div class="shape shape-4"></div>
-    </div>
-
-    <div class="main-container">
-        <div class="wizard-card">
-            <!-- Preview Panel -->
-            <div class="preview-panel">
-                <h2 class="preview-title" data-translate="previewTitle">✨ Guarda la Magia ✨</h2>
-                <div class="preview-carousel">
-                    <div class="preview-image">
-                        <img src="/assets/cover.png" alt="Book Cover">
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill" style="width: 20%;"></div>
+                </div>
+                <div class="progress-steps">
+                    <div class="progress-step active" onclick="goToStep(1)">
+                        <div class="step-dot">1</div>
+                        <div class="step-label" data-translate="yourInfo">Tue Info</div>
                     </div>
-                    <div class="preview-image">
-                        <img src="/assets/page_03.png" alt="Page 3">
+                    <div class="progress-step" onclick="goToStep(2)">
+                        <div class="step-dot">2</div>
+                        <div class="step-label" data-translate="bookTitle">Titolo</div>
                     </div>
-                    <div class="preview-image">
-                        <img src="/assets/page_04.png" alt="Page 4">
+                    <div class="progress-step" onclick="goToStep(3)">
+                        <div class="step-dot">3</div>
+                        <div class="step-label" data-translate="storyIdea">Storia</div>
                     </div>
-                    <div class="preview-image">
-                        <img src="/assets/page_06.png" alt="Page 6">
+                    <div class="progress-step" onclick="goToStep(4)">
+                        <div class="step-dot">4</div>
+                        <div class="step-label" data-translate="themes">Temi</div>
                     </div>
-                    <div class="preview-image">
-                        <img src="/assets/page_14.png" alt="Page 14">
+                    <div class="progress-step" onclick="goToStep(5)">
+                        <div class="step-dot">5</div>
+                        <div class="step-label" data-translate="details">Dettagli</div>
+                    </div>
+                    <div class="progress-step" onclick="goToStep(6)">
+                        <div class="step-dot">6</div>
+                        <div class="step-label" data-translate="mainCharacter">Protagonista</div>
+                    </div>
+                    <div class="progress-step" onclick="goToStep(7)">
+                        <div class="step-dot">7</div>
+                        <div class="step-label" data-translate="moreCharacters">Altri</div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Form Panel -->
-            <div class="form-panel">
-                <div class="wizard-header">
-                    <div class="logo">
-                        <span class="logo-icon">📚</span>
-                        <span class="logo-text" data-translate="logoText">StoryMaker</span>
+        <!-- Background Preview Images -->
+        <div class="background-preview">
+            <div class="floating-book">
+                <img src="/assets/cover.png" alt="Book Cover">
+            </div>
+            <div class="floating-book">
+                <img src="/assets/page_03.png" alt="Page 3">
+            </div>
+            <div class="floating-book">
+                <img src="/assets/page_04.png" alt="Page 4">
+            </div>
+            <div class="floating-book">
+                <img src="/assets/page_06.png" alt="Page 6">
+            </div>
+            <div class="floating-book">
+                <img src="/assets/page_14.png" alt="Page 14">
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <form id="bookForm">
+                <div class="form-card">
+                    <!-- Preview Section (Show on mobile) -->
+                    <div class="preview-section" id="mobilePreview" style="display: none;">
+                        <h2 class="preview-title" data-translate="previewTitle">✨ Guarda la Magia ✨</h2>
+                        <div class="preview-carousel">
+                            <div class="preview-image">
+                                <img src="/assets/cover.png" alt="Book Cover">
+                            </div>
+                            <div class="preview-image">
+                                <img src="/assets/page_03.png" alt="Page 3">
+                            </div>
+                            <div class="preview-image">
+                                <img src="/assets/page_04.png" alt="Page 4">
+                            </div>
+                            <div class="preview-image">
+                                <img src="/assets/page_06.png" alt="Page 6">
+                            </div>
+                            <div class="preview-image">
+                                <img src="/assets/page_14.png" alt="Page 14">
+                            </div>
+                        </div>
                     </div>
-                    <p class="tagline" data-translate="tagline">Crea storie magiche in pochi minuti!</p>
+
+                    <!-- Step 1: Your Info -->
+                    <div class="step-content active" id="step1">
+                        <h2 class="step-title" data-translate="letsMeet">Conosciamoci! 👋</h2>
+                        <p class="step-subtitle" data-translate="tellUsAboutYou">Prima di iniziare, dicci chi sei</p>
+                        
+                        <div class="form-group">
+                            <label for="customerName" data-translate="yourName">Il Tuo Nome</label>
+                            <input type="text" id="customerName" name="customerName" class="form-input" required placeholder="Inserisci il tuo nome" data-translate-placeholder="yourNamePlaceholder">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="customerEmail" data-translate="emailAddress">Indirizzo Email</label>
+                            <input type="email" id="customerEmail" name="customerEmail" class="form-input" required placeholder="tua@email.com" data-translate-placeholder="emailPlaceholder">
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Book Title -->
+                    <div class="step-content" id="step2">
+                        <h2 class="step-title" data-translate="nameYourBook">Dai un nome al tuo libro 📖</h2>
+                        <p class="step-subtitle" data-translate="chooseMagicalTitle">Scegli un titolo magico per la tua storia</p>
+                        
+                        <div class="form-group">
+                            <label for="bookTitle" data-translate="bookTitle">Titolo del Libro</label>
+                            <input type="text" id="bookTitle" name="bookTitle" class="form-input" required placeholder="L'Incredibile Avventura di..." data-translate-placeholder="bookTitlePlaceholder">
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Story Idea -->
+                    <div class="step-content" id="step3">
+                        <h2 class="step-title" data-translate="tellYourStory">Racconta la tua storia ✨</h2>
+                        <p class="step-subtitle" data-translate="shareIdea">Condividi la tua idea - non serve essere perfetti!</p>
+                        
+                        <div class="form-group">
+                            <label for="storyIdea" data-translate="storyIdea">La Tua Idea</label>
+                            <textarea id="storyIdea" name="storyIdea" class="form-input" required placeholder="C'era una volta..." data-translate-placeholder="storyIdeaPlaceholder"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Themes -->
+                    <div class="step-content" id="step4">
+                        <h2 class="step-title" data-translate="pickThemes">Scegli i temi 🎯</h2>
+                        <p class="step-subtitle" data-translate="selectThemes">Quali valori vuoi trasmettere?</p>
+                        
+                        <div class="form-group">
+                            <div class="theme-grid">
+                                <div class="theme-tag">
+                                    <input type="checkbox" id="friendship" name="themes" value="friendship">
+                                    <label for="friendship" data-translate="friendship">👫 Amicizia</label>
+                                </div>
+                                <div class="theme-tag">
+                                    <input type="checkbox" id="adventure" name="themes" value="adventure">
+                                    <label for="adventure" data-translate="adventure">🚀 Avventura</label>
+                                </div>
+                                <div class="theme-tag">
+                                    <input type="checkbox" id="courage" name="themes" value="courage">
+                                    <label for="courage" data-translate="courage">💪 Coraggio</label>
+                                </div>
+                                <div class="theme-tag">
+                                    <input type="checkbox" id="kindness" name="themes" value="kindness">
+                                    <label for="kindness" data-translate="kindness">💖 Gentilezza</label>
+                                </div>
+                                <div class="theme-tag">
+                                    <input type="checkbox" id="family" name="themes" value="family">
+                                    <label for="family" data-translate="family">👨‍👩‍👧 Famiglia</label>
+                                </div>
+                                <div class="theme-tag">
+                                    <input type="checkbox" id="nature" name="themes" value="nature">
+                                    <label for="nature" data-translate="nature">🌳 Natura</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Details -->
+                    <div class="step-content" id="step5">
+                        <h2 class="step-title" data-translate="bookDetails">Dettagli del libro 📝</h2>
+                        <p class="step-subtitle" data-translate="customizeBook">Personalizza il tuo libro</p>
+                        
+                        <div class="form-group">
+                            <label for="numPages" data-translate="numPages">Numero di Pagine</label>
+                            <select id="numPages" name="numPages" class="form-input">
+                                <option value="3">3 Pagine</option>
+                                <option value="8">8 Pagine</option>
+                                <option value="10" selected>10 Pagine</option>
+                                <option value="12">12 Pagine</option>
+                                <option value="14">14 Pagine</option>
+                                <option value="16">16 Pagine</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="ageGroup" data-translate="ageGroup">Fascia d'Età</label>
+                            <select id="ageGroup" name="ageGroup" class="form-input">
+                                <option value="3-5">3-5 anni</option>
+                                <option value="4-7" selected>4-7 anni</option>
+                                <option value="6-9">6-9 anni</option>
+                                <option value="9-12">9-12 anni</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="language" data-translate="language">Lingua</label>
+                            <select id="language" name="language" class="form-input">
+                                <option value="Italian" selected>Italiano</option>
+                                <option value="English">Inglese</option>
+                                <option value="Spanish">Spagnolo</option>
+                                <option value="French">Francese</option>
+                                <option value="German">Tedesco</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="artStyle" data-translate="artStyle">Stile Artistico</label>
+                            <input type="text" id="artStyle" name="artStyle" class="form-input" value="whimsical watercolor" placeholder="acquerello, cartone animato, digitale..." data-translate-placeholder="artStylePlaceholder">
+                        </div>
+                    </div>
+
+                    <!-- Step 6: Main Character -->
+                    <div class="step-content" id="step6">
+                        <h2 class="step-title" data-translate="createMainCharacter">Crea il protagonista 🦸</h2>
+                        <p class="step-subtitle" data-translate="mainCharacterDesc">Il personaggio principale della tua storia</p>
+                        
+                        <div id="mainCharacterContainer">
+                            <!-- Main character will be added here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Step 7: Additional Characters -->
+                    <div class="step-content" id="step7">
+                        <h2 class="step-title" data-translate="addMoreCharacters">Aggiungi altri personaggi 👥</h2>
+                        <p class="step-subtitle" data-translate="moreCharactersDesc">Personaggi di supporto per arricchire la storia (opzionale)</p>
+                        
+                        <div id="additionalCharactersContainer">
+                            <!-- Additional characters will be added here -->
+                        </div>
+                        
+                        <button type="button" class="btn btn-secondary" onclick="addCharacter()" data-translate="addCharacter">
+                            ➕ Aggiungi Personaggio
+                        </button>
+                    </div>
                 </div>
+            </form>
+        </main>
 
-                <!-- Progress Steps -->
-                <div class="progress-steps">
-                    <div class="step active" onclick="goToStep(1)">
-                        <div class="step-circle">1</div>
-                        <span class="step-label" data-translate="step1Label">Storia</span>
-                    </div>
-                    <div class="step" onclick="goToStep(2)">
-                        <div class="step-circle">2</div>
-                        <span class="step-label" data-translate="step2Label">Dettagli</span>
-                    </div>
-                    <div class="step" onclick="goToStep(3)">
-                        <div class="step-circle">3</div>
-                        <span class="step-label" data-translate="step3Label">Personaggi</span>
-                    </div>
-                </div>
-
-                <form id="bookForm">
-                    <div class="form-content">
-                        <!-- Step 1: Story -->
-                        <div class="step-content active" id="step1">
-                            <!-- Customer Information -->
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="customerName" data-translate="yourName">👤 Il Tuo Nome</label>
-                                    <input type="text" id="customerName" name="customerName" required placeholder="Inserisci il tuo nome" data-translate="yourNamePlaceholder">
-                                </div>
-                                <div class="form-group">
-                                    <label for="customerEmail" data-translate="emailAddress">📧 Indirizzo Email</label>
-                                    <input type="email" id="customerEmail" name="customerEmail" required placeholder="tua@email.com" data-translate="emailPlaceholder">
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="bookTitle" data-translate="bookTitle">📖 Qual è il titolo del tuo libro?</label>
-                                <input type="text" id="bookTitle" name="bookTitle" required placeholder="L'Incredibile Avventura di..." data-translate="bookTitlePlaceholder">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="storyIdea" data-translate="storyIdea">✨ Raccontaci la tua idea per la storia!</label>
-                                <textarea id="storyIdea" name="storyIdea" required placeholder="C'era una volta..." data-translate="storyIdeaPlaceholder"></textarea>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label data-translate="chooseThemes">🎯 Scegli i tuoi temi:</label>
-                                <div class="theme-grid">
-                                    <div class="theme-tag">
-                                        <input type="checkbox" id="friendship" name="themes" value="friendship">
-                                        <label for="friendship" data-translate="friendship">👫 Amicizia</label>
-                                    </div>
-                                    <div class="theme-tag">
-                                        <input type="checkbox" id="adventure" name="themes" value="adventure">
-                                        <label for="adventure" data-translate="adventure">🚀 Avventura</label>
-                                    </div>
-                                    <div class="theme-tag">
-                                        <input type="checkbox" id="courage" name="themes" value="courage">
-                                        <label for="courage" data-translate="courage">💪 Coraggio</label>
-                                    </div>
-                                    <div class="theme-tag">
-                                        <input type="checkbox" id="kindness" name="themes" value="kindness">
-                                        <label for="kindness" data-translate="kindness">💖 Gentilezza</label>
-                                    </div>
-                                    <div class="theme-tag">
-                                        <input type="checkbox" id="family" name="themes" value="family">
-                                        <label for="family" data-translate="family">👨‍👩‍👧 Famiglia</label>
-                                    </div>
-                                    <div class="theme-tag">
-                                        <input type="checkbox" id="nature" name="themes" value="nature">
-                                        <label for="nature" data-translate="nature">🌳 Natura</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Step 2: Details -->
-                        <div class="step-content" id="step2">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="numPages" data-translate="numPages">📄 Numero di Pagine</label>
-                                    <select id="numPages" name="numPages">
-                                        <option value="3">3 Pagine</option>
-                                        <option value="8">8 Pagine</option>
-                                        <option value="10" selected>10 Pagine</option>
-                                        <option value="12">12 Pagine</option>
-                                        <option value="14">14 Pagine</option>
-                                        <option value="16">16 Pagine</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="ageGroup" data-translate="ageGroup">👶 Fascia d'Età</label>
-                                    <select id="ageGroup" name="ageGroup">
-                                        <option value="3-5">3-5 anni</option>
-                                        <option value="4-7" selected>4-7 anni</option>
-                                        <option value="6-9">6-9 anni</option>
-                                        <option value="9-12">9-12 anni</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="language" data-translate="language">🌍 Lingua</label>
-                                    <select id="language" name="language">
-                                        <option value="Italian" selected>Italiano</option>
-                                        <option value="English">Inglese</option>
-                                        <option value="Spanish">Spagnolo</option>
-                                        <option value="French">Francese</option>
-                                        <option value="German">Tedesco</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="artStyle" data-translate="artStyle">🎨 Stile Artistico</label>
-                                    <input type="text" id="artStyle" name="artStyle" value="whimsical watercolor" placeholder="acquerello, cartone animato, digitale..." data-translate="artStylePlaceholder">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Step 3: Characters -->
-                        <div class="step-content" id="step3">
-                            <div id="charactersContainer">
-                                <!-- Characters will be added here -->
-                            </div>
-                            <button type="button" class="btn btn-secondary" onclick="addCharacter()" data-translate="addCharacter">
-                                ➕ Aggiungi Personaggio
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Navigation -->
-                    <div class="nav-buttons">
-                        <button type="button" class="btn btn-outline" id="prevBtn" onclick="previousStep()" style="display: none;" data-translate="back">
-                            ← Indietro
-                        </button>
-                        <div style="flex: 1;"></div>
-                        <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep()" data-translate="next">
-                            Avanti →
-                        </button>
-                        <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;" data-translate="generateBook">
-                            ✨ Genera Libro
-                        </button>
-                    </div>
-                </form>
+        <!-- Navigation Footer -->
+        <div class="nav-footer">
+            <div class="nav-content">
+                <button type="button" class="btn btn-outline" id="prevBtn" onclick="previousStep()" style="display: none;" data-translate="back">
+                    ← Indietro
+                </button>
+                <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep()" data-translate="next">
+                    Avanti →
+                </button>
+                <button type="submit" form="bookForm" class="btn btn-primary" id="submitBtn" style="display: none;" data-translate="generateBook">
+                    ✨ Genera Libro
+                </button>
             </div>
         </div>
     </div>
@@ -954,7 +1114,7 @@
             <div class="progress-emoji">📚</div>
             <h2 style="color: #333; margin-bottom: 10px;" data-translate="creatingStory">Creiamo la Tua Storia!</h2>
             <p style="color: #666; margin-bottom: 20px;" data-translate="magicalAI">La nostra IA magica sta lavorando...</p>
-            <div style="width: 100%; height: 20px; background: #F0F0F0; border-radius: 10px; overflow: hidden;">
+            <div style="width: 100%; height: 8px; background: #F0F0F0; border-radius: 4px; overflow: hidden;">
                 <div id="progressBar" style="height: 100%; background: linear-gradient(90deg, #FF6B6B, #4ECDC4, #FFE66D); width: 0%; transition: width 0.5s ease;"></div>
             </div>
             <p id="progressText" style="color: #999; margin-top: 10px; font-size: 0.9rem;" data-translate="starting">Inizio...</p>
@@ -983,13 +1143,29 @@
         let characterCount = 0;
         let currentGenerationId = null;
         let tosAccepted = false;
+        const totalSteps = 7;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            addCharacter();
-            updateTranslations(); // Apply initial translations
+            // Show preview on mobile
+            if (window.innerWidth <= 768) {
+                document.getElementById('mobilePreview').style.display = 'block';
+            }
+            
+            // Check for saved language preference and initialize
+            const savedLang = localStorage.getItem('preferredLanguage') || 'it';
+            switchLanguage(savedLang);
+            
+            addMainCharacter();
             loadTOS(); // Load Terms of Service
+            updateProgressBar();
         });
+
+        // Update progress bar
+        function updateProgressBar() {
+            const progress = (currentStep / totalSteps) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+        }
 
         // Load Terms of Service based on current language
         async function loadTOS() {
@@ -1069,14 +1245,16 @@
             if (step < currentStep || validateCurrentStep()) {
                 currentStep = step;
                 updateStepDisplay();
+                updateProgressBar();
             }
         }
 
         function nextStep() {
             if (validateCurrentStep()) {
-                if (currentStep < 3) {
+                if (currentStep < totalSteps) {
                     currentStep++;
                     updateStepDisplay();
+                    updateProgressBar();
                 }
             }
         }
@@ -1085,12 +1263,13 @@
             if (currentStep > 1) {
                 currentStep--;
                 updateStepDisplay();
+                updateProgressBar();
             }
         }
 
         function updateStepDisplay() {
             // Update step indicators
-            document.querySelectorAll('.step').forEach((step, index) => {
+            document.querySelectorAll('.progress-step').forEach((step, index) => {
                 step.classList.remove('active', 'completed');
                 if (index + 1 === currentStep) {
                     step.classList.add('active');
@@ -1109,18 +1288,21 @@
 
             // Update navigation buttons
             document.getElementById('prevBtn').style.display = currentStep === 1 ? 'none' : 'block';
-            document.getElementById('nextBtn').style.display = currentStep === 3 ? 'none' : 'block';
-            document.getElementById('submitBtn').style.display = currentStep === 3 ? 'block' : 'none';
+            document.getElementById('nextBtn').style.display = currentStep === totalSteps ? 'none' : 'block';
+            document.getElementById('submitBtn').style.display = currentStep === totalSteps ? 'block' : 'none';
+            
+            // Smooth scroll to top on mobile
+            if (window.innerWidth <= 768) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         }
 
         function validateCurrentStep() {
             if (currentStep === 1) {
                 const customerName = document.getElementById('customerName').value.trim();
                 const customerEmail = document.getElementById('customerEmail').value.trim();
-                const title = document.getElementById('bookTitle').value.trim();
-                const idea = document.getElementById('storyIdea').value.trim();
                 
-                if (!customerName || !customerEmail || !title || !idea) {
+                if (!customerName || !customerEmail) {
                     alert(t('fillRequired'));
                     return false;
                 }
@@ -1131,63 +1313,141 @@
                     alert(t('validEmail'));
                     return false;
                 }
+            } else if (currentStep === 2) {
+                const title = document.getElementById('bookTitle').value.trim();
+                if (!title) {
+                    alert(t('fillRequired'));
+                    return false;
+                }
+            } else if (currentStep === 3) {
+                const idea = document.getElementById('storyIdea').value.trim();
+                if (!idea) {
+                    alert(t('fillRequired'));
+                    return false;
+                }
+            } else if (currentStep === 6) {
+                const mainCharacterName = document.getElementById('characterName-1').value.trim();
+                if (!mainCharacterName) {
+                    alert(t('mainCharacterRequired'));
+                    return false;
+                }
+                
+                const inputType = document.querySelector('input[name="inputType-1"]:checked').value;
+                if (inputType === 'text') {
+                    const description = document.getElementById('characterDescription-1').value.trim();
+                    if (!description) {
+                        alert(t('mainCharacterDescriptionRequired'));
+                        return false;
+                    }
+                }
             }
             return true;
         }
 
+        function addMainCharacter() {
+            characterCount = 1;
+            const container = document.getElementById('mainCharacterContainer');
+            
+            const characterDiv = document.createElement('div');
+            characterDiv.className = 'character-card';
+            characterDiv.id = `character-1`;
+            
+            characterDiv.innerHTML = `
+                <div class="character-header">
+                    <h3 class="character-title">${t('mainCharacter')}</h3>
+                </div>
+                
+                <div class="form-group">
+                    <label for="characterName-1">${t('characterName')}</label>
+                    <input type="text" id="characterName-1" name="characterName-1" class="form-input" required placeholder="${t('characterNamePlaceholder')}">
+                </div>
+                
+                <input type="hidden" id="characterType-1" name="characterType-1" value="main">
+                
+                <div class="form-group">
+                    <label>${t('inputMethod')}</label>
+                    <div class="toggle-group">
+                        <div class="toggle-option">
+                            <input type="radio" id="inputText-1" name="inputType-1" value="text" checked onchange="toggleInputType(1)">
+                            <label for="inputText-1">${t('describe')}</label>
+                        </div>
+                        <div class="toggle-option">
+                            <input type="radio" id="inputImage-1" name="inputType-1" value="image" onchange="toggleInputType(1)">
+                            <label for="inputImage-1">${t('upload')}</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="textInput-1" class="form-group">
+                    <label for="characterDescription-1">${t('description')}</label>
+                    <textarea id="characterDescription-1" name="characterDescription-1" class="form-input" required placeholder="${t('descriptionPlaceholder')}"></textarea>
+                </div>
+                
+                <div id="imageInput-1" class="form-group" style="display: none;">
+                    <div class="upload-area" onclick="document.getElementById('characterImage-1').click()">
+                        <div id="uploadText-1">
+                            <p style="font-size: 2.5rem; margin-bottom: 8px;">📷</p>
+                            <p style="color: #64748B; font-weight: 500;">${t('clickToUpload')}</p>
+                        </div>
+                        <input type="file" id="characterImage-1" accept="image/*" style="display: none;" onchange="handleImageUpload(1)">
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(characterDiv);
+        }
+
         function addCharacter() {
             characterCount++;
-            const container = document.getElementById('charactersContainer');
+            const container = document.getElementById('additionalCharactersContainer');
             
             const characterDiv = document.createElement('div');
             characterDiv.className = 'character-card';
             characterDiv.id = `character-${characterCount}`;
             
             characterDiv.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h3 style="color: #333; font-size: 1.2rem;">${t('character')} ${characterCount}</h3>
-                    ${characterCount > 1 ? `<button type="button" class="btn btn-outline" style="padding: 8px 16px; font-size: 0.9rem;" onclick="removeCharacter(${characterCount})">${t('remove')}</button>` : ''}
+                <div class="character-header">
+                    <h3 class="character-title">${t('character')} ${characterCount}</h3>
+                    ${characterCount > 1 ? `<button type="button" class="btn btn-outline" style="padding: 8px 16px; font-size: 0.875rem;" onclick="removeCharacter(${characterCount})">${t('remove')}</button>` : ''}
                 </div>
                 
                 <div class="form-group">
                     <label for="characterName-${characterCount}">${t('characterName')}</label>
-                    <input type="text" id="characterName-${characterCount}" name="characterName-${characterCount}" required placeholder="${t('characterNamePlaceholder')}">
+                    <input type="text" id="characterName-${characterCount}" name="characterName-${characterCount}" class="form-input" required placeholder="${t('characterNamePlaceholder')}">
                 </div>
                 
                 <div class="form-group">
                     <label for="characterType-${characterCount}">${t('characterType')}</label>
-                    <select id="characterType-${characterCount}" name="characterType-${characterCount}">
-                        <option value="main" ${characterCount === 1 ? 'selected' : ''}>${t('mainCharacter')}</option>
-                        <option value="secondary" ${characterCount > 1 ? 'selected' : ''}>${t('supportingCharacter')}</option>
+                    <select id="characterType-${characterCount}" name="characterType-${characterCount}" class="form-input">
+                        <option value="secondary" selected>${t('supportingCharacter')}</option>
                         <option value="background">${t('backgroundCharacter')}</option>
                     </select>
                 </div>
                 
                 <div class="form-group">
                     <label>${t('inputMethod')}</label>
-                    <div style="display: flex; gap: 20px;">
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="radio" name="inputType-${characterCount}" value="text" checked onchange="toggleInputType(${characterCount})">
-                            <span>${t('describe')}</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="radio" name="inputType-${characterCount}" value="image" onchange="toggleInputType(${characterCount})">
-                            <span>${t('upload')}</span>
-                        </label>
+                    <div class="toggle-group">
+                        <div class="toggle-option">
+                            <input type="radio" id="inputText-${characterCount}" name="inputType-${characterCount}" value="text" checked onchange="toggleInputType(${characterCount})">
+                            <label for="inputText-${characterCount}">${t('describe')}</label>
+                        </div>
+                        <div class="toggle-option">
+                            <input type="radio" id="inputImage-${characterCount}" name="inputType-${characterCount}" value="image" onchange="toggleInputType(${characterCount})">
+                            <label for="inputImage-${characterCount}">${t('upload')}</label>
+                        </div>
                     </div>
                 </div>
                 
                 <div id="textInput-${characterCount}" class="form-group">
                     <label for="characterDescription-${characterCount}">${t('description')}</label>
-                    <textarea id="characterDescription-${characterCount}" name="characterDescription-${characterCount}" required placeholder="${t('descriptionPlaceholder')}"></textarea>
+                    <textarea id="characterDescription-${characterCount}" name="characterDescription-${characterCount}" class="form-input" required placeholder="${t('descriptionPlaceholder')}"></textarea>
                 </div>
                 
                 <div id="imageInput-${characterCount}" class="form-group" style="display: none;">
-                    <div style="border: 2px dashed #4ECDC4; border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; background: #F0F8FF;" 
-                         onclick="document.getElementById('characterImage-${characterCount}').click()">
+                    <div class="upload-area" onclick="document.getElementById('characterImage-${characterCount}').click()">
                         <div id="uploadText-${characterCount}">
-                            <p style="font-size: 2rem;">📷</p>
-                            <p style="color: #666;">${t('clickToUpload')}</p>
+                            <p style="font-size: 2.5rem; margin-bottom: 8px;">📷</p>
+                            <p style="color: #64748B; font-weight: 500;">${t('clickToUpload')}</p>
                         </div>
                         <input type="file" id="characterImage-${characterCount}" accept="image/*" style="display: none;" onchange="handleImageUpload(${characterCount})">
                     </div>
@@ -1355,31 +1615,31 @@
                     <h2 style="color: #333; margin: 20px 0;">${t('coverReady')}</h2>
                     
                     <div style="text-align: center; margin: 30px 0;">
-                        <img src="${coverUrl}" alt="Your Book Cover" style="max-width: 300px; width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); margin-bottom: 20px;">
+                        <img src="${coverUrl}" alt="Your Book Cover" style="max-width: min(300px, 80vw); width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); margin-bottom: 20px;">
                     </div>
                     
-                    <div style="background: #F8F9FA; border-radius: 20px; padding: 30px; margin-top: 30px; text-align: center;">
-                        <h3 style="color: #333; margin-bottom: 15px;">${t('getCompleteBook')}</h3>
-                        <div id="price-display" style="font-size: 2.5rem; font-weight: 700; color: #4ECDC4; margin: 20px 0;">€19.99</div>
+                    <div class="payment-section" style="background: #F8F9FA; border-radius: 20px; padding: clamp(20px, 5vw, 30px); margin-top: 30px; text-align: center;">
+                        <h3 style="color: #333; margin-bottom: 15px; font-size: clamp(1.2rem, 4vw, 1.5rem);">${t('getCompleteBook')}</h3>
+                        <div id="price-display" style="font-size: clamp(2rem, 6vw, 2.5rem); font-weight: 700; color: #4ECDC4; margin: 20px 0;">€19.99</div>
                         
-                        <ul style="list-style: none; padding: 0; text-align: left; margin: 20px 0;">
-                            <li style="margin: 10px 0; color: #666;">${t('professionalReview')}</li>
-                            <li style="margin: 10px 0; color: #666;">${t('highQualityIllustrations')}</li>
-                            <li style="margin: 10px 0; color: #666;">${t('ageAppropriate')}</li>
-                            <li style="margin: 10px 0; color: #666;">${t('deliveredEmail')}</li>
-                            <li style="margin: 10px 0; color: #666;">${t('pdfFormat')}</li>
+                        <ul style="list-style: none; padding: 0; text-align: left; margin: 20px 0; font-size: clamp(0.9rem, 3.5vw, 1rem);">
+                            <li style="margin: 8px 0; color: #666; display: flex; align-items: center;">${t('professionalReview')}</li>
+                            <li style="margin: 8px 0; color: #666; display: flex; align-items: center;">${t('highQualityIllustrations')}</li>
+                            <li style="margin: 8px 0; color: #666; display: flex; align-items: center;">${t('ageAppropriate')}</li>
+                            <li style="margin: 8px 0; color: #666; display: flex; align-items: center;">${t('deliveredEmail')}</li>
+                            <li style="margin: 8px 0; color: #666; display: flex; align-items: center;">${t('pdfFormat')}</li>
                         </ul>
                         
-                        <button id="payment-btn" onclick="processPayment('${orderId}')" class="btn btn-primary" style="font-size: 1.2rem; padding: 15px 40px; margin-top: 20px;">
+                        <button id="payment-btn" onclick="processPayment('${orderId}')" class="btn btn-primary" style="font-size: clamp(1rem, 4vw, 1.2rem); padding: 18px 40px; margin-top: 20px; width: 100%; min-height: 54px; border-radius: 16px;">
                             ${t('payNow')}
                         </button>
                         
-                        <p style="color: #666; margin-top: 15px; font-size: 0.9rem;">
+                        <p style="color: #666; margin-top: 15px; font-size: clamp(0.8rem, 3vw, 0.9rem);">
                             ${t('expertReview')}
                         </p>
                         
-                        <div style="margin-top: 20px; padding: 15px; background: #E8F5E8; border-radius: 10px;">
-                            <p style="color: #2E7D32; font-size: 0.9rem; margin: 0;">
+                        <div style="margin-top: 20px; padding: clamp(12px, 3vw, 15px); background: #E8F5E8; border-radius: 10px;">
+                            <p style="color: #2E7D32; font-size: clamp(0.8rem, 3vw, 0.9rem); margin: 0; line-height: 1.4;">
                                 <strong>🔒 ${currentLanguage === 'it' ? 'Pagamento Sicuro' : 'Secure Payment'}</strong><br>
                                 ${currentLanguage === 'it' ? 'Elaborato da Stripe • Crittografia SSL • Dati protetti' : 'Powered by Stripe • SSL Encryption • Protected Data'}
                             </p>

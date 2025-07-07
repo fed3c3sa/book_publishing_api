@@ -41,6 +41,7 @@ Return your response as a valid JSON object:
 - End with quality and technical specifications
 - Keep language clear and specific
 - Avoid abstract or complex concepts unsuitable for children
+- !!!The only text that can be included in the image is the title, no other text.!!!
 
 ## Example Structure:
 "[Main action/scene], featuring [character descriptions], [setting details], [composition and perspective], [lighting and mood], [art style], [quality specifications]"
