@@ -3,9 +3,13 @@ Asset Routes
 Handles serving static assets, templates, and TOS files
 """
 
-from flask import Blueprint, render_template, send_from_directory, redirect, request
+from flask import Blueprint, render_template, send_from_directory, redirect, request, send_file
+from app.services.storage_service import CloudStorageService
 
 asset_bp = Blueprint('assets', __name__)
+
+# Initialize Cloud Storage service
+storage_service = CloudStorageService()
 
 @asset_bp.route('/')
 def index():
@@ -26,6 +30,29 @@ def serve_assets_alt(filename):
 def serve_tos(filename):
     """Serve Terms of Service files from the tos directory."""
     return send_from_directory('tos', filename)
+
+@asset_bp.route('/api/cover/<order_id>')
+def serve_cover(order_id):
+    """Serve book cover from Cloud Storage."""
+    try:
+        cloud_path = f"covers/cover_{order_id}.png"
+        
+        if not storage_service.file_exists(cloud_path):
+            return {'error': 'Cover not found'}, 404
+        
+        # Download to temporary file and serve it
+        temp_file_path = storage_service.download_file_to_temp(cloud_path)
+        
+        return send_file(
+            temp_file_path,
+            mimetype='image/png',
+            as_attachment=False,
+            download_name=f"cover_{order_id}.png"
+        )
+        
+    except Exception as e:
+        print(f"Error serving cover {order_id}: {str(e)}")
+        return {'error': 'Failed to serve cover'}, 500
 
 @asset_bp.route('/success')
 def payment_success():

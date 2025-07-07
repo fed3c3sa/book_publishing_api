@@ -10,6 +10,7 @@ from flask import Blueprint, request, jsonify, render_template, redirect
 
 from config.stripe_config import stripe_config
 from app.services.email_service import EmailService
+from app.services.storage_service import CloudStorageService
 
 payment_bp = Blueprint('payment', __name__, url_prefix='/api')
 
@@ -26,16 +27,17 @@ def create_checkout_session():
                 'error': 'Order ID is required'
             }), 400
         
-        # Load order data
-        order_file_path = Path('output/orders') / f"order_{order_id}.json"
-        if not order_file_path.exists():
+        # Load order data from Cloud Storage
+        storage_service = CloudStorageService()
+        order_file_path = f"orders/order_{order_id}.json"
+        
+        if not storage_service.file_exists(order_file_path):
             return jsonify({
                 'success': False,
                 'error': 'Order not found'
             }), 404
         
-        with open(order_file_path, 'r', encoding='utf-8') as f:
-            order_data = json.load(f)
+        order_data = storage_service.download_json(order_file_path)
         
         # Add full cover URL for Stripe
         order_data['cover_url'] = f"{request.host_url}api/cover/{order_id}"
@@ -48,9 +50,8 @@ def create_checkout_session():
         order_data['payment_status'] = 'checkout_created'
         order_data['checkout_created_at'] = datetime.now().isoformat()
         
-        # Save updated order
-        with open(order_file_path, 'w', encoding='utf-8') as f:
-            json.dump(order_data, f, indent=2, ensure_ascii=False)
+        # Save updated order to Cloud Storage
+        storage_service.upload_json(order_data, order_file_path)
         
         return jsonify({
             'success': True,
@@ -135,11 +136,12 @@ def stripe_webhook():
             session_data = event['data']['object']
             order_id = session_data['metadata']['order_id']
             
-            # Update order status
-            order_file_path = Path('output/orders') / f"order_{order_id}.json"
-            if order_file_path.exists():
-                with open(order_file_path, 'r', encoding='utf-8') as f:
-                    order_data = json.load(f)
+            # Update order status using Cloud Storage
+            storage_service = CloudStorageService()
+            order_file_path = f"orders/order_{order_id}.json"
+            
+            if storage_service.file_exists(order_file_path):
+                order_data = storage_service.download_json(order_file_path)
                 
                 # Update payment status
                 order_data['payment_status'] = 'paid'
@@ -147,9 +149,8 @@ def stripe_webhook():
                 order_data['stripe_session_completed'] = session_data['id']
                 order_data['status'] = 'paid_awaiting_production'
                 
-                # Save updated order
-                with open(order_file_path, 'w', encoding='utf-8') as f:
-                    json.dump(order_data, f, indent=2, ensure_ascii=False)
+                # Save updated order to Cloud Storage
+                storage_service.upload_json(order_data, order_file_path)
                 
                 # Send confirmation emails
                 email_service = EmailService()
@@ -193,16 +194,17 @@ def manual_webhook_trigger(session_id):
                 'error': 'Could not determine order_id from session'
             }), 400
         
-        # Update order status manually
-        order_file_path = Path('output/orders') / f"order_{order_id}.json"
-        if not order_file_path.exists():
+        # Update order status manually using Cloud Storage
+        storage_service = CloudStorageService()
+        order_file_path = f"orders/order_{order_id}.json"
+        
+        if not storage_service.file_exists(order_file_path):
             return jsonify({
                 'success': False,
                 'error': f'Order file not found for order {order_id}'
             }), 404
         
-        with open(order_file_path, 'r', encoding='utf-8') as f:
-            order_data = json.load(f)
+        order_data = storage_service.download_json(order_file_path)
         
         # Update payment status
         order_data['payment_status'] = 'paid'
@@ -211,9 +213,8 @@ def manual_webhook_trigger(session_id):
         order_data['status'] = 'paid_awaiting_production'
         order_data['manual_webhook_triggered'] = True  # Mark as manually triggered
         
-        # Save updated order
-        with open(order_file_path, 'w', encoding='utf-8') as f:
-            json.dump(order_data, f, indent=2, ensure_ascii=False)
+        # Save updated order to Cloud Storage
+        storage_service.upload_json(order_data, order_file_path)
         
         # Send confirmation emails
         email_service = EmailService()

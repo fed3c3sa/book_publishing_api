@@ -6,12 +6,15 @@ Handles email notifications for orders and payments
 import os
 import json
 import smtplib
+import tempfile
 from pathlib import Path
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
 from typing import Dict, Any
+
+from .storage_service import CloudStorageService
 
 class EmailService:
     """Service for handling email notifications"""
@@ -24,6 +27,9 @@ class EmailService:
         self.smtp_port = int(os.getenv('SMTP_PORT', '587'))
         self.email_user = os.getenv('EMAIL_USER', '')
         self.email_password = os.getenv('EMAIL_PASSWORD', '')
+        
+        # Initialize Cloud Storage service
+        self.storage_service = CloudStorageService()
     
     def _send_email(self, to_email: str, subject: str, body: str, attachments: list = None) -> None:
         """
@@ -185,7 +191,7 @@ Characters: {len(order_data['characters'])} characters defined
 
 Please begin production immediately and deliver the completed book to the customer within 12 hours.
 
-Order file location: output/orders/order_{order_data['order_id']}.json
+Order data is stored in Cloud Storage and will be sent as email attachments.
         """
         
         self._send_email(self.production_email, subject, body)
@@ -258,55 +264,90 @@ Book must be completed and delivered within 12 hours of this email.
 Please confirm receipt of this email and begin production immediately.
         """
         
-        # Prepare attachments
+        # Prepare attachments (download from Cloud Storage to temporary files)
         attachments = []
+        temp_files = []  # Keep track of temp files to clean up
         order_id = order_data.get('order_id', 'unknown')
         
-        # 1. Save complete order data as JSON and attach it
         try:
-            json_path = Path('output/orders') / f"complete_order_{order_id}.json"
-            with open(json_path, 'w', encoding='utf-8') as f:
-                json.dump(order_data, f, indent=2, ensure_ascii=False)
-            attachments.append(str(json_path))
-        except Exception as e:
-            print(f"Failed to create order JSON file: {str(e)}")
-        
-        # 2. Attach the generated cover image
-        cover_path = order_data.get('cover_path')
-        if cover_path and Path(cover_path).exists():
-            attachments.append(cover_path)
-        else:
-            # Try alternative cover path
-            alt_cover_path = Path('output/covers') / f"cover_{order_id}.png"
-            if alt_cover_path.exists():
-                attachments.append(str(alt_cover_path))
-        
-        # 3. Attach character descriptions if they exist
-        character_descriptions = []
-        for char in order_data.get('characters', []):
-            char_name = char.get('name', '').lower().replace(' ', '_')
-            if char_name:
-                char_file_path = Path('app/output/characters') / f"{char_name}.json"
-                if char_file_path.exists():
-                    attachments.append(str(char_file_path))
-                    try:
-                        with open(char_file_path, 'r', encoding='utf-8') as f:
-                            char_desc = json.load(f)
-                        character_descriptions.append(char_desc)
-                    except Exception as e:
-                        print(f"Failed to load character description for {char_name}: {str(e)}")
-        
-        # If we have character descriptions, create a combined file
-        if character_descriptions:
-            try:
-                char_desc_path = Path('output/orders') / f"character_descriptions_{order_id}.json"
-                with open(char_desc_path, 'w', encoding='utf-8') as f:
-                    json.dump(character_descriptions, f, indent=2, ensure_ascii=False)
-                attachments.append(str(char_desc_path))
-            except Exception as e:
-                print(f"Failed to create character descriptions file: {str(e)}")
-        
-        # Send email with attachments
-        self._send_email(self.production_email, subject, body, attachments)
+            # 1. Create complete order data as temporary JSON file
+            temp_json = tempfile.NamedTemporaryFile(mode='w', suffix=f'_complete_order_{order_id}.json', delete=False)
+            json.dump(order_data, temp_json, indent=2, ensure_ascii=False)
+            temp_json.close()
+            attachments.append(temp_json.name)
+            temp_files.append(temp_json.name)
+            print(f"Created temporary order JSON: {temp_json.name}")
+            
+            # 2. Download and attach the generated cover image from Cloud Storage
+            cover_cloud_path = f"covers/cover_{order_id}.png"
+            if self.storage_service.file_exists(cover_cloud_path):
+                temp_cover = self.storage_service.download_file_to_temp(cover_cloud_path)
+                # Rename temp file to have proper extension
+                cover_temp = tempfile.NamedTemporaryFile(suffix=f'_cover_{order_id}.png', delete=False)
+                cover_temp.close()
+                # Copy content to new temp file with proper name
+                import shutil
+                shutil.copy2(temp_cover, cover_temp.name)
+                attachments.append(cover_temp.name)
+                temp_files.extend([temp_cover, cover_temp.name])
+                print(f"Downloaded cover image from Cloud Storage: {cover_cloud_path}")
+            else:
+                print(f"Cover image not found in Cloud Storage: {cover_cloud_path}")
+            
+            # 3. Download and attach character descriptions from Cloud Storage
+            character_descriptions = []
+            for char in order_data.get('characters', []):
+                char_name = char.get('name', '').lower().replace(' ', '_')
+                if char_name:
+                    # Clean character name to match Cloud Storage path format
+                    clean_name = "".join(c for c in char_name if c.isalnum() or c in (' ', '-', '_')).rstrip()
+                    clean_name = clean_name.replace(' ', '_').lower()
+                    char_cloud_path = f"characters/{clean_name}.json"
+                    
+                    if self.storage_service.file_exists(char_cloud_path):
+                        try:
+                            char_data = self.storage_service.download_json(char_cloud_path)
+                            character_descriptions.append(char_data)
+                            
+                            # Create temporary file for this character
+                            temp_char = tempfile.NamedTemporaryFile(
+                                mode='w', 
+                                suffix=f'_character_{clean_name}.json', 
+                                delete=False
+                            )
+                            json.dump(char_data, temp_char, indent=2, ensure_ascii=False)
+                            temp_char.close()
+                            attachments.append(temp_char.name)
+                            temp_files.append(temp_char.name)
+                            print(f"Downloaded character description: {char_cloud_path}")
+                        except Exception as e:
+                            print(f"Failed to download character description for {char_name}: {str(e)}")
+            
+            # If we have character descriptions, create a combined temporary file
+            if character_descriptions:
+                try:
+                    temp_combined = tempfile.NamedTemporaryFile(
+                        mode='w',
+                        suffix=f'_all_characters_{order_id}.json',
+                        delete=False
+                    )
+                    json.dump(character_descriptions, temp_combined, indent=2, ensure_ascii=False)
+                    temp_combined.close()
+                    attachments.append(temp_combined.name)
+                    temp_files.append(temp_combined.name)
+                    print(f"Created combined character descriptions file")
+                except Exception as e:
+                    print(f"Failed to create combined character descriptions file: {str(e)}")
+            
+            # Send email with attachments
+            self._send_email(self.production_email, subject, body, attachments)
+            
+        finally:
+            # Clean up temporary files
+            for temp_file in temp_files:
+                try:
+                    Path(temp_file).unlink(missing_ok=True)
+                except Exception as e:
+                    print(f"Failed to clean up temporary file {temp_file}: {str(e)}")
         
         print(f"Complete order information sent for order {order_id} with {len(attachments)} attachments") 

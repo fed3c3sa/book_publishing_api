@@ -29,18 +29,28 @@ def create_app():
     # Enable CORS
     CORS(app)
     
-    # Ensure required directories exist
-    required_dirs = [
-        'output/covers',
-        'output/orders', 
-        'temp_uploads',
-        'static/assets',
-        'templates',
-        'tos'
-    ]
+    # Ensure required directories exist (only in local development)
+    # Skip on App Engine where filesystem is read-only
+    # Check multiple App Engine environment indicators
+    is_app_engine = (
+        os.getenv('GAE_ENV') == 'standard' or 
+        os.getenv('GAE_APPLICATION') or 
+        os.getenv('GOOGLE_CLOUD_PROJECT') or
+        os.path.exists('/srv')
+    )
     
-    for dir_path in required_dirs:
-        Path(dir_path).mkdir(parents=True, exist_ok=True)
+    if not is_app_engine:
+        required_dirs = [
+            'output/covers',
+            'output/orders', 
+            'temp_uploads',
+            'static/assets',
+            'templates',
+            'tos'
+        ]
+        
+        for dir_path in required_dirs:
+            Path(dir_path).mkdir(parents=True, exist_ok=True)
     
     # Register blueprints
     from app.routes.asset_routes import asset_bp
@@ -52,6 +62,11 @@ def create_app():
     app.register_blueprint(book_bp)
     app.register_blueprint(payment_bp)
     app.register_blueprint(upload_bp)
+    
+    @app.route('/health')
+    def health_check():
+        """Health check endpoint for App Engine"""
+        return {'status': 'healthy', 'service': 'book_publishing_api'}, 200
     
     @app.errorhandler(404)
     def not_found(error):

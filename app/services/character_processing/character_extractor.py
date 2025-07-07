@@ -12,6 +12,7 @@ from pathlib import Path
 
 from ..ai_clients.openai_client import OpenAIClient
 from ..utils.config import load_prompt, get_output_path, CHARACTERS_DIR
+from ..storage_service import CloudStorageService
 
 
 class CharacterProcessor:
@@ -26,6 +27,7 @@ class CharacterProcessor:
         """
         self.openai_client = openai_client or OpenAIClient()
         self.character_prompt = load_prompt("character_description")
+        self.storage_service = CloudStorageService()
     
     def extract_character_from_text(
         self,
@@ -117,53 +119,48 @@ class CharacterProcessor:
         self,
         character_data: Dict[str, Any],
         filename: Optional[str] = None
-    ) -> Path:
+    ) -> str:
         """
-        Save character description to a JSON file.
+        Save character description to Cloud Storage.
         
         Args:
             character_data: Character description dictionary
             filename: Optional custom filename. If None, uses character name.
             
         Returns:
-            Path to the saved file
+            Cloud Storage URL of the saved file
         """
         if filename is None:
             char_name = character_data.get("character_name", "unknown_character")
-            # Clean filename
-            char_name = "".join(c for c in char_name if c.isalnum() or c in (' ', '-', '_')).rstrip()
-            char_name = char_name.replace(' ', '_').lower()
-            filename = f"{char_name}.json"
+        else:
+            # Extract character name from filename if provided
+            char_name = filename.replace('.json', '') if filename.endswith('.json') else filename
         
-        # Ensure filename has .json extension
-        if not filename.endswith('.json'):
-            filename += '.json'
-        
-        # Get output path
-        output_path = get_output_path(CHARACTERS_DIR, filename)
-        
-        # Save character data
-        with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(character_data, f, indent=2, ensure_ascii=False)
-        
-        return output_path
+        # Save to Cloud Storage using the storage service method
+        return self.storage_service.save_character_data(char_name, character_data)
     
     def load_character_description(self, filename: str) -> Dict[str, Any]:
         """
-        Load character description from a JSON file.
+        Load character description from Cloud Storage.
         
         Args:
-            filename: Name of the character file
+            filename: Name of the character file (without .json extension)
             
         Returns:
             Character description dictionary
         """
-        file_path = CHARACTERS_DIR / filename
-        if not file_path.exists():
-            raise FileNotFoundError(f"Character file not found: {file_path}")
+        # Clean filename and ensure it matches the cloud storage path format
+        clean_name = "".join(c for c in filename if c.isalnum() or c in (' ', '-', '_')).rstrip()
+        clean_name = clean_name.replace(' ', '_').lower()
+        if not clean_name.endswith('.json'):
+            clean_name += '.json'
         
-        with open(file_path, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        cloud_file_path = f"characters/{clean_name}"
+        
+        if not self.storage_service.file_exists(cloud_file_path):
+            raise FileNotFoundError(f"Character file not found in Cloud Storage: {cloud_file_path}")
+        
+        return self.storage_service.download_json(cloud_file_path)
     
     def process_multiple_characters(
         self,

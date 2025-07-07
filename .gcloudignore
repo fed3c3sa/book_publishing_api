@@ -1,0 +1,108 @@
+# This file specifies files that are *not* uploaded to Google Cloud
+# using gcloud. It follows the same syntax as .gitignore, with the addition of
+# "#!include" directives (which insert the entries of the given .gitignore-style
+# file at that point).
+
+#!include:.gitignore
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+env/
+.env
+.venv
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Development and testing files
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Local configuration files
+.env
+.env.local
+.env.development
+.env.test
+
+# Output directories (files are now stored in Cloud Storage)
+output/
+app/output/
+temp_uploads/
+
+# Log files
+*.log
+logs/
+
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Documentation
+docs/_build/
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Large files that shouldn't be deployed
+*.zip
+*.tar.gz
+*.rar
+
+# Git repository
+.git/
+.gitignore
+
+# Node modules (if any)
+node_modules/
+
+# Local development files
+local_test.py
+test_*.py
+*_test.py
+
+# Jupyter notebooks
+*.ipynb
+.ipynb_checkpoints/
+
+# Any temporary or cache directories
+tmp/
+cache/
+.cache/
+
+# SQLite databases (if any)
+*.db
+*.sqlite
+*.sqlite3
+
+# Configuration templates
+*.template
+*.example 

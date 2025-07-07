@@ -23,9 +23,18 @@ BOOKS_DIR = OUTPUT_DIR / "books"
 # Prompts directory
 PROMPTS_DIR = PROJECT_ROOT / "prompts"
 
-# Ensure all directories exist
-for directory in [CHARACTERS_DIR, PLANS_DIR, IMAGES_DIR, TEXTS_DIR, BOOKS_DIR]:
-    directory.mkdir(parents=True, exist_ok=True)
+# Ensure all directories exist (only in local development)
+# Skip on App Engine where filesystem is read-only
+is_app_engine = (
+    os.getenv('GAE_ENV') == 'standard' or 
+    os.getenv('GAE_APPLICATION') or 
+    os.getenv('GOOGLE_CLOUD_PROJECT') or
+    os.path.exists('/srv')
+)
+
+if not is_app_engine:
+    for directory in [CHARACTERS_DIR, PLANS_DIR, IMAGES_DIR, TEXTS_DIR, BOOKS_DIR]:
+        directory.mkdir(parents=True, exist_ok=True)
 
 
 def load_config(env_file: str = "secrets.env") -> Dict[str, str]:
@@ -92,8 +101,10 @@ def get_output_path(directory: Path, filename: str) -> Path:
     Returns:
         Path object for the output file
     """
-    # Ensure directory exists
-    directory.mkdir(parents=True, exist_ok=True)
+    # Ensure directory exists (only in local development)
+    # Skip on App Engine where filesystem is read-only
+    if not is_app_engine:
+        directory.mkdir(parents=True, exist_ok=True)
     
     # Return full path
     return directory / filename

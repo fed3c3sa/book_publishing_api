@@ -11,6 +11,7 @@ from pathlib import Path
 
 from ..ai_clients.openai_client import OpenAIClient
 from ..utils.config import load_prompt, get_output_path, PLANS_DIR
+from ..storage_service import CloudStorageService
 
 
 class BookPlanner:
@@ -25,6 +26,7 @@ class BookPlanner:
         """
         self.openai_client = openai_client or OpenAIClient()
         self.planning_prompt = load_prompt("book_planning")
+        self.storage_service = CloudStorageService()
     
     def create_book_plan(
         self,
@@ -172,53 +174,49 @@ class BookPlanner:
         self,
         book_plan: Dict[str, Any],
         filename: Optional[str] = None
-    ) -> Path:
+    ) -> str:
         """
-        Save book plan to a JSON file.
+        Save book plan to Cloud Storage.
         
         Args:
             book_plan: Book plan dictionary
             filename: Optional custom filename. If None, uses book title.
             
         Returns:
-            Path to the saved file
+            Cloud Storage URL of the saved file
         """
         if filename is None:
             book_title = book_plan.get("book_title", "untitled_book")
-            # Clean filename
-            book_title = "".join(c for c in book_title if c.isalnum() or c in (' ', '-', '_')).rstrip()
-            book_title = book_title.replace(' ', '_').lower()
-            filename = f"{book_title}_plan.json"
+        else:
+            # Extract book title from filename if provided
+            book_title = filename.replace('_plan.json', '') if filename.endswith('_plan.json') else filename
+            book_title = book_title.replace('.json', '') if book_title.endswith('.json') else book_title
         
-        # Ensure filename has .json extension
-        if not filename.endswith('.json'):
-            filename += '.json'
-        
-        # Get output path
-        output_path = get_output_path(PLANS_DIR, filename)
-        
-        # Save book plan
-        with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(book_plan, f, indent=2, ensure_ascii=False)
-        
-        return output_path
+        # Save to Cloud Storage using the storage service method
+        return self.storage_service.save_book_plan(book_title, book_plan)
     
     def load_book_plan(self, filename: str) -> Dict[str, Any]:
         """
-        Load book plan from a JSON file.
+        Load book plan from Cloud Storage.
         
         Args:
-            filename: Name of the plan file
+            filename: Name of the plan file (book title)
             
         Returns:
             Book plan dictionary
         """
-        file_path = PLANS_DIR / filename
-        if not file_path.exists():
-            raise FileNotFoundError(f"Book plan file not found: {file_path}")
+        # Clean filename and ensure it matches the cloud storage path format
+        clean_title = "".join(c for c in filename if c.isalnum() or c in (' ', '-', '_')).rstrip()
+        clean_title = clean_title.replace(' ', '_').lower()
+        if not clean_title.endswith('_plan.json'):
+            clean_title += '_plan.json'
         
-        with open(file_path, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        cloud_file_path = f"plans/{clean_title}"
+        
+        if not self.storage_service.file_exists(cloud_file_path):
+            raise FileNotFoundError(f"Book plan file not found in Cloud Storage: {cloud_file_path}")
+        
+        return self.storage_service.download_json(cloud_file_path)
     
     def get_page_by_number(self, book_plan: Dict[str, Any], page_number: int) -> Optional[Dict[str, Any]]:
         """

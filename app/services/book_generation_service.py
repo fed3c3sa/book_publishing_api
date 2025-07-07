@@ -14,6 +14,7 @@ from .character_processing import CharacterProcessor
 from .book_planning import BookPlanner
 from .content_generation import ImageGenerator
 from .utils.config import load_config
+from .storage_service import CloudStorageService
 
 class BookGenerationService:
     """Service for handling book cover generation and order management"""
@@ -25,11 +26,13 @@ class BookGenerationService:
         self.image_generator = ImageGenerator()
         self.config = load_config()
         
-        # Ensure output directories exist
-        self.covers_dir = Path('output/covers')
-        self.orders_dir = Path('output/orders')
-        self.covers_dir.mkdir(parents=True, exist_ok=True)
-        self.orders_dir.mkdir(parents=True, exist_ok=True)
+        # Initialize Cloud Storage service
+        self.storage_service = CloudStorageService()
+        
+        # Create directory structure in Cloud Storage
+        self.storage_service.create_directory_structure([
+            'covers/', 'orders/', 'characters/', 'plans/', 'images/', 'texts/', 'books/'
+        ])
     
     def generate_cover_and_save_order(
         self,
@@ -89,20 +92,20 @@ class BookGenerationService:
             )
             print(f"Cover generated at: {cover_image_path}")
             
-            # Save the cover to our output directory
-            cover_filename = f"cover_{order_id}.png"
-            final_cover_path = self.covers_dir / cover_filename
-            
-            # Copy the generated cover to our output directory
+            # Read the generated cover file and upload to Cloud Storage
             if not Path(cover_image_path).exists():
                 raise FileNotFoundError(f"Generated cover file does not exist: {cover_image_path}")
             
-            shutil.copy2(cover_image_path, final_cover_path)
-            print(f"Cover copied to: {final_cover_path}")
+            # Read the image file
+            with open(cover_image_path, 'rb') as f:
+                image_data = f.read()
             
-            # Verify the copy was successful
-            if not final_cover_path.exists():
-                raise FileNotFoundError("Failed to save cover file")
+            # Upload to Cloud Storage
+            cloud_cover_url = self.storage_service.save_cover_image(order_id, image_data)
+            print(f"Cover uploaded to Cloud Storage: {cloud_cover_url}")
+            
+            # Get public URL for the cover
+            public_cover_url = self.storage_service.get_public_url(f"covers/cover_{order_id}.png")
             
             # Create order data
             order_data = {
@@ -117,19 +120,20 @@ class BookGenerationService:
                 'art_style': art_style,
                 'characters': characters_data,
                 'themes': themes,
-                'cover_path': str(final_cover_path),
+                'cover_path': cloud_cover_url,
+                'cover_public_url': public_cover_url,
                 'order_date': datetime.now().isoformat(),
                 'status': 'cover_generated',
                 'payment_status': 'pending'
             }
             
-            # Save order to JSON file
-            order_file_path = self.orders_dir / f"order_{order_id}.json"
-            with open(order_file_path, 'w', encoding='utf-8') as f:
-                json.dump(order_data, f, indent=2, ensure_ascii=False)
+            # Save order to Cloud Storage
+            order_cloud_url = self.storage_service.save_order_data(order_id, order_data)
+            print(f"Order data saved to Cloud Storage: {order_cloud_url}")
             
             return {
-                'cover_path': str(final_cover_path),
+                'cover_path': public_cover_url,
+                'cover_cloud_path': cloud_cover_url,
                 'order_data': order_data
             }
             
@@ -147,13 +151,12 @@ class BookGenerationService:
         Returns:
             Order data dictionary
         """
-        order_file_path = self.orders_dir / f"order_{order_id}.json"
+        cloud_file_path = f"orders/order_{order_id}.json"
         
-        if not order_file_path.exists():
+        if not self.storage_service.file_exists(cloud_file_path):
             raise FileNotFoundError(f"Order {order_id} not found")
         
-        with open(order_file_path, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        return self.storage_service.download_json(cloud_file_path)
     
     def update_order_status(self, order_id: str, status: str, **kwargs) -> None:
         """
@@ -171,7 +174,5 @@ class BookGenerationService:
         for key, value in kwargs.items():
             order_data[key] = value
         
-        # Save updated order
-        order_file_path = self.orders_dir / f"order_{order_id}.json"
-        with open(order_file_path, 'w', encoding='utf-8') as f:
-            json.dump(order_data, f, indent=2, ensure_ascii=False) 
+        # Save updated order to Cloud Storage
+        self.storage_service.save_order_data(order_id, order_data) 
