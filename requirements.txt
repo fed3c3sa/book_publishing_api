@@ -5,6 +5,7 @@ Flask-CORS>=4.0.0
 # AI and API clients
 requests>=2.31.0
 openai>=1.0.0
+google-genai
 
 # Environment and configuration
 python-dotenv>=1.0.0
