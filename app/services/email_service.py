@@ -87,6 +87,76 @@ class EmailService:
             
         except Exception as e:
             print(f"Failed to send email to {to_email}: {str(e)}")
+
+    def _format_character_descriptions_for_customer(self, order_data: Dict[str, Any]) -> str:
+        """
+        Format character descriptions in a customer-friendly way for email inclusion.
+        
+        Args:
+            order_data: Order information dictionary
+            
+        Returns:
+            Formatted string with character descriptions
+        """
+        character_section = ""
+        
+        try:
+            # Get character descriptions from Cloud Storage
+            characters_info = []
+            for char in order_data.get('characters', []):
+                char_name = char.get('name', '').lower().replace(' ', '_')
+                if char_name:
+                    # Clean character name to match Cloud Storage path format
+                    clean_name = "".join(c for c in char_name if c.isalnum() or c in (' ', '-', '_')).rstrip()
+                    clean_name = clean_name.replace(' ', '_').lower()
+                    char_cloud_path = f"characters/{clean_name}.json"
+                    
+                    if self.storage_service.file_exists(char_cloud_path):
+                        try:
+                            char_data = self.storage_service.download_json(char_cloud_path)
+                            characters_info.append(char_data)
+                        except Exception as e:
+                            print(f"Failed to download character description for {char_name}: {str(e)}")
+            
+            if characters_info:
+                character_section = "\n\n=== YOUR BOOK CHARACTERS ===\n"
+                character_section += "Our AI has created detailed descriptions for your characters:\n\n"
+                
+                for i, char_data in enumerate(characters_info, 1):
+                    char_name = char_data.get('character_name', f'Character {i}')
+                    species = char_data.get('species', 'character')
+                    char_type = char_data.get('character_type', 'character')
+                    
+                    character_section += f"{i}. {char_name}\n"
+                    character_section += f"   Type: {char_type.title()} {species}\n"
+                    
+                    # Get physical description
+                    phys_desc = char_data.get('physical_description', {})
+                    overall_impression = phys_desc.get('overall_impression', '')
+                    if overall_impression:
+                        character_section += f"   Description: {overall_impression}\n"
+                    
+                    # Get distinctive features
+                    distinctive_features = phys_desc.get('distinctive_features', [])
+                    if distinctive_features:
+                        character_section += f"   Special Features: {', '.join(distinctive_features[:3])}\n"
+                    
+                    # Get personality traits
+                    personality = char_data.get('personality_psychology', {})
+                    if personality:
+                        core_traits = personality.get('core_personality_traits', [])
+                        if core_traits:
+                            character_section += f"   Personality: {', '.join(core_traits[:4])}\n"
+                    
+                    character_section += "\n"
+                
+                character_section += "These characters will be beautifully illustrated throughout your personalized book!\n"
+            
+        except Exception as e:
+            print(f"Error formatting character descriptions: {str(e)}")
+            character_section = "\n\n=== YOUR BOOK CHARACTERS ===\nYour characters are being processed and will be beautifully illustrated in your book!\n"
+        
+        return character_section
     
     def send_admin_notification(self, order_data: Dict[str, Any]) -> None:
         """
@@ -129,6 +199,9 @@ Please review the order details in the system.
         """
         subject = f"Payment Confirmed - Your Book '{order_data['book_title']}' is in Production!"
         
+        # Get character descriptions in customer-friendly format
+        character_descriptions = self._format_character_descriptions_for_customer(order_data)
+        
         body = f"""
 Dear {order_data['customer_name']},
 
@@ -139,6 +212,10 @@ Order Details:
 - Order ID: {order_data['order_id']}
 - Pages: {order_data['num_pages']}
 - Age Group: {order_data['age_group']}
+
+Story Concept:
+{order_data.get('story_idea', 'Your personalized story')}
+{character_descriptions}
 
 What happens next:
 ✅ Payment confirmed
