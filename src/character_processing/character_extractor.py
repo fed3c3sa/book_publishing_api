@@ -10,21 +10,21 @@ import json
 from typing import Dict, Any, List, Optional, Union
 from pathlib import Path
 
-from ..ai_clients.openai_client import OpenAIClient
+from ..ai_clients.gemini_client import GeminiClient
 from ..utils.config import load_prompt, get_output_path, CHARACTERS_DIR
 
 
 class CharacterProcessor:
     """Handles character description extraction and processing."""
     
-    def __init__(self, openai_client: Optional[OpenAIClient] = None):
+    def __init__(self, gemini_client: Optional[GeminiClient] = None):
         """
         Initialize the character processor.
         
         Args:
-            openai_client: OpenAI client instance. If None, creates a new one.
+            gemini_client: Gemini client instance. If None, creates a new one.
         """
-        self.openai_client = openai_client or OpenAIClient()
+        self.gemini_client = gemini_client or GeminiClient()
         self.character_prompt = load_prompt("character_description")
     
     def extract_character_from_text(
@@ -49,8 +49,8 @@ class CharacterProcessor:
         if character_name:
             input_content = f"Character Name: {character_name}\nDescription: {character_description}"
         
-        # Extract character description using OpenAI
-        character_data = self.openai_client.extract_character_description(
+        # Extract character description using Gemini
+        character_data = self.gemini_client.extract_character_description(
             input_content=input_content,
             prompt_template=self.character_prompt
         )
@@ -94,8 +94,8 @@ class CharacterProcessor:
         # Convert paths to Path objects
         image_paths = [Path(p) for p in image_paths]
         
-        # Extract character description using OpenAI with images
-        character_data = self.openai_client.extract_character_description(
+        # Extract character description using Gemini with images
+        character_data = self.gemini_client.extract_character_description(
             input_content=input_content,
             images=image_paths,
             prompt_template=self.character_prompt

@@ -781,6 +781,19 @@
                                     <input type="text" id="artStyle" name="artStyle" value="whimsical watercolor" placeholder="watercolor, cartoon, digital...">
                                 </div>
                             </div>
+                            
+                            <div class="form-group">
+                                <label for="bookCover">📖 Book Cover (Optional)</label>
+                                <div style="border: 2px dashed #4ECDC4; border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; background: #F0F8FF;" 
+                                     onclick="document.getElementById('bookCoverImage').click()">
+                                    <div id="coverUploadText">
+                                        <p style="font-size: 2rem;">📖</p>
+                                        <p style="color: #666;">Upload your own book cover or we'll create one for you!</p>
+                                        <p style="color: #999; font-size: 0.9rem;">Click to upload (JPG, PNG, WebP)</p>
+                                    </div>
+                                    <input type="file" id="bookCoverImage" name="bookCoverImage" accept="image/*" style="display: none;" onchange="handleCoverUpload()">
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Step 3: Characters -->
@@ -1007,6 +1020,36 @@
             }
         }
 
+        async function handleCoverUpload() {
+            const fileInput = document.getElementById('bookCoverImage');
+            const uploadText = document.getElementById('coverUploadText');
+            
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const formData = new FormData();
+                formData.append('image', file);
+                
+                try {
+                    uploadText.innerHTML = '<p style="font-size: 2rem;">⏳</p><p style="color: #666;">Uploading cover...</p>';
+                    const response = await fetch('/api/upload_cover_image', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        uploadText.innerHTML = '<p style="font-size: 2rem; color: #4ECDC4;">✅</p><p style="color: #4ECDC4;">Cover uploaded successfully!</p><p style="color: #999; font-size: 0.9rem;">We\'ll use your cover instead of generating one</p>';
+                        fileInput.setAttribute('data-filename', result.filename);
+                    } else {
+                        uploadText.innerHTML = '<p style="font-size: 2rem; color: #FF6B6B;">❌</p><p style="color: #FF6B6B;">Upload failed!</p>';
+                    }
+                } catch (error) {
+                    uploadText.innerHTML = '<p style="font-size: 2rem; color: #FF6B6B;">❌</p><p style="color: #FF6B6B;">Upload error!</p>';
+                }
+            }
+        }
+
         // Form submission
         document.getElementById('bookForm').addEventListener('submit', async function(event) {
             event.preventDefault();
@@ -1020,8 +1063,16 @@
                 language: formData.get('language'),
                 artStyle: formData.get('artStyle'),
                 themes: formData.getAll('themes'),
-                characters: []
+                characters: [],
+                coverImage: null
             };
+            
+            // Check if a cover image was uploaded
+            const coverInput = document.getElementById('bookCoverImage');
+            const coverFilename = coverInput.getAttribute('data-filename');
+            if (coverFilename) {
+                data.coverImage = `temp_uploads/${coverFilename}`;
+            }
             
             // Collect characters
             const characterCards = document.querySelectorAll('.character-card');

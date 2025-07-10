@@ -9,7 +9,7 @@ import json
 from typing import Dict, Any, List, Optional, Tuple
 from pathlib import Path
 
-from ..ai_clients.openai_client import OpenAIClient
+from ..ai_clients.gemini_client import GeminiClient
 from ..utils.config import load_prompt, get_output_path, TEXTS_DIR
 
 
@@ -202,14 +202,14 @@ class StoryContext:
 class TextGenerator:
     """Handles text generation for book pages."""
     
-    def __init__(self, openai_client: Optional[OpenAIClient] = None):
+    def __init__(self, gemini_client: Optional[GeminiClient] = None):
         """
         Initialize the text generator.
         
         Args:
-            openai_client: OpenAI client instance. If None, creates a new one.
+            gemini_client: Gemini client instance. If None, creates a new one.
         """
-        self.openai_client = openai_client or OpenAIClient()
+        self.gemini_client = gemini_client or GeminiClient()
         self.text_prompt_template = load_prompt("text_generation")
     
     def generate_page_text(
@@ -257,8 +257,8 @@ class TextGenerator:
         else:
             previous_context = previous_page_text
         
-        # Generate page text using OpenAI
-        page_text_data = self.openai_client.generate_page_text(
+        # Generate page text using Gemini 2.5 Flash
+        page_text_data = self.gemini_client.generate_page_text(
             page_description=page_description,
             characters_present=characters_present,
             age_group=age_group,
@@ -302,7 +302,7 @@ class TextGenerator:
         
         generated_texts = {}
         story_context = StoryContext()  # Initialize story context for consistency
-        previous_page_text = ""  # Track previous page text for smooth transitions
+        previous_pages_text = []  # Track previous 2 pages for better context
         
         # Generate text for each page
         for page_data in pages:
@@ -314,22 +314,33 @@ class TextGenerator:
                 continue
             
             try:
+                # Create context from last 2 pages if available
+                if len(previous_pages_text) >= 2:
+                    previous_context = f"Previous page: {previous_pages_text[-1]}\n\nTwo pages ago: {previous_pages_text[-2]}"
+                elif len(previous_pages_text) == 1:
+                    previous_context = f"Previous page: {previous_pages_text[-1]}"
+                else:
+                    previous_context = ""
+                
                 text_data, story_context = self.generate_page_text(
                     page_data=page_data,
                     book_plan=book_plan,
                     story_context=story_context,
-                    previous_page_text=previous_page_text,
+                    previous_page_text=previous_context,  # Pass enhanced context
                     language=language
                 )
                 
                 # Save the text data
                 self._save_page_text(text_data, book_title, page_number)
                 
-                # Update previous page text for next iteration
-                previous_page_text = text_data.get("page_text", "")
+                # Update previous pages text (keep only last 2)
+                current_page_text = text_data.get("page_text", "")
+                previous_pages_text.append(current_page_text)
+                if len(previous_pages_text) > 2:
+                    previous_pages_text.pop(0)  # Remove oldest entry
                 
                 generated_texts[page_number] = text_data
-                print(f"Generated text for page {page_number} with story context")
+                print(f"Generated text for page {page_number} with enhanced story context from {len(previous_pages_text)} previous pages")
                 
             except Exception as e:
                 print(f"Error generating text for page {page_number}: {str(e)}")

@@ -165,6 +165,7 @@ def generate_book_async(generation_id: str, data: Dict[str, Any]):
         art_style = data.get('artStyle', 'children\'s book illustration')
         characters_data = data.get('characters', [])
         themes = data.get('themes', [])
+        cover_image_path = data.get('coverImage', None)  # Path to uploaded cover image
         
         # Process characters
         update_status(generation_id, 'processing', 25, f'Processing {len(characters_data)} characters...')
@@ -188,13 +189,17 @@ def generate_book_async(generation_id: str, data: Dict[str, Any]):
         )
         
         # Generate images
-        update_status(generation_id, 'processing', 60, 'Generating illustrations...')
+        if cover_image_path:
+            update_status(generation_id, 'processing', 60, 'Generating illustrations (using your uploaded cover)...')
+        else:
+            update_status(generation_id, 'processing', 60, 'Generating illustrations...')
         
         page_images = image_generator.generate_all_page_images(
             book_plan=book_plan,
             characters=processed_characters,
             art_style=art_style,
-            include_cover=True
+            include_cover=not bool(cover_image_path),  # Don't generate cover if one is uploaded
+            uploaded_cover_path=cover_image_path  # Pass the uploaded cover path
         )
         
         # Generate text content
@@ -258,6 +263,36 @@ def upload_character_image():
             'success': True,
             'filename': unique_filename,
             'message': 'Image uploaded successfully'
+        })
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/upload_cover_image', methods=['POST'])
+def upload_cover_image():
+    """Upload a book cover image."""
+    try:
+        if 'image' not in request.files:
+            return jsonify({'success': False, 'error': 'No image file provided'}), 400
+        
+        file = request.files['image']
+        if file.filename == '':
+            return jsonify({'success': False, 'error': 'No file selected'}), 400
+        
+        if not allowed_file(file.filename):
+            return jsonify({'success': False, 'error': 'Invalid file type'}), 400
+        
+        # Save file
+        filename = secure_filename(file.filename)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        unique_filename = f"cover_{timestamp}_{filename}"
+        file_path = Path(UPLOAD_FOLDER) / unique_filename
+        file.save(file_path)
+        
+        return jsonify({
+            'success': True,
+            'filename': unique_filename,
+            'message': 'Cover image uploaded successfully'
         })
         
     except Exception as e:

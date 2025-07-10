@@ -179,7 +179,8 @@ class ImageGenerator:
         book_plan: Dict[str, Any],
         characters: List[Dict[str, Any]],
         art_style: str = "children's book illustration, colorful, friendly",
-        include_cover: bool = True
+        include_cover: bool = True,
+        uploaded_cover_path: Optional[str] = None
     ) -> Dict[int, str]:
         """
         Generate images for all pages in the book.
@@ -189,6 +190,7 @@ class ImageGenerator:
             characters: List of all character descriptions
             art_style: Desired art style for illustrations
             include_cover: Whether to generate a cover image
+            uploaded_cover_path: Path to uploaded cover image (if any)
             
         Returns:
             Dictionary mapping page numbers to image file paths
@@ -198,8 +200,13 @@ class ImageGenerator:
         
         generated_images = {}
         
-        # Generate cover if requested
-        if include_cover:
+        # Handle cover - either use uploaded or generate new one
+        if uploaded_cover_path:
+            # Use uploaded cover
+            print(f"Using uploaded cover: {uploaded_cover_path}")
+            generated_images[0] = uploaded_cover_path  # Cover is page 0
+        elif include_cover:
+            # Generate cover if requested and no uploaded cover
             try:
                 cover_path = self.generate_book_cover(book_plan, characters, art_style)
                 generated_images[0] = cover_path  # Cover is page 0
@@ -212,8 +219,8 @@ class ImageGenerator:
             page_number = page_data.get("page_number", 0)
             page_type = page_data.get("page_type", "story")
             
-            # Skip cover page if we already generated it separately
-            if page_type == "cover" and include_cover:
+            # Skip cover page if we already handled it
+            if page_type == "cover" and (include_cover or uploaded_cover_path):
                 continue
             
             try:
