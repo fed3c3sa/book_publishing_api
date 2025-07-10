@@ -321,6 +321,7 @@ class TextGenerator:
                     previous_context = f"Previous page: {previous_pages_text[-1]}"
                 else:
                     # This is the first story page - provide introduction guidance
+                    # This handles both page 1 and any first story page
                     story_summary = book_plan.get("book_summary", "")
                     previous_context = f"FIRST PAGE OF STORY: This is the opening page after the cover. Introduce the main characters and setting. Set up the story world and provide context for young readers. Story summary for reference: {story_summary}"
                 
@@ -343,6 +344,15 @@ class TextGenerator:
                 
                 generated_texts[page_number] = text_data
                 print(f"Generated text for page {page_number} with enhanced story context from {len(previous_pages_text)} previous pages")
+                
+                # Log page information for debugging
+                word_count = text_data.get("word_count", 0)
+                characters_present = page_data.get("characters_present", [])
+                print(f"  Page {page_number}: {word_count} words, characters: {', '.join(characters_present) if characters_present else 'none'}")
+                
+                # Special logging for first page
+                if len(previous_pages_text) == 1:  # This was the first story page
+                    print(f"  ✅ Successfully generated FIRST STORY PAGE (page {page_number})")
                 
             except Exception as e:
                 print(f"Error generating text for page {page_number}: {str(e)}")

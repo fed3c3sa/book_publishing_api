@@ -66,6 +66,20 @@ class ImageGenerator:
             if char_name in characters_present:
                 relevant_characters[char_name] = char
         
+        # If no characters were found for the page, include all main characters
+        # This ensures character consistency even if character names don't match exactly
+        if not relevant_characters and characters_present:
+            print(f"Warning: No exact character matches found for {characters_present}, including all main characters for consistency")
+            for char in characters:
+                if char.get("character_type", "") == "main":
+                    relevant_characters[char.get("character_name", "")] = char
+        
+        # As final fallback, include all characters to ensure descriptions are never lost
+        if not relevant_characters:
+            print(f"Warning: No characters found for page {page_data.get('page_number', 0)}, including all characters")
+            for char in characters:
+                relevant_characters[char.get("character_name", "")] = char
+        
         # Generate image prompt using Gemini 2.5 Flash
         image_prompt_data = self.gemini_client.generate_image_prompt(
             page_description=page_description,
@@ -223,15 +237,28 @@ class ImageGenerator:
             if page_type == "cover" and (include_cover or uploaded_cover_path):
                 continue
             
+            # Generate image for this page
             try:
+                # Use reference image for consistency (except for first page)
+                use_reference = page_number > 1  # Don't use reference for first page
+                
                 image_path = self.generate_page_image(
                     page_data=page_data,
-                    characters=characters,
+                    characters=characters,  # Pass all characters to ensure descriptions are available
                     book_title=book_title,
-                    art_style=art_style
+                    art_style=art_style,
+                    use_reference=use_reference
                 )
+                
                 generated_images[page_number] = image_path
-                print(f"Generated image for page {page_number}: {image_path}")
+                print(f"Generated image for page {page_number}: {Path(image_path).name}")
+                
+                # Log character information for this page
+                characters_present = page_data.get("characters_present", [])
+                if characters_present:
+                    print(f"  Characters on page {page_number}: {', '.join(characters_present)}")
+                    available_chars = [c.get("character_name", "") for c in characters]
+                    print(f"  Available character descriptions: {', '.join(available_chars)}")
                 
             except Exception as e:
                 print(f"Error generating image for page {page_number}: {str(e)}")

@@ -45,14 +45,21 @@ Return your response as a valid JSON object with the following structure:
 ```
 
 ## Important Notes:
-- Page 1 should always be the cover
-- Page 2 should serve as the story introduction, setting the scene and introducing main characters
+- Page 0 should always be the cover (this will be handled separately)
+- Page 1 should serve as the story introduction, setting the scene and introducing main characters
+- Page 2, 3, etc. continue the story progression
 - Last page can be back cover or story conclusion
 - Each page should have enough visual interest for illustration
 - Consider how characters will be positioned and interact
 - Ensure story flows logically from page to page
 - Include emotional beats appropriate for children
-- The first story page (page 2) should provide context and background to orient the reader
+- The first story page (page 1) should provide context and background to orient the reader
+
+## Page Numbering Instructions:
+- Start page numbering at 1 for the first story page (NOT the cover)
+- The cover will be handled separately as page 0
+- Your pages array should contain only story pages numbered 1, 2, 3, etc.
+- Do NOT include a cover page in your pages array
 
 Create an engaging, age-appropriate story plan now.
 

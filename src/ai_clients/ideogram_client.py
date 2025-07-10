@@ -228,9 +228,19 @@ class IdeogramClient:
                 seed_description = char_data.get("ideogram_character_seed", "")
                 if seed_description:
                     character_consistency.append(seed_description)
+                
+                # Add original user description as fallback
+                original_desc = char_data.get("original_user_description", "")
+                if original_desc and not consistency_formula and not seed_description:
+                    char_name = char_data.get("character_name", "character")
+                    character_consistency.append(f"{char_name}: {original_desc}")
             
             if character_consistency:
                 main_prompt += f" Character consistency: {', '.join(character_consistency)}."
+            else:
+                print(f"Warning: Character data provided but no usable descriptions found for page {page_number}")
+        else:
+            print(f"Warning: No character data provided for page {page_number}, images may lack character consistency")
         
         # Add style specifications if available
         style_specs = image_prompt_data.get("style_specifications", "")
@@ -319,7 +329,13 @@ class IdeogramClient:
                 # Require proper character description fields
                 if not consistency_formula and not seed_description:
                     char_name = char.get("character_name", "unknown")
-                    raise ValueError(f"Character '{char_name}' is missing required consistency_formula and ideogram_character_seed fields")
+                    # Try to get original user description as fallback
+                    original_desc = char.get("original_user_description", "")
+                    if original_desc:
+                        char_descriptions.append(f"{char_name}: {original_desc}")
+                        print(f"Using original description for {char_name} in cover generation")
+                    else:
+                        print(f"Warning: Character '{char_name}' is missing character description fields for cover generation")
             
             # Add character consistency to prompt
             if character_consistency:
