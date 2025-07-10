@@ -32,7 +32,7 @@ class GeminiClient:
         self.client = genai.Client(api_key=config["gemini_api_key"])
         
         # Default model configuration
-        self.model = "gemini-2.5-flash"
+        self.model = "gemini-2.5-flash-lite-preview-06-17"
         self.max_tokens = 8000
         self.temperature = 0.3
     

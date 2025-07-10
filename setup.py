@@ -85,16 +85,16 @@ def check_api_keys():
     with open(secrets_file, 'r') as f:
         content = f.read()
     
-    has_openai = "your_openai_api_key_here" not in content and "OPENAI_API_KEY=" in content
+    has_gemini = "your_gemini_api_key_here" not in content and "GEMINI_API_KEY=" in content
     has_ideogram = "your_ideogram_api_key_here" not in content and "IDEOGRAM_API_KEY=" in content
     
-    if has_openai and has_ideogram:
+    if has_gemini and has_ideogram:
         print("✅ API keys appear to be configured")
         return True
     else:
         print("⚠️  API keys need to be configured in secrets.env")
-        if not has_openai:
-            print("   - Missing OpenAI API key")
+        if not has_gemini:
+            print("   - Missing Gemini API key")
         if not has_ideogram:
             print("   - Missing Ideogram API key")
         return False
@@ -106,7 +106,7 @@ def test_imports():
     try:
         sys.path.insert(0, str(Path("src")))
         
-        from src.ai_clients import OpenAIClient, IdeogramClient
+        from src.ai_clients import GeminiClient, IdeogramClient
         from src.character_processing import CharacterProcessor
         from src.book_planning import BookPlanner
         from src.content_generation import ImageGenerator, TextGenerator

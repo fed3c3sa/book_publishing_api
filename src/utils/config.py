@@ -44,26 +44,18 @@ def load_config(env_file: str = "secrets.env") -> Dict[str, str]:
         load_dotenv(env_path)
     
     # Required API keys
-    openai_api_key = os.getenv("OPENAI_API_KEY")
     ideogram_api_key = os.getenv("IDEOGRAM_API_KEY")
     gemini_api_key = os.getenv("GEMINI_API_KEY")
     
-    # Optional configuration
-    openai_org_id = os.getenv("OPENAI_ORG_ID", "")
-    
     # Validate required keys
-    if not openai_api_key:
-        raise ValueError("OPENAI_API_KEY not found in environment variables or .env file")
     if not ideogram_api_key:
         raise ValueError("IDEOGRAM_API_KEY not found in environment variables or .env file")
     if not gemini_api_key:
         raise ValueError("GEMINI_API_KEY not found in environment variables or .env file")
     
     return {
-        "openai_api_key": openai_api_key,
         "ideogram_api_key": ideogram_api_key,
         "gemini_api_key": gemini_api_key,
-        "openai_org_id": openai_org_id,
     }
 
 

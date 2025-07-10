@@ -34,7 +34,7 @@ class CharacterProcessor:
         character_type: str = "main"
     ) -> Dict[str, Any]:
         """
-        Extract structured character description from text.
+        Create a simple character structure from user text description without AI expansion.
         
         Args:
             character_description: Text description of the character
@@ -42,28 +42,141 @@ class CharacterProcessor:
             character_type: Type of character (main, secondary, background)
             
         Returns:
-            Structured character description dictionary
+            Simple character description dictionary preserving original text
         """
-        # Prepare input content
-        input_content = character_description
-        if character_name:
-            input_content = f"Character Name: {character_name}\nDescription: {character_description}"
+        # Use the original user description without AI expansion
+        print(f"🔄 Creating character from user text (preserving original description)...")
         
-        # Extract character description using Gemini
-        character_data = self.gemini_client.extract_character_description(
-            input_content=input_content,
-            prompt_template=self.character_prompt
+        # Create a simple character structure that preserves the user's original text
+        character_data = self._create_simple_character_structure(
+            character_name=character_name or "Unnamed Character",
+            character_type=character_type,
+            original_description=character_description
         )
         
-        # Ensure character type is set
-        if "character_type" not in character_data or not character_data["character_type"]:
-            character_data["character_type"] = character_type
-        
-        # Ensure character name is set
-        if character_name and ("character_name" not in character_data or not character_data["character_name"]):
-            character_data["character_name"] = character_name
-        
+        print(f"✅ Character created with original description preserved")
         return character_data
+    
+    def _create_simple_character_structure(
+        self,
+        character_name: str,
+        character_type: str,
+        original_description: str
+    ) -> Dict[str, Any]:
+        """
+        Create a simple character structure that preserves the original user description.
+        
+        Args:
+            character_name: Name of the character
+            character_type: Type of character (main, secondary, background)
+            original_description: The original user-provided description
+            
+        Returns:
+            Simple character structure dictionary
+        """
+        # Create a minimal structure that preserves the original description
+        # This bypasses AI expansion and keeps the user's exact words
+        return {
+            "character_name": character_name,
+            "character_type": character_type,
+            "species": "character",  # Generic species
+            "age_category": "child",  # Default for children's books
+            "gender_presentation": "neutral",  # Neutral default
+            "ideogram_character_seed": f"{character_name}, {original_description[:100]}",  # Use original text for consistency
+            "original_user_description": original_description,  # Preserve the exact user input
+            "consistency_formula": f"{character_name} as described: {original_description[:50]}...",
+            
+            # Minimal physical description that references the original
+            "physical_description": {
+                "overall_impression": original_description,  # Use the user's exact words
+                "size": "medium",
+                "build_physique": "as described by user",
+                "height_weight": "appropriate for story",
+                "exact_colors": {
+                    "primary": "as described",
+                    "secondary": "",
+                    "accent": "",
+                    "details": "",
+                    "seasonal_variations": ""
+                },
+                "head_face": {
+                    "head_shape": "as described",
+                    "facial_structure": {
+                        "eyes": "as described",
+                        "nose": "as described", 
+                        "mouth": "as described",
+                        "cheeks": "as described",
+                        "chin": "as described",
+                        "forehead": "as described"
+                    },
+                    "hair_fur_covering": {
+                        "type": "as described",
+                        "color": "as described",
+                        "texture": "as described",
+                        "length": "as described",
+                        "style": "as described",
+                        "special_features": ""
+                    },
+                    "ears": "as described",
+                    "other_facial_features": ""
+                },
+                "body_structure": {
+                    "torso": "as described",
+                    "arms_hands": "as described",
+                    "legs_feet": "as described",
+                    "tail": "as described if any",
+                    "wings": "as described if any",
+                    "other_appendages": "as described if any"
+                },
+                "skin_surface": {
+                    "texture": "as described",
+                    "patterns": "as described",
+                    "markings": "as described",
+                    "special_properties": ""
+                },
+                "distinctive_features": [original_description],  # The whole description is the distinctive feature
+                "fixed_elements": ["user-defined character"],
+                "proportions": "as described by user",
+                "mobility_posture": {
+                    "typical_posture": "as described",
+                    "gait": "as described",
+                    "gesture_patterns": "as described",
+                    "flexibility": "normal"
+                }
+            },
+            
+            # Additional structure to maintain compatibility
+            "personality_psychology": {
+                "core_personality_traits": [original_description],
+                "emotional_characteristics": {
+                    "dominant_emotions": ["as described"],
+                    "emotional_range": "as described",
+                    "emotional_triggers": "as described",
+                    "emotional_expression": "as described"
+                },
+                "social_behavior": {
+                    "social_preference": "as described",
+                    "leadership_style": "as described",
+                    "conflict_resolution": "as described",
+                    "communication_style": "as described"
+                },
+                "cognitive_traits": {
+                    "intelligence_type": "as described",
+                    "learning_style": "as described",
+                    "problem_solving": "as described",
+                    "creativity_level": "as described"
+                },
+                "motivations_values": {
+                    "core_values": ["as described"],
+                    "life_goals": "as described",
+                    "fears_concerns": "as described",
+                    "what_drives_them": "as described"
+                }
+            },
+            
+            "behavior_source": "user_description",  # Flag to indicate this is user-provided
+            "ai_expanded": False  # Flag to indicate this was NOT AI-expanded
+        }
     
     def extract_character_from_image(
         self,

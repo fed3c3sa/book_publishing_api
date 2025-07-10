@@ -204,7 +204,7 @@ class IdeogramClient:
         Generate an image for a specific book page.
         
         Args:
-            image_prompt_data: Structured image prompt data from OpenAI
+            image_prompt_data: Structured image prompt data from Gemini
             page_number: Page number for file naming
             output_dir: Directory to save the image
             reference_image_path: Optional reference image for style consistency

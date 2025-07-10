@@ -5,14 +5,14 @@ This package contains all the core modules for generating AI-powered children's 
 """
 
 # Make imports available at package level
-from .ai_clients import OpenAIClient, IdeogramClient
+from .ai_clients import GeminiClient, IdeogramClient
 from .character_processing import CharacterProcessor
 from .book_planning import BookPlanner
 from .content_generation import ImageGenerator, TextGenerator
 from .pdf_generation import PDFGenerator
 
 __all__ = [
-    "OpenAIClient",
+    "GeminiClient",
     "IdeogramClient", 
     "CharacterProcessor",
     "BookPlanner",

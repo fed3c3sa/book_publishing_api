@@ -9,21 +9,21 @@ import json
 from typing import Dict, Any, List, Optional
 from pathlib import Path
 
-from ..ai_clients.openai_client import OpenAIClient
+from ..ai_clients.gemini_client import GeminiClient
 from ..utils.config import load_prompt, get_output_path, PLANS_DIR
 
 
 class BookPlanner:
     """Handles book planning and story structure creation."""
     
-    def __init__(self, openai_client: Optional[OpenAIClient] = None):
+    def __init__(self, gemini_client: Optional[GeminiClient] = None):
         """
         Initialize the book planner.
         
         Args:
-            openai_client: OpenAI client instance. If None, creates a new one.
+            gemini_client: Gemini client instance. If None, creates a new one.
         """
-        self.openai_client = openai_client or OpenAIClient()
+        self.gemini_client = gemini_client or GeminiClient()
         self.planning_prompt = load_prompt("book_planning")
     
     def create_book_plan(
@@ -51,8 +51,8 @@ class BookPlanner:
         Returns:
             Comprehensive book plan dictionary
         """
-        # Create book plan using OpenAI
-        book_plan = self.openai_client.create_book_plan(
+        # Create book plan using Gemini 2.5 Flash
+        book_plan = self.gemini_client.create_book_plan(
             story_idea=story_idea,
             num_pages=num_pages,
             age_group=age_group,
@@ -153,7 +153,7 @@ class BookPlanner:
             "3-6": 15,
             "6-8": 25,
             "6-9": 30,
-            "9-12": 50
+            "9-12": 115  # Average of 80-150 word range for older children
         }
         
         # Get base count for age group

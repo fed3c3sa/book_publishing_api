@@ -9,7 +9,7 @@ import json
 from typing import Dict, Any, List, Optional, Union
 from pathlib import Path
 
-from ..ai_clients.openai_client import OpenAIClient
+from ..ai_clients.gemini_client import GeminiClient
 from ..ai_clients.ideogram_client import IdeogramClient
 from ..utils.config import load_prompt, get_output_path, IMAGES_DIR
 
@@ -19,17 +19,17 @@ class ImageGenerator:
     
     def __init__(
         self,
-        openai_client: Optional[OpenAIClient] = None,
+        gemini_client: Optional[GeminiClient] = None,
         ideogram_client: Optional[IdeogramClient] = None
     ):
         """
         Initialize the image generator.
         
         Args:
-            openai_client: OpenAI client instance. If None, creates a new one.
+            gemini_client: Gemini client instance. If None, creates a new one.
             ideogram_client: Ideogram client instance. If None, creates a new one.
         """
-        self.openai_client = openai_client or OpenAIClient()
+        self.gemini_client = gemini_client or GeminiClient()
         self.ideogram_client = ideogram_client or IdeogramClient()
         self.image_prompt_template = load_prompt("image_generation")
         
@@ -66,8 +66,8 @@ class ImageGenerator:
             if char_name in characters_present:
                 relevant_characters[char_name] = char
         
-        # Generate image prompt using OpenAI
-        image_prompt_data = self.openai_client.generate_image_prompt(
+        # Generate image prompt using Gemini 2.5 Flash
+        image_prompt_data = self.gemini_client.generate_image_prompt(
             page_description=page_description,
             characters_present=characters_present,
             character_descriptions=relevant_characters,

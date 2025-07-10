@@ -32,7 +32,7 @@ class GeminiClient:
         self.client = genai.Client(api_key=config["gemini_api_key"])
         
         # Default model configuration
-        self.model = "gemini-2.5-flash"
+        self.model = "gemini-2.5-flash-lite-preview-06-17"
         self.max_tokens = 8000
         self.temperature = 0.3
     
@@ -263,4 +263,115 @@ class GeminiClient:
             raise ValueError(f"Failed to parse page text JSON: {str(e)}")
         except Exception as e:
             print(f"Error: Unexpected error in text generation: {str(e)}")
-            raise ValueError(f"Unexpected error in text generation: {str(e)}") 
+            raise ValueError(f"Unexpected error in text generation: {str(e)}")
+    
+    def create_book_plan(
+        self,
+        story_idea: str,
+        num_pages: int,
+        age_group: str,
+        language: str,
+        characters: List[Dict[str, Any]],
+        prompt_template: str = ""
+    ) -> Dict[str, Any]:
+        """
+        Create a structured book plan using Gemini 2.5 Flash.
+        
+        Args:
+            story_idea: The main story concept
+            num_pages: Number of pages for the book
+            age_group: Target age group (e.g., "3-5", "6-8")
+            language: Language for the book
+            characters: List of character descriptions
+            prompt_template: Custom prompt template to use
+            
+        Returns:
+            Structured book plan as dictionary
+        """
+        # Format the prompt
+        formatted_prompt = prompt_template.format(
+            story_idea=story_idea,
+            num_pages=num_pages,
+            age_group=age_group,
+            language=language,
+            characters=json.dumps(characters, indent=2)
+        )
+        
+        print("🔄 Creating book plan using Gemini 2.5 Flash...")
+        
+        # Create completion
+        response = self.create_completion(
+            prompt=formatted_prompt,
+            system_message="You are an expert children's book author and story planner specializing in creating engaging, age-appropriate narratives. Always respond with valid JSON.",
+            force_json=True,
+            temperature=0.5  # Balanced temperature for creative yet structured planning
+        )
+        
+        try:
+            book_plan = json.loads(response)
+            print("✅ Book plan created with Gemini 2.5 Flash")
+            return book_plan
+        except json.JSONDecodeError as e:
+            print(f"Error: Failed to parse book plan JSON: {str(e)}")
+            print(f"Raw response: {response}")
+            raise ValueError(f"Failed to parse book plan JSON: {str(e)}")
+        except Exception as e:
+            print(f"Error: Unexpected error in book planning: {str(e)}")
+            raise ValueError(f"Unexpected error in book planning: {str(e)}")
+    
+    def generate_image_prompt(
+        self,
+        page_description: str,
+        characters_present: List[str],
+        character_descriptions: Dict[str, Any],
+        mood_tone: str,
+        visual_elements: List[str],
+        art_style: str,
+        prompt_template: str = ""
+    ) -> Dict[str, Any]:
+        """
+        Generate a detailed prompt for image generation using Gemini 2.5 Flash.
+        
+        Args:
+            page_description: Description of what happens on the page
+            characters_present: List of character names present
+            character_descriptions: Full character description data
+            mood_tone: Mood and tone for the scene
+            visual_elements: List of visual elements to include
+            art_style: Desired art style
+            prompt_template: Custom prompt template to use
+            
+        Returns:
+            Structured image prompt as dictionary
+        """
+        # Format the prompt
+        formatted_prompt = prompt_template.format(
+            page_description=page_description,
+            characters_present=", ".join(characters_present),
+            character_descriptions=json.dumps(character_descriptions, indent=2),
+            mood_tone=mood_tone,
+            visual_elements=", ".join(visual_elements),
+            art_style=art_style
+        )
+        
+        print("🔄 Generating image prompt using Gemini 2.5 Flash...")
+        
+        # Create completion
+        response = self.create_completion(
+            prompt=formatted_prompt,
+            system_message="You are an expert at creating detailed prompts for AI image generation, specializing in children's book illustrations. Always respond with valid JSON.",
+            force_json=True,
+            temperature=0.4  # Moderate temperature for creative yet precise prompts
+        )
+        
+        try:
+            image_prompt = json.loads(response)
+            print("✅ Image prompt generated with Gemini 2.5 Flash")
+            return image_prompt
+        except json.JSONDecodeError as e:
+            print(f"Error: Failed to parse image prompt JSON: {str(e)}")
+            print(f"Raw response: {response}")
+            raise ValueError(f"Failed to parse image prompt JSON: {str(e)}")
+        except Exception as e:
+            print(f"Error: Unexpected error in image prompt generation: {str(e)}")
+            raise ValueError(f"Unexpected error in image prompt generation: {str(e)}") 

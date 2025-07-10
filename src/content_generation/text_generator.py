@@ -320,7 +320,9 @@ class TextGenerator:
                 elif len(previous_pages_text) == 1:
                     previous_context = f"Previous page: {previous_pages_text[-1]}"
                 else:
-                    previous_context = ""
+                    # This is the first story page - provide introduction guidance
+                    story_summary = book_plan.get("book_summary", "")
+                    previous_context = f"FIRST PAGE OF STORY: This is the opening page after the cover. Introduce the main characters and setting. Set up the story world and provide context for young readers. Story summary for reference: {story_summary}"
                 
                 text_data, story_context = self.generate_page_text(
                     page_data=page_data,
