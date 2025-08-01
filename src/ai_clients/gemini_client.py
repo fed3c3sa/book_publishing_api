@@ -32,7 +32,7 @@ class GeminiClient:
         self.client = genai.Client(api_key=config["gemini_api_key"])
         
         # Default model configuration
-        self.model = "gemini-2.5-flash-lite-preview-06-17"
+        self.model = "gemini-2.5-flash"  # Updated to newer model
         self.max_tokens = 8000
         self.temperature = 0.3
     
@@ -142,13 +142,29 @@ class GeminiClient:
         generation_config.safety_settings = safety_settings
         
         try:
+            print(f"🔍 Making Gemini API call with model: {self.model}")
+            print(f"🔍 Prompt length: {len(prompt)} characters")
+            print(f"🔍 Force JSON: {force_json}")
+            print(f"🔍 Temperature: {temperature if temperature is not None else self.temperature}")
+            
             response = self.client.models.generate_content(
                 model=self.model,
                 contents=contents,
                 config=generation_config
             )
+            
+            if response is None:
+                raise Exception("API returned None response")
+            
+            if not hasattr(response, 'text') or response.text is None:
+                raise Exception("API response has no text content")
+            
+            print(f"✅ Gemini API call successful, response length: {len(response.text)} characters")
             return response.text
+            
         except Exception as e:
+            print(f"❌ Gemini API error details: {str(e)}")
+            print(f"❌ Error type: {type(e).__name__}")
             raise Exception(f"Gemini API error: {str(e)}")
     
     def extract_character_description(
@@ -298,6 +314,9 @@ class GeminiClient:
         )
         
         print("🔄 Creating book plan using Gemini 2.5 Flash...")
+        print(f"   Story idea: {story_idea[:100]}...")
+        print(f"   Characters: {len(characters)} character(s)")
+        print(f"   Pages: {num_pages}, Age: {age_group}, Language: {language}")
         
         # Create completion
         response = self.create_completion(
