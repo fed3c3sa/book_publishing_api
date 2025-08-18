@@ -1026,17 +1026,7 @@
                         <h2 class="step-title" data-translate="bookDetails">Dettagli del libro 📝</h2>
                         <p class="step-subtitle" data-translate="customizeBook">Personalizza il tuo libro</p>
                         
-                        <div class="form-group">
-                            <label for="numPages" data-translate="numPages">Numero di Pagine</label>
-                            <select id="numPages" name="numPages" class="form-input">
-                                <option value="3">3 Pagine</option>
-                                <option value="8">8 Pagine</option>
-                                <option value="10" selected>10 Pagine</option>
-                                <option value="12">12 Pagine</option>
-                                <option value="14">14 Pagine</option>
-                                <option value="16">16 Pagine</option>
-                            </select>
-                        </div>
+                        
                         
                         <div class="form-group">
                             <label for="ageGroup" data-translate="ageGroup">Fascia d'Età</label>
@@ -1059,10 +1049,7 @@
                             </select>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="artStyle" data-translate="artStyle">Stile Artistico</label>
-                            <input type="text" id="artStyle" name="artStyle" class="form-input" value="whimsical watercolor" placeholder="acquerello, cartone animato, digitale..." data-translate-placeholder="artStylePlaceholder">
-                        </div>
+                        
                     </div>
 
                     <!-- Step 6: Main Character -->
@@ -1210,16 +1197,7 @@
 
         // Update select options based on language
         function updatePageOptions() {
-            // Update number of pages options
-            const numPagesSelect = document.getElementById('numPages');
-            if (numPagesSelect) {
-                numPagesSelect.options[0].text = currentLanguage === 'it' ? '3 Pagine' : '3 Pages';
-                numPagesSelect.options[1].text = currentLanguage === 'it' ? '8 Pagine' : '8 Pages';
-                numPagesSelect.options[2].text = currentLanguage === 'it' ? '10 Pagine' : '10 Pages';
-                numPagesSelect.options[3].text = currentLanguage === 'it' ? '12 Pagine' : '12 Pages';
-                numPagesSelect.options[4].text = currentLanguage === 'it' ? '14 Pagine' : '14 Pages';
-                numPagesSelect.options[5].text = currentLanguage === 'it' ? '16 Pagine' : '16 Pages';
-            }
+            
 
             // Update age group options
             const ageGroupSelect = document.getElementById('ageGroup');
@@ -1524,10 +1502,8 @@
                 customerEmail: formData.get('customerEmail'),
                 bookTitle: formData.get('bookTitle'),
                 storyIdea: formData.get('storyIdea'),
-                numPages: parseInt(formData.get('numPages')),
                 ageGroup: formData.get('ageGroup'),
                 language: formData.get('language'),
-                artStyle: formData.get('artStyle'),
                 themes: formData.getAll('themes'),
                 characters: []
             };
