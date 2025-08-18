@@ -28,6 +28,7 @@ from src.character_processing import CharacterProcessor
 from src.book_planning import BookPlanner
 from src.content_generation import ImageGenerator, TextGenerator
 from src.pdf_generation import PDFGenerator
+from src.ai_clients.runway_client import RunwayClient
 from src.utils.config import load_config
 
 dotenv.load_dotenv("secrets.env")
@@ -152,7 +153,15 @@ def generate_book_async(generation_id: str, data: Dict[str, Any]):
         update_status(generation_id, 'processing', 15, 'Initializing AI clients...')
         character_processor = CharacterProcessor()
         book_planner = BookPlanner()
-        image_generator = ImageGenerator()
+        
+        # Initialize image generator with Runway support if API key is available
+        use_runway = bool(config.get("runway_api_key"))
+        runway_client = RunwayClient(config) if use_runway else None
+        image_generator = ImageGenerator(
+            runway_client=runway_client,
+            use_runway=use_runway
+        )
+        
         text_generator = TextGenerator()
         pdf_generator = PDFGenerator()
         
@@ -174,6 +183,44 @@ def generate_book_async(generation_id: str, data: Dict[str, Any]):
         
         if not processed_characters:
             raise Exception("No characters were successfully processed")
+        
+        # Generate character reference images for consistency (if using Runway)
+        character_images = {}
+        if config.get("runway_api_key"):
+            try:
+                update_status(generation_id, 'processing', 30, 'Generating character reference images for consistency...')
+                runway_client = RunwayClient(config)
+                
+                # Create character images directory
+                char_images_dir = Path(f"output/images/{book_title}_characters")
+                char_images_dir.mkdir(parents=True, exist_ok=True)
+                
+                for i, character in enumerate(processed_characters):
+                    char_name = character.get("character_name", f"character_{i}")
+                    try:
+                        update_status(generation_id, 'processing', 30 + (i * 5), f'Generating reference image for {char_name}...')
+                        
+                        char_image_path = runway_client.generate_character_reference_image(
+                            character_data=character,
+                            output_dir=char_images_dir
+                        )
+                        character_images[char_name] = char_image_path
+                        print(f"✅ Generated character reference image for {char_name}: {char_image_path}")
+                        
+                    except Exception as e:
+                        print(f"⚠️  Failed to generate character image for {char_name}: {e}")
+                        # Continue with other characters
+                        continue
+                
+                if character_images:
+                    print(f"✅ Generated {len(character_images)} character reference images for consistency")
+                else:
+                    print("⚠️  No character reference images were generated")
+                    
+            except Exception as e:
+                print(f"⚠️  Character image generation failed: {e}")
+                # Continue without character images
+                pass
         
         # Create book plan
         update_status(generation_id, 'processing', 40, 'Creating book plan and story structure...')
@@ -199,7 +246,8 @@ def generate_book_async(generation_id: str, data: Dict[str, Any]):
             characters=processed_characters,
             art_style=art_style,
             include_cover=not bool(cover_image_path),  # Don't generate cover if one is uploaded
-            uploaded_cover_path=cover_image_path  # Pass the uploaded cover path
+            uploaded_cover_path=cover_image_path,  # Pass the uploaded cover path
+            character_images=character_images  # Pass character reference images for consistency
         )
         
         # Generate text content

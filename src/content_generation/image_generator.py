@@ -11,6 +11,7 @@ from pathlib import Path
 
 from ..ai_clients.gemini_client import GeminiClient
 from ..ai_clients.ideogram_client import IdeogramClient
+from ..ai_clients.runway_client import RunwayClient
 from ..utils.config import load_prompt, get_output_path, IMAGES_DIR
 
 
@@ -20,7 +21,9 @@ class ImageGenerator:
     def __init__(
         self,
         gemini_client: Optional[GeminiClient] = None,
-        ideogram_client: Optional[IdeogramClient] = None
+        ideogram_client: Optional[IdeogramClient] = None,
+        runway_client: Optional[RunwayClient] = None,
+        use_runway: bool = True
     ):
         """
         Initialize the image generator.
@@ -28,9 +31,13 @@ class ImageGenerator:
         Args:
             gemini_client: Gemini client instance. If None, creates a new one.
             ideogram_client: Ideogram client instance. If None, creates a new one.
+            runway_client: Runway client instance. If None, creates a new one when needed.
+            use_runway: Whether to use Runway instead of Ideogram for image generation.
         """
         self.gemini_client = gemini_client or GeminiClient()
         self.ideogram_client = ideogram_client or IdeogramClient()
+        self.runway_client = runway_client
+        self.use_runway = use_runway
         self.image_prompt_template = load_prompt("image_generation")
         
         # Track reference image for consistency
@@ -106,7 +113,8 @@ class ImageGenerator:
         characters: List[Dict[str, Any]],
         book_title: str = "",
         art_style: str = "children's book illustration, colorful, friendly",
-        use_reference: bool = True
+        use_reference: bool = True,
+        character_images: Optional[Dict[str, str]] = None
     ) -> str:
         """
         Generate an image for a specific book page.
@@ -117,6 +125,7 @@ class ImageGenerator:
             book_title: Book title for file organization
             art_style: Desired art style for the illustration
             use_reference: Whether to use reference image for consistency
+            character_images: Dict mapping character names to reference image paths
             
         Returns:
             Path to the generated image file
@@ -136,16 +145,28 @@ class ImageGenerator:
         # Create output directory for this book
         book_images_dir = self._get_book_images_dir(book_title)
         
-        # Generate the image using Ideogram
+        # Generate the image using the selected client (Runway or Ideogram)
         reference_image = self.reference_image_path if use_reference else None
         
-        image_path = self.ideogram_client.generate_book_page_image(
-            image_prompt_data=image_prompt_data,
-            page_number=page_number,
-            output_dir=book_images_dir,
-            reference_image_path=reference_image,
-            characters_data=characters
-        )
+        if self.use_runway and self.runway_client:
+            # Use Runway for image generation
+            image_path = self.runway_client.generate_book_page_image(
+                image_prompt_data=image_prompt_data,
+                page_number=page_number,
+                output_dir=book_images_dir,
+                reference_image_path=reference_image,
+                characters_data=characters,
+                character_images=character_images
+            )
+        else:
+            # Use Ideogram for image generation (default)
+            image_path = self.ideogram_client.generate_book_page_image(
+                image_prompt_data=image_prompt_data,
+                page_number=page_number,
+                output_dir=book_images_dir,
+                reference_image_path=reference_image,
+                characters_data=characters
+            )
         
         # Set reference image for future pages if this is the first generated image
         if self.reference_image_path is None and Path(image_path).exists():
@@ -157,7 +178,8 @@ class ImageGenerator:
         self,
         book_plan: Dict[str, Any],
         characters: List[Dict[str, Any]],
-        art_style: str = "children's book cover, professional, engaging"
+        art_style: str = "children's book cover, professional, engaging",
+        character_images: Optional[Dict[str, str]] = None
     ) -> str:
         """
         Generate a cover image for the book.
@@ -166,6 +188,7 @@ class ImageGenerator:
             book_plan: Complete book plan data
             characters: List of all character descriptions
             art_style: Desired art style for the cover
+            character_images: Dict mapping character names to reference image paths
             
         Returns:
             Path to the generated cover image file
@@ -177,14 +200,26 @@ class ImageGenerator:
         # Create output directory for this book
         book_images_dir = self._get_book_images_dir(book_title)
         
-        # Generate cover using Ideogram
-        cover_path = self.ideogram_client.generate_book_cover(
-            title=book_title,
-            characters=characters,
-            theme=theme_str,
-            output_dir=book_images_dir,
-            reference_image_path=self.reference_image_path
-        )
+        # Generate cover using the selected client (Runway or Ideogram)
+        if self.use_runway and self.runway_client:
+            # Use Runway for cover generation
+            cover_path = self.runway_client.generate_book_cover(
+                title=book_title,
+                characters=characters,
+                theme=theme_str,
+                output_dir=book_images_dir,
+                reference_image_path=self.reference_image_path,
+                character_images=character_images
+            )
+        else:
+            # Use Ideogram for cover generation (default)
+            cover_path = self.ideogram_client.generate_book_cover(
+                title=book_title,
+                characters=characters,
+                theme=theme_str,
+                output_dir=book_images_dir,
+                reference_image_path=self.reference_image_path
+            )
         
         return cover_path
     
@@ -194,7 +229,8 @@ class ImageGenerator:
         characters: List[Dict[str, Any]],
         art_style: str = "children's book illustration, colorful, friendly",
         include_cover: bool = True,
-        uploaded_cover_path: Optional[str] = None
+        uploaded_cover_path: Optional[str] = None,
+        character_images: Optional[Dict[str, str]] = None
     ) -> Dict[int, str]:
         """
         Generate images for all pages in the book.
@@ -205,6 +241,7 @@ class ImageGenerator:
             art_style: Desired art style for illustrations
             include_cover: Whether to generate a cover image
             uploaded_cover_path: Path to uploaded cover image (if any)
+            character_images: Dict mapping character names to reference image paths
             
         Returns:
             Dictionary mapping page numbers to image file paths
@@ -222,7 +259,7 @@ class ImageGenerator:
         elif include_cover:
             # Generate cover if requested and no uploaded cover
             try:
-                cover_path = self.generate_book_cover(book_plan, characters, art_style)
+                cover_path = self.generate_book_cover(book_plan, characters, art_style, character_images)
                 generated_images[0] = cover_path  # Cover is page 0
                 print(f"Generated cover: {cover_path}")
             except Exception as e:
@@ -247,7 +284,8 @@ class ImageGenerator:
                     characters=characters,  # Pass all characters to ensure descriptions are available
                     book_title=book_title,
                     art_style=art_style,
-                    use_reference=use_reference
+                    use_reference=use_reference,
+                    character_images=character_images
                 )
                 
                 generated_images[page_number] = image_path

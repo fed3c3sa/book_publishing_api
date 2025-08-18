@@ -46,17 +46,27 @@ def load_config(env_file: str = "secrets.env") -> Dict[str, str]:
     # Required API keys
     ideogram_api_key = os.getenv("IDEOGRAM_API_KEY")
     gemini_api_key = os.getenv("GEMINI_API_KEY")
+    runway_api_key = os.getenv("RUNWAY_API_KEY")  # Optional for now
     
     # Validate required keys
-    if not ideogram_api_key:
-        raise ValueError("IDEOGRAM_API_KEY not found in environment variables or .env file")
     if not gemini_api_key:
         raise ValueError("GEMINI_API_KEY not found in environment variables or .env file")
     
-    return {
-        "ideogram_api_key": ideogram_api_key,
+    # At least one image generation API key is required
+    if not ideogram_api_key and not runway_api_key:
+        raise ValueError("At least one image generation API key is required: IDEOGRAM_API_KEY or RUNWAY_API_KEY")
+    
+    config = {
         "gemini_api_key": gemini_api_key,
     }
+    
+    # Add available image generation API keys
+    if ideogram_api_key:
+        config["ideogram_api_key"] = ideogram_api_key
+    if runway_api_key:
+        config["runway_api_key"] = runway_api_key
+    
+    return config
 
 
 def load_prompt(prompt_name: str) -> str:
