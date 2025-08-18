@@ -3,7 +3,7 @@
 const translations = {
     it: {
         // Header
-        logoText: 'StoryMaker',
+        logoText: 'storywonder.ai',
         tagline: 'Crea storie magiche in pochi minuti!',
         
         // Preview panel
@@ -159,7 +159,7 @@ const translations = {
     },
     en: {
         // Header
-        logoText: 'StoryMaker',
+        logoText: 'storywonder.ai',
         tagline: 'Create magical stories in minutes!',
         
         // Preview panel
@@ -347,14 +347,14 @@ function updateTranslations() {
     }
     
     // Update page title
-    if (document.title.includes('StoryMaker')) {
+    if (document.title.includes('storywonder.ai')) {
         document.title = currentLanguage === 'it' ? 
-            'StoryMaker - Generatore di Libri per Bambini con IA' : 
-            'StoryMaker - AI Children\'s Book Generator';
+            'storywonder.ai - Generatore di Libri per Bambini con IA' : 
+            'storywonder.ai - AI Children\'s Book Generator';
     } else if (document.title.includes('Pagamento')) {
         document.title = currentLanguage === 'it' ? 
-            'Pagamento Completato - StoryMaker' : 
-            'Payment Complete - StoryMaker';
+            'Pagamento Completato - storywonder.ai' : 
+            'Payment Complete - storywonder.ai';
     }
 }
 
