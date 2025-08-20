@@ -121,6 +121,7 @@ const translations = {
         starting: 'Inizio...',
         creatingCover: 'Creazione della copertina del libro...',
         almostReady: 'Quasi pronto!',
+        stayOnPage: 'Rimani su questa pagina finché il processo non è terminato.',
         
         // Success screen
         coverReady: 'La Copertina del Tuo Libro è Pronta!',
@@ -277,6 +278,7 @@ const translations = {
         starting: 'Starting...',
         creatingCover: 'Creating your book cover...',
         almostReady: 'Almost ready!',
+        stayOnPage: 'Stay on this page until the process is finished.',
         
         // Success screen
         coverReady: 'Your Book Cover is Ready!',

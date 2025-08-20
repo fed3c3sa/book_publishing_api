@@ -163,6 +163,23 @@ class ImageGenerator:
         book_title = book_plan.get("book_title", "Untitled Book")
         themes = book_plan.get("themes", [])
         theme_str = ", ".join(themes) if themes else "adventure and friendship"
+
+        # Extract plot and setting/location context for the cover
+        plot_summary = book_plan.get("book_summary", "") or book_plan.get("metadata", {}).get("original_story_idea", "")
+
+        # Try to infer a concise setting from the first story page
+        setting_description = ""
+        pages = book_plan.get("pages", [])
+        first_story_page = next((p for p in pages if p.get("page_type") == "story"), None)
+        if first_story_page:
+            scene_desc = first_story_page.get("scene_description", "")
+            visual_elements = first_story_page.get("visual_elements", [])
+            if scene_desc:
+                setting_description = scene_desc
+            if visual_elements:
+                # Append visual elements as hints for environment/location
+                elements_str = ", ".join(visual_elements)
+                setting_description = f"{setting_description}. Key environment elements: {elements_str}".strip()
         
         # Clean book title for filename
         clean_title = "".join(c for c in book_title if c.isalnum() or c in (' ', '-', '_')).rstrip()
@@ -177,7 +194,9 @@ class ImageGenerator:
             characters=characters,
             theme=theme_str,
             cloud_file_path=cloud_file_path,
-            reference_image_path=self.reference_image_path
+            reference_image_path=self.reference_image_path,
+            plot_summary=plot_summary,
+            setting_description=setting_description
         )
         
         return cover_cloud_url

@@ -438,7 +438,9 @@ class IdeogramClient:
         characters: List[Dict[str, Any]],
         theme: str,
         output_dir: Path,
-        reference_image_path: Optional[Path] = None
+        reference_image_path: Optional[Path] = None,
+        plot_summary: Optional[str] = None,
+        setting_description: Optional[str] = None
     ) -> str:
         """
         Generate a cover image for the book.
@@ -454,17 +456,17 @@ class IdeogramClient:
             Path to the generated cover image file
         """
         # Create cover prompt
-        main_characters = [char for char in characters if char.get("character_type") == "main"]
+        all_characters = characters or []
         
-        cover_prompt = f"Children's book cover illustration for '{title}', "
+        cover_prompt = f"Children's book cover illustration for '{title}', include ALL characters together in the scene, grouped naturally, "
         
         # Add character descriptions using new structure
-        if main_characters:
+        if all_characters:
             char_descriptions = []
             character_consistency = []
             style_anchors = []
             
-            for char in main_characters:
+            for char in all_characters:
                 # Use consistency formula for main description
                 consistency_formula = char.get("consistency_formula", "")
                 if consistency_formula:
@@ -486,14 +488,20 @@ class IdeogramClient:
             
             # Add character consistency to prompt
             if character_consistency:
-                cover_prompt += f"Characters: {', '.join(character_consistency)}, "
+                cover_prompt += f"Characters (all present): {', '.join(character_consistency)}, "
             elif char_descriptions:
-                cover_prompt += f"featuring {', '.join(char_descriptions)}, "
+                cover_prompt += f"featuring all: {', '.join(char_descriptions)}, "
             
             # Add style anchors
             if style_anchors:
                 unique_anchors = list(set(style_anchors))  # Remove duplicates
                 cover_prompt += f"art style: {', '.join(unique_anchors)}, "
+        
+        # Add plot and setting context
+        if plot_summary:
+            cover_prompt += f"plot context: {plot_summary}, "
+        if setting_description:
+            cover_prompt += f"set in: {setting_description}, "
         
         cover_prompt += (
             f"theme: {theme}, bright and colorful children's book illustration style, "
@@ -520,7 +528,9 @@ class IdeogramClient:
         characters: List[Dict[str, Any]],
         theme: str,
         cloud_file_path: str,
-        reference_image_path: Optional[Path] = None
+        reference_image_path: Optional[Path] = None,
+        plot_summary: Optional[str] = None,
+        setting_description: Optional[str] = None
     ) -> str:
         """
         Generate a cover image for the book and upload directly to Cloud Storage.
@@ -536,17 +546,17 @@ class IdeogramClient:
             Cloud Storage URL of the generated cover image
         """
         # Create cover prompt
-        main_characters = [char for char in characters if char.get("character_type") == "main"]
+        all_characters = characters or []
         
-        cover_prompt = f"Children's book cover illustration for '{title}', "
+        cover_prompt = f"Children's book cover illustration for '{title}', include ALL characters together in the scene, grouped naturally, "
         
         # Add character descriptions using new structure
-        if main_characters:
+        if all_characters:
             char_descriptions = []
             character_consistency = []
             style_anchors = []
             
-            for char in main_characters:
+            for char in all_characters:
                 # Use consistency formula for main description
                 consistency_formula = char.get("consistency_formula", "")
                 if consistency_formula:
@@ -568,14 +578,20 @@ class IdeogramClient:
             
             # Add character consistency to prompt
             if character_consistency:
-                cover_prompt += f"Characters: {', '.join(character_consistency)}, "
+                cover_prompt += f"Characters (all present): {', '.join(character_consistency)}, "
             elif char_descriptions:
-                cover_prompt += f"featuring {', '.join(char_descriptions)}, "
+                cover_prompt += f"featuring all: {', '.join(char_descriptions)}, "
             
             # Add style anchors
             if style_anchors:
                 unique_anchors = list(set(style_anchors))  # Remove duplicates
                 cover_prompt += f"art style: {', '.join(unique_anchors)}, "
+        
+        # Add plot and setting context
+        if plot_summary:
+            cover_prompt += f"plot context: {plot_summary}, "
+        if setting_description:
+            cover_prompt += f"set in: {setting_description}, "
         
         cover_prompt += (
             f"theme: {theme}, bright and colorful children's book illustration style, "

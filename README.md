@@ -146,6 +146,10 @@ Configure webhook endpoints in your Stripe dashboard:
 - Test: `https://your-domain.com/api/webhook/stripe`
 - Live: `https://your-domain.com/api/webhook/stripe`
 
+See `DEPLOYMENT_GUIDE.md` (Step 6) for webhook setup and `config/stripe_config.py` for environment variable names. Ensure:
+- `STRIPE_TEST_SECRET_KEY`, `STRIPE_TEST_PUBLISHABLE_KEY`, `STRIPE_TEST_WEBHOOK_SECRET` are set for test
+- `STRIPE_LIVE_SECRET_KEY`, `STRIPE_LIVE_PUBLISHABLE_KEY`, `STRIPE_LIVE_WEBHOOK_SECRET` are set for live
+
 ### Email Notifications
 
 Email notifications are sent for:
