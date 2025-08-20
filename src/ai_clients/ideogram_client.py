@@ -36,6 +36,7 @@ class IdeogramClient:
         prompt: str,
         output_path: Union[str, Path],
         style_reference_image_path: Optional[Union[str, Path]] = None,
+        character_reference_image_paths: Optional[List[Union[str, Path]]] = None,
         aspect_ratio: str = "1x1",
         style_type: str = "GENERAL",
         magic_prompt: str = "AUTO",
@@ -88,8 +89,8 @@ class IdeogramClient:
         if seed is not None:
             data["seed"] = seed  # Send as integer, not string
         
-        # Prepare files for multipart upload
-        files = {}
+        # Prepare files for multipart upload (list to support multiple files with same key)
+        files: List = []
         
         # Add style reference image if provided
         if style_reference_image_path and os.path.exists(style_reference_image_path):
@@ -113,19 +114,53 @@ class IdeogramClient:
                         mime_type = mime_types.get(ext, 'image/jpeg')
                         
                         # Add to files with proper filename and MIME type
-                        files['style_reference_images'] = (
-                            os.path.basename(style_reference_image_path),
-                            image_content,
-                            mime_type
-                        )
+                        files.append((
+                            'style_reference_images',
+                            (
+                                os.path.basename(style_reference_image_path),
+                                image_content,
+                                mime_type
+                            )
+                        ))
                         print(f"Using style reference image: {style_reference_image_path}")
             except Exception as e:
                 print(f"Warning: Could not read style reference image: {e}")
+
+        # Add character reference images if provided (supports multiple; API currently supports 1)
+        if character_reference_image_paths:
+            for img_path in character_reference_image_paths:
+                try:
+                    img_path_str = str(img_path)
+                    if not os.path.exists(img_path_str):
+                        print(f"Warning: Character reference image not found: {img_path_str}")
+                        continue
+                    with open(img_path_str, 'rb') as img_file:
+                        image_content = img_file.read()
+                        if len(image_content) > 10 * 1024 * 1024:
+                            print(f"Warning: Character reference image exceeds 10MB limit, skipping: {img_path_str}")
+                            continue
+                        ext = os.path.splitext(img_path_str)[1].lower()
+                        mime_types = {
+                            '.jpg': 'image/jpeg',
+                            '.jpeg': 'image/jpeg',
+                            '.png': 'image/png',
+                            '.webp': 'image/webp'
+                        }
+                        mime_type = mime_types.get(ext, 'image/jpeg')
+                        files.append((
+                            'character_reference_images',
+                            (
+                                os.path.basename(img_path_str),
+                                image_content,
+                                mime_type
+                            )
+                        ))
+                        print(f"Using character reference image: {img_path_str}")
+                except Exception as e:
+                    print(f"Warning: Could not read character reference image: {e}")
         
-        # Only add style_type if no style reference images are used
-        # API allows only one of: style_type, style_codes, OR style_reference_images
-        if not files:
-            data["style_type"] = style_type
+        # Always include style_type; when using character references, certain types are required
+        data["style_type"] = style_type
         
         # Make the API request - use JSON format when no files, multipart when files present
         try:
@@ -198,7 +233,8 @@ class IdeogramClient:
         page_number: int,
         output_dir: Path,
         reference_image_path: Optional[Path] = None,
-        characters_data: Optional[List[Dict[str, Any]]] = None
+        characters_data: Optional[List[Dict[str, Any]]] = None,
+        character_reference_image_paths: Optional[List[Union[str, Path]]] = None
     ) -> str:
         """
         Generate an image for a specific book page.
@@ -251,9 +287,18 @@ class IdeogramClient:
         composition = image_prompt_data.get("composition_notes", "")
         if composition:
             main_prompt += f" {composition}"
+
+        # Add strong location/setting description
+        location_description = image_prompt_data.get("location_description", "")
+        if location_description:
+            main_prompt += f" Setting: {location_description}."
         
         # Enhance prompt for children's book style
         main_prompt += " Children's book illustration, bright colors, friendly and engaging, high quality digital art"
+
+        # Composition guidance: character smaller, environment prominent; no text on image
+        main_prompt += \
+            ", wide environmental composition with the character smaller in frame, scene-focused, richly detailed background, no text in the image"
         
         # Add style anchors from characters if available
         if characters_data:
@@ -271,12 +316,18 @@ class IdeogramClient:
         output_path = output_dir / output_filename
         
         # Generate the image
+        # Character reference images require specific style types; prefer FICTION when provided
+        effective_style_type = "AUTO" if character_reference_image_paths else "DESIGN"
+        # When using character references, avoid also sending a style reference image
+        effective_style_reference = None if character_reference_image_paths else reference_image_path
+
         return self.generate_image(
             prompt=main_prompt,
             output_path=output_path,
-            style_reference_image_path=reference_image_path,
+            style_reference_image_path=effective_style_reference,
+            character_reference_image_paths=character_reference_image_paths,
             aspect_ratio="1x1",  # Square format for book pages
-            style_type="DESIGN"  # Good for children's book illustrations
+            style_type=effective_style_type  # Use FICTION when character references are used
         )
     
     def generate_book_cover(
@@ -285,7 +336,8 @@ class IdeogramClient:
         characters: List[Dict[str, Any]],
         theme: str,
         output_dir: Path,
-        reference_image_path: Optional[Path] = None
+        reference_image_path: Optional[Path] = None,
+        character_reference_image_paths: Optional[List[Union[str, Path]]] = None
     ) -> str:
         """
         Generate a cover image for the book.
@@ -351,7 +403,7 @@ class IdeogramClient:
         cover_prompt += (
             f"theme: {theme}, bright and colorful children's book illustration style, "
             f"engaging and friendly, high quality, professional book cover design, "
-            f"title space at top, appealing to children"
+            f"title space at top, appealing to children, no text in the image"
         )
         
         # Determine output filename
@@ -359,11 +411,17 @@ class IdeogramClient:
         output_path = output_dir / output_filename
         
         # Generate the cover
+        # Character reference images require specific style types; prefer FICTION when provided
+        effective_style_type = "AUTO" if character_reference_image_paths else "DESIGN"
+        # When using character references, avoid also sending a style reference image
+        effective_style_reference = None if character_reference_image_paths else reference_image_path
+
         return self.generate_image(
             prompt=cover_prompt,
             output_path=output_path,
-            style_reference_image_path=reference_image_path,
+            style_reference_image_path=effective_style_reference,
+            character_reference_image_paths=character_reference_image_paths,
             aspect_ratio="3x4",  # Portrait format for book cover
-            style_type="DESIGN"
+            style_type=effective_style_type
         )
 

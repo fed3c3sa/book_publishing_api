@@ -33,8 +33,9 @@ class ImageGenerator:
         self.ideogram_client = ideogram_client or IdeogramClient()
         self.image_prompt_template = load_prompt("image_generation")
         
-        # Track reference image for consistency
+        # Track style and character reference images for consistency
         self.reference_image_path = None
+        self.main_character_reference_image = None
     
     def generate_image_prompt(
         self,
@@ -91,6 +92,21 @@ class ImageGenerator:
             prompt_template=self.image_prompt_template
         )
         
+        # Ensure we have a solid location/setting description
+        location_description = (
+            image_prompt_data.get("location_description")
+            or image_prompt_data.get("setting_description")
+            or page_data.get("location_description")
+        )
+        if not location_description:
+            # Heuristic fallback from scene description
+            location_description = (
+                f"A vividly described setting inferred from the scene: {page_description}. "
+                "Describe the environment in detail (time of day, weather/lighting, architecture or nature, "
+                "foreground/midground/background elements, textures, colors, and atmosphere)."
+            )
+        image_prompt_data["location_description"] = location_description
+
         # Add page metadata
         image_prompt_data["page_metadata"] = {
             "page_number": page_data.get("page_number", 0),
@@ -136,6 +152,11 @@ class ImageGenerator:
         # Create output directory for this book
         book_images_dir = self._get_book_images_dir(book_title)
         
+        # Determine character reference images: only apply for main character
+        character_reference_images = None
+        if use_reference and self.main_character_reference_image:
+            character_reference_images = [self.main_character_reference_image]
+
         # Generate the image using Ideogram
         reference_image = self.reference_image_path if use_reference else None
         
@@ -144,10 +165,11 @@ class ImageGenerator:
             page_number=page_number,
             output_dir=book_images_dir,
             reference_image_path=reference_image,
-            characters_data=characters
+            characters_data=characters,
+            character_reference_image_paths=character_reference_images
         )
         
-        # Set reference image for future pages if this is the first generated image
+        # Set style reference image for future pages if this is the first generated image
         if self.reference_image_path is None and Path(image_path).exists():
             self.reference_image_path = Path(image_path)
         
@@ -178,12 +200,17 @@ class ImageGenerator:
         book_images_dir = self._get_book_images_dir(book_title)
         
         # Generate cover using Ideogram
+        # Include character reference for main character if available
+        character_reference_images = [self.main_character_reference_image] if self.main_character_reference_image else None
+
         cover_path = self.ideogram_client.generate_book_cover(
             title=book_title,
             characters=characters,
             theme=theme_str,
             output_dir=book_images_dir,
-            reference_image_path=self.reference_image_path
+            # When using character reference images, avoid passing a separate style reference image
+            reference_image_path=None if character_reference_images else self.reference_image_path,
+            character_reference_image_paths=character_reference_images
         )
         
         return cover_path
@@ -214,6 +241,40 @@ class ImageGenerator:
         
         generated_images = {}
         
+        # If there is a main character, generate a character reference image first
+        main_characters = [c for c in characters if c.get("character_type") == "main"]
+        if main_characters:
+            try:
+                main_char = main_characters[0]
+                # Build the prompt prioritizing the exact user description from the frontend
+                user_desc = main_char.get("original_user_description", "").strip()
+                seed = main_char.get("ideogram_character_seed", "").strip()
+                description = user_desc or seed
+                base_prompt = (
+                    f"Character reference portrait of {main_char.get('character_name','the main character')}, "
+                    f"single 3/4 view, neutral background, well-lit, front-facing, arms relaxed. "
+                    f"Exact description: {description}. Clean, clear, centered, no text."
+                )
+                ref_output_dir = self._get_book_images_dir(book_title)
+                ref_output_path = ref_output_dir / "main_character_reference.png"
+                # Generate the character reference image without any reference inputs
+                generated_ref_path = self.ideogram_client.generate_image(
+                    prompt=base_prompt,
+                    output_path=ref_output_path,
+                    aspect_ratio="1x1",
+                    style_type="AUTO",
+                    num_images=1,
+                    rendering_speed="QUALITY",
+                    magic_prompt="OFF"
+                )
+                self.main_character_reference_image = str(generated_ref_path)
+                # Also set as style reference for subsequent cohesion
+                if self.reference_image_path is None:
+                    self.reference_image_path = Path(generated_ref_path)
+                print(f"Generated main character reference image: {generated_ref_path}")
+            except Exception as e:
+                print(f"Warning: Failed to generate main character reference image: {str(e)}")
+
         # Handle cover - either use uploaded or generate new one
         if uploaded_cover_path:
             # Use uploaded cover
@@ -239,8 +300,8 @@ class ImageGenerator:
             
             # Generate image for this page
             try:
-                # Use reference image for consistency (except for first page)
-                use_reference = page_number > 1  # Don't use reference for first page
+                # Use reference image and character reference for consistency on all story pages
+                use_reference = True
                 
                 image_path = self.generate_page_image(
                     page_data=page_data,
